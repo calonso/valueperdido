@@ -17,8 +17,10 @@ ActiveRecord::Schema.define(:version => 20111206181548) do
     t.string   "name"
     t.string   "surname"
     t.string   "email"
-    t.boolean  "admin",      :default => false
-    t.boolean  "validated",  :default => false
+    t.boolean  "admin",              :default => false
+    t.boolean  "validated",          :default => false
+    t.string   "encrypted_password"
+    t.string   "salt"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
