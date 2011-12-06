@@ -1,7 +1,7 @@
 Valueperdido::Application.routes.draw do
 
-  get "users/new"
-
+  resources :users
+  
   match '/terms',   :to => 'pages#terms'
   match '/signup',  :to => 'users#new'
   # The priority is based upon order of creation:
