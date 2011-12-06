@@ -10,4 +10,9 @@ describe "LayoutLinks" do
     get terms_path
     response.should have_selector('title', :content => 'Terms and Conditions')
   end
+
+  it "should have a signup page at '/signup'" do
+    get signup_path
+    response.should have_selector('title', :content => 'Sign up')
+  end
 end
