@@ -1,9 +1,13 @@
 Valueperdido::Application.routes.draw do
 
+
   resources :users
+  resources :sessions, :only => [:new, :create, :destroy]
   
   match '/terms',   :to => 'pages#terms'
   match '/signup',  :to => 'users#new'
+  match '/login',   :to => 'sessions#new'
+  match '/logout',  :to => 'sessions#destroy'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
