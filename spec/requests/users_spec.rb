@@ -28,7 +28,7 @@ describe "Users" do
           fill_in :password,              :with => "ThePAssw0rd"
           fill_in "Confirmation", :with => "ThePAssw0rd"
           click_button
-          response.should render_template('users/show')
+          response.should render_template('users/create')
           response.should have_selector("div.flash.success",
                                         :content => "Welcome")
         end.should change(User, :count).by(1)

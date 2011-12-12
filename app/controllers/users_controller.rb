@@ -1,4 +1,12 @@
 class UsersController < ApplicationController
+  before_filter :authenticate, :only => [:index, :show, :edit, :update, :destroy]
+  before_filter :authorize,    :only => [:show, :edit, :update]
+  before_filter :admin_user,   :only => :destroy
+
+  def index
+    @title = "All users"
+    @users = User.paginate(:page => params[:page])
+  end
 
   def new
     @user = User.new
@@ -6,14 +14,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
   end
 
   def create
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Welcome to ValuePerdido Community!"
-      redirect_to @user
     else
       @title = "Sign up"
       render 'new'
@@ -21,12 +27,10 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
     @title = "Edit user"
   end
 
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile successfully updated."
       redirect_to @user
@@ -35,5 +39,25 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
+
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed"
+    redirect_to users_path
+  end
+
+  private
+    def authenticate
+      deny_access unless logged_in?
+    end
+
+    def authorize
+      @user = User.find(params[:id])
+      redirect_to(root_path) unless current_user?(@user)
+    end
+
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
+    end
 
 end
