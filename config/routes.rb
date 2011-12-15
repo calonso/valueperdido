@@ -1,6 +1,6 @@
 Valueperdido::Application.routes.draw do
 
-
+  resources :events
   resources :users
   resources :sessions, :only => [:new, :create, :destroy]
   

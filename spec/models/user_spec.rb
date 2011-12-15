@@ -157,4 +157,20 @@ describe User do
       end
     end
   end
+
+  describe "events associations" do
+    before(:each) do
+      @user = User.create(@attr)
+      @event = Factory(:event, :user => @user)
+    end
+
+    it "should have an events attribute" do
+      @user.should respond_to(:events)
+    end
+
+    it "should not destroy associated events" do
+      @user.destroy
+      Event.find_by_id(@event.id).should_not be_nil
+    end
+  end
 end

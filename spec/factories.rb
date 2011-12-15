@@ -14,3 +14,9 @@ end
 Factory.sequence :email do |n|
   "user-#{n}@example.org"
 end
+
+Factory.define :event do |event|
+  event.name        "Event name"
+  event.date        Date.today
+  event.association :user
+end

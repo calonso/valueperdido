@@ -167,6 +167,15 @@ describe UsersController do
         put :update, :id => @user, :user => @attr
         response.should have_selector("title", :content => "Edit user")
       end
+
+      it "should not update the user's attributes" do
+        put :update, id => @user, :user => @attr
+        prev = {:name => @user.name, :surname => @user.surname, :email => @user.email}
+        @user.reload
+        @user.name.should == prev[:name]
+        @user.surname.should == prev[:surname]
+        @user.email.should == prev[:email]
+      end
     end
 
     describe "success" do

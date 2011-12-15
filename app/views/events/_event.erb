@@ -1,0 +1,8 @@
+<li>
+  <%= link_to event.name, event %>
+  <% if current_user.admin? %>
+   | <%= link_to "delete", event, :method => :delete,
+                                  :confirm => "You sure?",
+                                  :title => "Delete #{event.name}" %>
+  <% end %>
+</li>
