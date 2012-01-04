@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :surname, :email, :admin, :validated, :password, :password_confirmation
 
   has_many :events
+  has_many :bets
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 

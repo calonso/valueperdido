@@ -20,3 +20,9 @@ Factory.define :event do |event|
   event.date        Date.today
   event.association :user
 end
+
+Factory.define :bet do |bet|
+  bet.description   "The bet's description"
+  bet.association   :user
+  bet.association   :event
+end

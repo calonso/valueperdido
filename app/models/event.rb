@@ -2,6 +2,7 @@ class Event < ActiveRecord::Base
   attr_accessible :name, :date
 
   belongs_to :user
+  has_many :bets, :dependent => :destroy
 
   validates :name,  :presence => true,
                     :length => { :maximum => 45 },

@@ -160,7 +160,7 @@ describe User do
 
   describe "events associations" do
     before(:each) do
-      @user = User.create(@attr)
+      @user = User.create!(@attr)
       @event = Factory(:event, :user => @user)
     end
 
@@ -171,6 +171,23 @@ describe User do
     it "should not destroy associated events" do
       @user.destroy
       Event.find_by_id(@event.id).should_not be_nil
+    end
+  end
+
+  describe "bets associations" do
+    before(:each) do
+      @user = User.create!(@attr)
+      event = Factory(:event, :user => @user)
+      @bet = Factory(:bet, :user => @user, :event => event)
+    end
+
+    it "should have a bets attribute" do
+      @user.should respond_to(:bets)
+    end
+
+    it "should not destroy associated bets" do
+      @user.destroy
+      Bet.find_by_id(@bet.id).should_not be_nil
     end
   end
 end

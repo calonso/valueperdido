@@ -66,4 +66,20 @@ describe Event do
       sec_event.should be_valid
     end
   end
+
+  describe "bets associations" do
+    before(:each) do
+      @event = Factory(:event, :user => @user)
+      @bet = Factory(:bet, :user => @user, :event => @event)
+    end
+
+    it "should have a bets attribute" do
+      @event.should respond_to(:bets)
+    end
+
+    it "should destroy associated bets" do
+      @event.destroy
+      Bet.find_by_id(@bet.id).should be_nil
+    end
+  end
 end
