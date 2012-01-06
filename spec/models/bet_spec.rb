@@ -4,7 +4,8 @@ describe Bet do
   before(:each) do
     @user = Factory(:user)
     @event = Factory(:event, :user => @user)
-    @attr = { :description => "This is the description",
+    @attr = { :title => "The title",
+              :description => "This is the description",
               :event => @event}
   end
 
@@ -47,6 +48,16 @@ describe Bet do
   end
 
   describe "validations" do
+    it "should require a title" do
+      invalid_bet = @user.bets.build(@attr.merge(:title => ""))
+      invalid_bet.should_not be_valid
+    end
+
+    it "should reject too long titles" do
+      invalid_bet = @user.bets.build(@attr.merge(:title => "a" * 46))
+      invalid_bet.should_not be_valid
+    end
+
     it "should require a description" do
       invalid_bet = @user.bets.build(@attr.merge(:description => ""))
       invalid_bet.should_not be_valid
@@ -81,6 +92,13 @@ describe Bet do
         valid_bet = @user.bets.build(@attr.merge(:rate => num))
         valid_bet.should be_valid
       end
+    end
+
+    it "should reject more than max bets per user and event" do
+      max = Valueperdido::Application.config.max_bets_per_user
+      max.times { |i| @user.bets.create!(@attr)}
+      second_bet = @user.bets.create(@attr)
+      second_bet.should_not be_valid
     end
   end
 

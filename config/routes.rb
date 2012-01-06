@@ -1,9 +1,12 @@
 Valueperdido::Application.routes.draw do
 
-  resources :events
+  match '/events/:event_id/bets/list', :to => 'bets#event_user_bets', :as => :event_user_bets
+  resources :events do
+    resources :bets
+  end
   resources :users
   resources :sessions, :only => [:new, :create, :destroy]
-  
+
   match '/terms',   :to => 'pages#terms'
   match '/signup',  :to => 'users#new'
   match '/login',   :to => 'sessions#new'

@@ -50,5 +50,7 @@ module Valueperdido
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.max_bets_per_user = 1
   end
 end

@@ -22,6 +22,7 @@ Factory.define :event do |event|
 end
 
 Factory.define :bet do |bet|
+  bet.title         "The title"
   bet.description   "The bet's description"
   bet.association   :user
   bet.association   :event
