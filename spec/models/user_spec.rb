@@ -187,7 +187,25 @@ describe User do
 
     it "should not destroy associated bets" do
       @user.destroy
-      Bet.find_by_id(@bet.id).should_not be_nil
+      Bet.find(@bet.id).should_not be_nil
+    end
+  end
+
+  describe "votes associations" do
+    before(:each) do
+      @user = User.create!(@attr)
+      event = Factory(:event, :user => @user)
+      bet = Factory(:bet, :user => @user, :event => event)
+      @vote = Factory(:vote, :user => @user, :event => event, :bet => bet)
+    end
+
+    it "should have a votes attribute" do
+      @user.should respond_to(:votes)
+    end
+
+    it "should not destroy associated bets" do
+      @user.destroy
+      Vote.find(@vote.id).should_not be_nil
     end
   end
 end

@@ -82,4 +82,21 @@ describe Event do
       Bet.find_by_id(@bet.id).should be_nil
     end
   end
+
+  describe "votes associations" do
+    before(:each) do
+      @event = Factory(:event, :user => @user)
+      bet = Factory(:bet, :user => @user, :event => @event)
+      @vote = Factory(:vote, :user => @user, :event => @event, :bet => bet)
+    end
+
+    it "should have a votes attribute" do
+      @event.should respond_to(:votes)
+    end
+
+    it "should indirectly destroy associated votes" do
+      @event.destroy
+      Vote.find_by_id(@vote.id).should be_nil
+    end
+  end
 end

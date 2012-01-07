@@ -27,3 +27,9 @@ Factory.define :bet do |bet|
   bet.association   :user
   bet.association   :event
 end
+
+Factory.define :vote do |vote|
+  vote.association :user
+  vote.association :event
+  vote.association :bet
+end

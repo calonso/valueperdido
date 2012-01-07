@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
 
   has_many :events
   has_many :bets
+  has_many :votes
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 

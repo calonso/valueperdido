@@ -52,5 +52,6 @@ module Valueperdido
     config.assets.version = '1.0'
 
     config.max_bets_per_user = 1
+    config.max_votes_per_user = 3
   end
 end

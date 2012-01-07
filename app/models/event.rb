@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
 
   belongs_to :user
   has_many :bets, :dependent => :destroy
+  has_many :votes
 
   validates :name,  :presence => true,
                     :length => { :maximum => 45 },

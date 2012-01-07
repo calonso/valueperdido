@@ -3,6 +3,7 @@ class Bet < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :event
+  has_many :votes, :dependent => :destroy
 
   validates :title, :presence => true,
                     :length => { :maximum => 45 }
@@ -16,8 +17,8 @@ class Bet < ActiveRecord::Base
 
   def no_more_than_max_bets_per_user
     bets = Bet.where("user_id = ? AND event_id = ?", user, event)
-    if bets.count > Valueperdido::Application.config.max_bets_per_user
-      errors.add(:event, "You already made a bet for this event")
+    if bets.count >= Valueperdido::Application.config.max_bets_per_user
+      errors.add(:event, "You already made max bets for this event")
     end
   end
 end

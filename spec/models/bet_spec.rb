@@ -96,9 +96,25 @@ describe Bet do
 
     it "should reject more than max bets per user and event" do
       max = Valueperdido::Application.config.max_bets_per_user
-      max.times { |i| @user.bets.create!(@attr)}
-      second_bet = @user.bets.create(@attr)
+      max.times { @user.bets.create!(@attr)}
+      second_bet = @user.bets.build(@attr)
       second_bet.should_not be_valid
+    end
+  end
+
+  describe "votes association" do
+    before(:each) do
+      @bet = Factory(:bet, :user => @user, :event => @event)
+      @vote = Factory(:vote, :user => @user, :event => @event, :bet => @bet)
+    end
+
+    it "should have a votes attribute" do
+      @bet.should respond_to(:votes)
+    end
+
+    it "should destroy associated votes" do
+      @bet.destroy
+      Vote.find_by_id(@vote.id).should be_nil
     end
   end
 
