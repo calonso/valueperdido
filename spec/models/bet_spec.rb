@@ -102,6 +102,46 @@ describe Bet do
     end
   end
 
+  describe "scopes" do
+    describe "selected scope" do
+      before(:each) do
+        sec_user = Factory(:user, :email => Factory.next(:email))
+        sec_user.bets.create!(@attr)
+        @sel_bet = @user.bets.create!(@attr.merge(:selected => true))
+      end
+
+      it "should have the selected scope" do
+        Bet.should respond_to(:selected)
+      end
+
+      it "should retrieve selected scopes" do
+        Bet.selected.should == [@sel_bet]
+      end
+    end
+
+    describe "votes info scope" do
+      before(:each) do
+        bet = @user.bets.create!(@attr)
+        sec_user = Factory(:user, :email => Factory.next(:email))
+        Factory(:vote, :event => @attr[:event], :bet => bet, :user => @user)
+        Factory(:vote, :event => @attr[:event], :bet => bet, :user => sec_user)
+      end
+
+      it "should respond to the with votes info for event scope" do
+        Bet.should respond_to(:with_votes_for_event)
+      end
+
+      it "should retrieve the bet with the votes info" do
+        bets = Bet.with_votes_for_event(@attr[:event], @user.id)
+        bets.count.should == 1
+        bet = bets[0]
+        bet[1].should == @attr[:title]
+        bet[2].should == 2
+        bet[3].should == 1
+      end
+    end
+  end
+
   describe "votes association" do
     before(:each) do
       @bet = Factory(:bet, :user => @user, :event => @event)

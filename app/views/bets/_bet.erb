@@ -1,3 +1,9 @@
 <li>
-  <%= bet.title %> | <%= link_to bet.user.name, bet.user  %>
+  <%= bet[1] %>
+  | Votes: <%= bet[2] %>
+  | <% if bet[3] == 1 %>
+      <%= link_to "Unvote", unvote_path(:event_id => @event.id, :id => bet[0]) %>
+    <% else %>
+      <%= link_to "Vote", vote_path(:event_id => @event.id, :id => bet[0]) %>
+    <% end %>
 </li>

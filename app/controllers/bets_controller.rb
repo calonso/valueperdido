@@ -5,7 +5,8 @@ class BetsController < ApplicationController
   before_filter :owner, :only => :destroy
 
   def index
-    @bets = Bet.where(:event_id => params[:event_id]).paginate(:page => params[:page])
+    @event = Event.find(params[:event_id])
+    @bets = Bet.with_votes_for_event(params[:event_id], current_user.id)
   end
 
   def new
@@ -26,6 +27,31 @@ class BetsController < ApplicationController
 
   def event_user_bets
     @bets = Bet.where("user_id = ? AND event_id = ?", current_user, params[:event_id])
+  end
+
+  def vote
+    bet = Bet.find(params[:id])
+    attrs = { :event => bet.event, :bet => bet }
+    vote = current_user.votes.build(attrs)
+    if vote.save
+      flash[:success] = "Bet successfully voted"
+    else
+      flash[:error] = "The bet couldn't be voted"
+    end
+    redirect_to event_bets_path, :event_id => params[:event_id]
+  end
+
+  def unvote
+    votes = Vote.where("bet_id = ? AND user_id = ?", params[:id], current_user.id)
+    if votes.count > 0
+      votes.each do |vote|
+        vote.destroy
+      end
+      flash[:success] = "Vote successfully deleted"
+    else
+      flash[:error] = "No vote could be found"
+    end
+    redirect_to event_bets_path, :event_id => params[:event_id]
   end
 
   def show

@@ -1,7 +1,9 @@
 <h1>Event's Bets</h1>
 
 <ul>
-  <%= render @bets %>
+  <% @bets.each do |bet| %>
+  <%= render 'bet', :bet => bet %>
+  <% end %>
 </ul>
 
 <%= link_to "New bet", new_event_bet_path %>

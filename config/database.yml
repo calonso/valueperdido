@@ -11,7 +11,7 @@
 development:
   adapter: mysql2
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: valueperdido_development
   pool: 5
   username: root
@@ -24,7 +24,7 @@ development:
 test:
   adapter: mysql2
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: valueperdido_test
   pool: 5
   username: root
@@ -34,7 +34,7 @@ test:
 production:
   adapter: mysql2
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: valueperdido_production
   pool: 5
   username: root

@@ -35,6 +35,16 @@ describe BetsController do
       response.should redirect_to(login_path)
     end
 
+    it "should protect the 'vote' action" do
+      get :vote, :event_id => @event, :id => @bet
+      response.should redirect_to(login_path)
+    end
+
+    it "should protect the 'unvote' action" do
+      get :unvote, :event_id => @event, :id => @bet
+      response.should redirect_to(login_path)
+    end
+
     it "should protect the 'show' action" do
       get :show, :event_id => @event, :id => @bet
       response.should redirect_to(login_path)
@@ -82,7 +92,7 @@ describe BetsController do
         assigns(:bets).should == @bets
       end
 
-      it "should only show bets belonging to the requested event" do
+      it "should show bets belonging to the requested event" do
         get :index, :event_id => @event
         @bets.each do |bet|
           response.should have_selector('li', :content => bet.title)
@@ -341,6 +351,49 @@ describe BetsController do
       end
     end
 
-  end
+    describe "GET 'vote'" do
+      it "should add a vote for the bet" do
+        lambda do
+          get :vote, :event_id => @event, :id => @bet
+        end.should change(@bet.votes, :count).by(1)
+      end
 
+      it "should have a flash message" do
+        get :vote, :event_id => @event, :id => @bet
+        flash[:success].should =~ /successfully/i
+      end
+    end
+
+    describe "GET 'unvote'" do
+      describe "when the vote exists" do
+        before(:each) do
+          @user.votes.create({ :event => @event, :bet => @bet })
+        end
+
+        it "should remove the vote for the bet" do
+          lambda do
+            get :unvote, :event_id => @event, :id => @bet
+          end.should change(@bet.votes, :count).by(-1)
+        end
+
+        it "should have a flash message" do
+          get :unvote, :event_id => @event, :id => @bet
+          flash[:success].should =~ /successfully/i
+        end
+      end
+
+      describe "when the vote doesn't exist'" do
+        it "should not remove any votes" do
+          lambda do
+            get :unvote, :event_id => @event, :id => @bet
+          end.should_not change(@bet.votes, :count)
+        end
+
+        it "should have a flash message" do
+          get :unvote, :event_id => @event, :id => @bet
+          flash[:error].should =~ /found/i
+        end
+      end
+    end
+  end
 end
