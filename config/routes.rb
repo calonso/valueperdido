@@ -6,7 +6,9 @@ Valueperdido::Application.routes.draw do
   resources :events do
     resources :bets
   end
-  resources :users
+  resources :users do
+    resources :payments, :except => [:show, :edit, :update]
+  end
   resources :sessions, :only => [:new, :create, :destroy]
 
   match '/terms',   :to => 'pages#terms'
