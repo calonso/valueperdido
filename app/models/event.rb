@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   validates :name,  :presence => true,
                     :length => { :maximum => 45 },
                     :uniqueness => { :scope => :date }
-  validates :date, :date => {:after => Date.civil(1980, 1, 1), :message => "Must be after today!"},
+  validates :date, :date => {:after => Date.civil(1980, 1, 1), :message => "Must be a valid date!"},
                    :on => :create
 
   scope :active_events, lambda { where("date > ?", Date.today) }

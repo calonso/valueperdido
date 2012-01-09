@@ -33,3 +33,9 @@ Factory.define :vote do |vote|
   vote.association :event
   vote.association :bet
 end
+
+Factory.define :payment do |payment|
+  payment.amount      300.50
+  payment.date        Date.today
+  payment.association :user
+end

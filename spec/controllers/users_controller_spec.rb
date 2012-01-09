@@ -169,7 +169,7 @@ describe UsersController do
       end
 
       it "should not update the user's attributes" do
-        put :update, id => @user, :user => @attr
+        put :update, :id => @user, :user => @attr
         prev = {:name => @user.name, :surname => @user.surname, :email => @user.email}
         @user.reload
         @user.name.should == prev[:name]

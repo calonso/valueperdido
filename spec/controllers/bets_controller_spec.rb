@@ -89,7 +89,11 @@ describe BetsController do
 
       it "should only retrieve bets belonging to the requested event" do
         get :index, :event_id => @event
-        assigns(:bets).should == @bets
+        assigns(:bets).each do |bet|
+          @bets.any? { |original|
+            bet[0] == original.id && bet[1] == original.title
+          }.should be_true
+        end
       end
 
       it "should show bets belonging to the requested event" do

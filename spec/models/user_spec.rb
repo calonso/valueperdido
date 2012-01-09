@@ -208,4 +208,20 @@ describe User do
       Vote.find(@vote.id).should_not be_nil
     end
   end
+
+  describe "payments associations" do
+    before(:each) do
+      @user = User.create!(@attr)
+      @payment = Factory(:payment, :user => @user)
+    end
+
+    it "should have a payments attribute" do
+      @user.should respond_to(:payments)
+    end
+
+    it "should not destroy associated payments" do
+      @user.destroy
+      Payment.find(@payment.id).should_not be_nil
+    end
+  end
 end
