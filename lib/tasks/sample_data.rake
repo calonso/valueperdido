@@ -7,7 +7,8 @@ namespace :db do
                         :surname => "User",
                         :email => "user@example.com",
                         :password => "ThePassw0rd",
-                        :password_confirmation => "ThePassw0rd")
+                        :password_confirmation => "ThePassw0rd",
+                        :validated => true)
     admin.toggle!(:admin)
 
     4.times do |n|
@@ -25,7 +26,8 @@ namespace :db do
                           :surname => surname,
                           :email => email,
                           :password => password,
-                          :password_confirmation => password)
+                          :password_confirmation => password,
+                          :validated => true)
       Event.all.each do |event|
         bets = event.bets.shuffle[0..Valueperdido::Application.config.max_votes_per_user - 1]
         bets.each do |bet|

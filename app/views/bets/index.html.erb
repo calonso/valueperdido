@@ -1,9 +1,13 @@
-<h1>Event's Bets</h1>
+<h1><%= @event.name %>'s Bets</h1>
 
-<ul>
-  <% @bets.each do |bet| %>
-  <%= render 'bet_votes', :bet => bet %>
-  <% end %>
-</ul>
+<% if @bets.count > 0 %>
+    <ul>
+      <% @bets.each do |bet| %>
+      <%= render 'bet_votes', :bet => bet %>
+      <% end %>
+    </ul>
+<% else %>
+    <p>There are still no bets proposed for this event</p>
+<% end %>
 
 <%= link_to "New bet", new_event_bet_path %>

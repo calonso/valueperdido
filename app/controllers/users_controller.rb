@@ -1,12 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :only => [:index, :show, :edit, :update, :destroy]
-  before_filter :authorize,    :only => [:show, :edit, :update]
-  before_filter :admin_user,   :only => :destroy
-
-  def index
-    @title = "All users"
-    @users = User.paginate(:page => params[:page])
-  end
+  before_filter :authenticate, :only => [:show, :edit, :update, :destroy]
+  before_filter :authorize,    :only => [:show, :edit, :update, :destroy]
 
   def new
     @user = User.new
@@ -41,9 +35,10 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    @user.destroy
     flash[:success] = "User destroyed"
-    redirect_to users_path
+    logout
+    redirect_to root_path
   end
 
   private

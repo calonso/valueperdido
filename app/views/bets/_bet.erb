@@ -1,3 +1,6 @@
 <li>
-    <%= bet.title %>
+    <%= link_to bet.title, event_bet_path(:event_id => @event.id, :id => bet) %> |
+    <%= link_to "delete", event_bet_path(:event_id => @event.id, :id => bet), :method => :delete,
+                               :confirm => "You sure?",
+                               :title => "Delete your bet" %>
 </li>

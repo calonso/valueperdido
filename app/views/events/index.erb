@@ -1,7 +1,13 @@
 <h1>Active events</h1>
 
-<ul>
-  <%= render @events %>
-</ul>
+<% if @events.count > 0 %>
+    <ul>
+      <%= render @events %>
+    </ul>
+<% else %>
+    <p>Sorry, there are no active events available</p>
+<% end %>
 
-<%= link_to "New event", new_event_path %>
+<% if current_user.admin? %>
+    <%= link_to "New event", new_event_path %>
+<% end %>

@@ -49,7 +49,7 @@ describe "Users" do
 
     describe "success" do
       it "should log the user in and out" do
-        user = Factory(:user)
+        user = Factory(:user, :validated => true)
         visit login_path
         fill_in :email,     :with => user.email
         fill_in :password,  :with => user.password

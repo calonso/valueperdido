@@ -1,12 +1,18 @@
 Valueperdido::Application.routes.draw do
 
+  namespace :admin do
+    match '/users/:id/validate', :to => 'users#validate', :as => :validate
+    match '/users/:id/invalidate', :to => 'users#invalidate', :as => :invalidate
+    resources :users, :only => [:index, :destroy]
+  end
+
   match '/events/:event_id/bets/list', :to => 'bets#event_user_bets', :as => :event_user_bets
   match '/events/:event_id/bets/:id/vote', :to => 'bets#vote', :as => :vote
   match '/events/:event_id/bets/:id/unvote', :to => 'bets#unvote', :as => :unvote
-  resources :events do
+  resources :events, :except => :show do
     resources :bets
   end
-  resources :users do
+  resources :users, :except => :index do
     resources :payments, :except => [:show, :edit, :update]
   end
   resources :sessions, :only => [:new, :create, :destroy]

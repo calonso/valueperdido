@@ -1,0 +1,11 @@
+<li>
+  <%= link_to "#{user.surname}, #{user.name}", user %> |
+  <% if user.validated %>
+    <%= link_to "Invalidate", admin_invalidate_path(:id => user.id) %>
+  <% else %>
+    <%= link_to "Validate", admin_validate_path(:id => user.id) %>
+  <% end %>
+  | <%= link_to "delete", admin_user, :method => :delete,
+                                      :confirm => "You sure?",
+                                      :title => "Delete #{user.name}" %>
+</li>

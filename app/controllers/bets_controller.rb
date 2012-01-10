@@ -26,6 +26,7 @@ class BetsController < ApplicationController
   end
 
   def event_user_bets
+    @event = Event.find(params[:event_id])
     @bets = Bet.where("user_id = ? AND event_id = ?", current_user, params[:event_id])
   end
 

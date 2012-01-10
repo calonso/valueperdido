@@ -150,7 +150,14 @@ describe User do
           nonexistent_user.should be_nil
         end
 
+        it "should return nil for a non validated user" do
+          not_validated_user = User.authenticate(@attr[:email], @attr[:password])
+          not_validated_user.should be_nil
+        end
+
         it "should return the user on email/password match" do
+          @user.validated = true
+          @user.save!
           matching_user = User.authenticate(@attr[:email], @attr[:password])
           matching_user.should == @user
         end

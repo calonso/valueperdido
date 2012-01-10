@@ -32,11 +32,16 @@ class User < ActiveRecord::Base
   validates :email, :presence => true,
                     :format => { :with => email_regex },
                     :uniqueness => { :case_sensitive => false }
-  validates :password, :presence => true,
-                       :confirmation => true,
-                       :length => { :within => 8..45 }
+  # The password is required on creation, then, only validated if present
+  validates :password, :confirmation => true,
+                       :length => { :within => 8..45 },
+                       :unless => Proc.new { |a| a.password.blank? }
+  validates :password, :presence => true, :on => :create
 
-  before_save :encrypt_password
+
+  before_save :encrypt_password, :unless => Proc.new { |a| a.password.blank? }
+
+  default_scope :order => "users.surname ASC, users.name ASC"
 
   def has_password? (submitted_password)
     encrypted_password == encrypt(submitted_password)
@@ -45,7 +50,7 @@ class User < ActiveRecord::Base
   # Here adding a class method User.authenticate, self is User class, not an instance
   def self.authenticate(email, submitted_password)
     user = find_by_email(email)
-    (user && user.has_password?(submitted_password)) ? user : nil
+    (user && user.has_password?(submitted_password) && user.validated?) ? user : nil
   end
 
   def self.auth_with_salt(id, cookie_salt)

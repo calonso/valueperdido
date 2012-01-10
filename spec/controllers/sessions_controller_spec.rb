@@ -39,7 +39,7 @@ describe SessionsController do
 
     describe "valid login" do
       before(:each) do
-        @user = Factory(:user)
+        @user = Factory(:user, :validated => true)
         @attr = { :email => @user.email, :password => @user.password }
       end
 

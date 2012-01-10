@@ -3,58 +3,6 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
-  describe "GET 'index'" do
-    describe "for non logged users" do
-      it "should deny access" do
-        get :index
-        response.should redirect_to(login_path)
-        flash[:notice] =~ /login/i
-      end
-    end
-
-    describe "for logged users" do
-      before(:each) do
-        @user = test_login(Factory(:user))
-        second = Factory(:user, :email => "second@example.com")
-        third = Factory(:user, :email => "third@example.com")
-
-        @users = [@user, second, third]
-
-        30.times do
-          @users << Factory(:user, :name => Factory.next(:name),
-                                  :email => Factory.next(:email))
-        end
-      end
-
-      it "should be successful" do
-        get :index
-        response.should be_success
-      end
-
-      it "should have the right title" do
-        get :index
-        response.should have_selector('title', :content => 'All users')
-      end
-
-      it "should have an element for each user" do
-        get :index
-        @users[0..2].each do |user|
-          response.should have_selector("li", :content => user.name)
-        end
-      end
-
-      it "should paginate users" do
-        get :index
-        response.should have_selector("div.pagination")
-        response.should have_selector("span.disabled", :content => "Previous")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "2")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "Next")
-      end
-    end
-  end
-
   describe "GET 'new'" do
     it "should be successful" do
       get :new
@@ -201,6 +149,24 @@ describe UsersController do
         put :update, :id => @user, :user => @attr
         flash[:success].should =~ /updated/
       end
+
+      describe "without pass modification" do
+        before(:each) do
+          @attr = { :name => "New Name", :email => "user@example.org", :surname => "surname" }
+        end
+
+        it "should change the user's attributes" do
+          put :update, :id => @user, :user => @attr
+          prev_pass = @user.encrypted_password
+          prev_salt = @user.salt
+          @user.reload
+          @user.name.should  == @attr[:name]
+          @user.surname.should == @attr[:surname]
+          @user.email.should == @attr[:email]
+          @user.encrypted_password.should == prev_pass
+          @user.salt.should == prev_salt
+        end
+      end
     end
   end
 
@@ -267,9 +233,9 @@ describe UsersController do
       end
     end
 
-    describe "as non-admin user" do
+    describe "as non-auth user" do
       before(:each) do
-        test_login @user
+        test_login Factory(:user, :email => Factory.next(:email))
       end
       it "should protect the page" do
         delete :destroy, :id => @user
@@ -283,10 +249,9 @@ describe UsersController do
       end
     end
 
-    describe "as an admin user" do
+    describe "as the user" do
       before(:each) do
-        admin = Factory(:user, :email => "admin@example.com", :admin => true)
-        test_login(admin)
+        test_login @user
       end
 
       it "should destroy the user" do
@@ -297,7 +262,12 @@ describe UsersController do
 
       it "should redirect to the users page" do
         delete :destroy, :id => @user
-        response.should redirect_to(users_path)
+        response.should redirect_to(root_path)
+      end
+
+      it "should log the user out" do
+        delete :destroy, :id => @user
+        controller.should_not be_logged_in
       end
     end
   end

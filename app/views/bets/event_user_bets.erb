@@ -1,5 +1,10 @@
-<p>This is the list</p>
+<h1>My bets for: <%= @event.name %></h1>
 
-<ul>
-  <%= render @bets %>
-</ul>
+<% if @bets.count > 0 %>
+    <ul>
+      <%= render @bets %>
+    </ul>
+<% else %>
+    <p>You haven't made any bet for this event yet</p>
+    <%= link_to "New bet", new_event_bet_path(:event_id => @event) %>
+<% end %>

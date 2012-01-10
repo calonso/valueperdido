@@ -1,4 +1,6 @@
-<h1>Comunidad ValuePerdido</h1>
-<p>Esta es la home page de la comunidad ValuePerdido.</p>
+<h1>Home</h1>
+<p>This is ValuePerdido Home page</p>
 
-<%= link_to "Sign up!", signup_path %>
+<% if !current_user %>
+    <p>New user? <%= link_to "Register!", signup_path,%></p>
+<% end %>
