@@ -1,0 +1,11 @@
+<h1>Events history</h1>
+
+<% if @events.count > 0 %>
+    <%= will_paginate %>
+    <ul>
+      <%= render @events %>
+    </ul>
+    <%= will_paginate %>
+<% else %>
+    <p>No events have finished yet</p>
+<% end %>

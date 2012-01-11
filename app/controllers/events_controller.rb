@@ -1,10 +1,13 @@
 class EventsController < ApplicationController
-
   before_filter :authenticate
-  before_filter :admin_user, :only => [ :new, :create, :edit, :update, :destroy]
+  before_filter :admin_user, :only => [:new, :create, :edit, :update, :destroy]
 
   def index
-    @events = Event.active_events
+    @events = Event.active_events.paginate(:page => params[:page])
+  end
+
+  def history
+    @events = Event.past_events.paginate(:page => params[:page])
   end
 
   def new

@@ -1,7 +1,7 @@
 class BetsController < ApplicationController
   before_filter :authenticate
   before_filter :more_bets_allowed, :only => [:new, :create]
-  before_filter :admin_user,   :only => [:show, :edit, :update]
+  before_filter :admin_user,   :only => [:edit, :update]
   before_filter :owner, :only => :destroy
 
   def index

@@ -200,27 +200,14 @@ describe BetsController do
     end
 
     describe "GET 'show'" do
-      describe "for non admin users" do
-        it "should deny access" do
-          get :show, :event_id => @event, :id => @bet
-          response.should redirect_to(root_path)
-        end
+      it "should be success" do
+        get :show, :event_id => @event, :id => @bet
+        response.should be_success
       end
 
-      describe "for admin users" do
-        before(:each) do
-          @user.admin = true
-        end
-
-        it "should be success" do
-          get :show, :event_id => @event, :id => @bet
-          response.should be_success
-        end
-
-        it "should find the required bet" do
-          get :show, :event_id => @event, :id => @bet
-          assigns(:bet).should == @bet
-        end
+      it "should find the required bet" do
+        get :show, :event_id => @event, :id => @bet
+        assigns(:bet).should == @bet
       end
     end
 

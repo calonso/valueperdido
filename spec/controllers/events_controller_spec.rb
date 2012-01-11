@@ -14,6 +14,11 @@ describe EventsController do
       response.should redirect_to(login_path)
     end
 
+    it "should deny the access to 'history'" do
+      get :history
+      response.should redirect_to(login_path)
+    end
+
     it "should deny the access to 'new'" do
       get :new
       response.should redirect_to(login_path)
@@ -31,11 +36,6 @@ describe EventsController do
 
     it "should deny the access to 'update'" do
       put :update, :id => @evt
-      response.should redirect_to(login_path)
-    end
-
-    it "should deny the access to 'show'" do
-      get :show, :id => @evt
       response.should redirect_to(login_path)
     end
 
@@ -57,8 +57,8 @@ describe EventsController do
       response.should be_success
     end
 
-    it "should be able to access 'show'" do
-      get :show, :id => @evt
+    it "should be able to access 'history'" do
+      get :history
       response.should be_success
     end
 
@@ -94,21 +94,24 @@ describe EventsController do
       test_login @user
     end
 
-    describe "GET 'index'" do
-      it "should only show the following events, not past ones" do
-        evt1 = Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
-        evt2 = Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
-        evt3 = Factory(:event, :name => Factory.next(:name), :user => @user)
-        evt4 = Factory(:event, :name => Factory.next(:name), :user => @user)
-        events = [evt1, evt2]
-        passed_events = [evt3, evt4]
+    describe "GET 'index' and 'history'" do
+      before(:each) do
+        @events = []
+        @past_events = []
+        @events << Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
+        @events << Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
+        @past_events << Factory(:event, :name => Factory.next(:name), :user => @user)
+        @past_events << Factory(:event, :name => Factory.next(:name), :user => @user)
+      end
+
+      it "index should only show the following events, not past ones" do
         get :index
-        events.each do |event|
-          response.should have_selector('li', :content => event.name)
-        end
-        passed_events.each do |event|
-          response.should_not have_selector('li', :content => event.name)
-        end
+        assigns(:events).should == @events
+      end
+
+      it "history should show past events, not active ones" do
+        get :history
+        assigns(:events).should == @past_events
       end
     end
 
@@ -153,22 +156,6 @@ describe EventsController do
           post :create, :event => @attrs
           response.should redirect_to(events_path)
         end
-      end
-    end
-
-    describe "GET 'show'" do
-      before(:each) do
-        @evt = Factory(:event, :user => @user)
-      end
-
-      it "should be successful" do
-        get :show, :id => @evt
-        response.should be_success
-      end
-
-      it "should redirect to the newly created event" do
-        get :show, :id => @evt
-        assigns[:event].should == @evt
       end
     end
 

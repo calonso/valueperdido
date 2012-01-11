@@ -12,4 +12,9 @@ class Event < ActiveRecord::Base
                    :on => :create
 
   scope :active_events, lambda { where("date > ?", Date.today) }
+  scope :past_events, lambda { where("date <= ?", Date.today) }
+
+  def active?
+    self.date > Date.today
+  end
 end

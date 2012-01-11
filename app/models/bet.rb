@@ -10,14 +10,16 @@ class Bet < ActiveRecord::Base
   validates :description, :presence => true
   validates :event_id, :presence => true
   validates :money, :numericality => true
+  validates :money, :numericality => { :greater_than => 0 }, :if => :selected
   validates :rate, :numericality => true
+  validates :rate, :numericality => { :greater_than => 0 }, :if => :winner
   validate :no_more_than_max_bets_per_user, :on => :create
 
   scope :selected, where(:selected => true)
   
   def self.with_votes_for_event(evt, usr)
     self.connection.execute(sanitize_sql ["
-      SELECT id, title, IFNULL(votes, 0) as votes, user FROM bets b
+      SELECT id, title, IFNULL(votes, 0) as votes, user, selected FROM bets b
       left outer join (SELECT bet_id, count(*) as votes FROM votes group by bet_id) as v on b.id = v.bet_id
       left outer join (SELECT bet_id, 1 as user from votes where user_id = ? and event_id = ?) as usr on usr.bet_id = b.id
       where event_id = ? order by votes desc", usr, evt, evt]).to_a

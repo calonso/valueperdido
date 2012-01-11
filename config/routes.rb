@@ -9,6 +9,7 @@ Valueperdido::Application.routes.draw do
   match '/events/:event_id/bets/list', :to => 'bets#event_user_bets', :as => :event_user_bets
   match '/events/:event_id/bets/:id/vote', :to => 'bets#vote', :as => :vote
   match '/events/:event_id/bets/:id/unvote', :to => 'bets#unvote', :as => :unvote
+  match '/events/history', :to => 'events#history', :as => :historic_events
   resources :events, :except => :show do
     resources :bets
   end

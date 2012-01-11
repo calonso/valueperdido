@@ -1,6 +1,10 @@
 <h1><%= @bet.title %></h1>
 <p><%= @bet.description %></p>
-<% if current_user?(@bet.user) %>
+<p>Bet is selected: <%= @bet.selected.to_s.underscore.humanize %></p>
+<p>Money bet: <%= @bet.money %> €</p>
+<p>Bet is winner: <%= @bet.winner.to_s.underscore.humanize %></p>
+<p>Bet's rate: <%= @bet.rate %> %</p>
+<% if current_user?(@bet.user) && @bet.event.active? %>
   <%= link_to "Delete", event_bet_path(:event_id => @bet.event, :id => @bet), :method => :delete,
                                                                          :confirm => "Are you sure?",
                                                                          :title => "Delete bet" %>

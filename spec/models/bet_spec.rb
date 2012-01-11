@@ -100,6 +100,16 @@ describe Bet do
       second_bet = @user.bets.build(@attr)
       second_bet.should_not be_valid
     end
+
+    it "should require a money amount if selected" do
+      invalid_bet = @user.bets.build(@attr.merge(:selected => true))
+      invalid_bet.should_not be_valid
+    end
+
+    it "should require a rate amount if winner" do
+      invalid_bet = @user.bets.build(@attr.merge(:winner => true))
+      invalid_bet.should_not be_valid
+    end
   end
 
   describe "scopes" do
@@ -107,7 +117,7 @@ describe Bet do
       before(:each) do
         sec_user = Factory(:user, :email => Factory.next(:email))
         sec_user.bets.create!(@attr)
-        @sel_bet = @user.bets.create!(@attr.merge(:selected => true))
+        @sel_bet = @user.bets.create!(@attr.merge(:selected => true, :money => 1.0))
       end
 
       it "should have the selected scope" do
@@ -138,6 +148,7 @@ describe Bet do
         bet[1].should == @attr[:title]
         bet[2].should == 2
         bet[3].should == 1
+        bet[4].should == 0
       end
     end
   end

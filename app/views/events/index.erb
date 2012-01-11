@@ -1,9 +1,11 @@
 <h1>Active events</h1>
 
 <% if @events.count > 0 %>
+    <%= will_paginate %>
     <ul>
       <%= render @events %>
     </ul>
+    <%= will_paginate %>
 <% else %>
     <p>Sorry, there are no active events available</p>
 <% end %>

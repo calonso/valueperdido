@@ -67,6 +67,45 @@ describe Event do
     end
   end
 
+  describe "scopes" do
+    before (:each) do
+      @past = Factory(:event, :user => @user, :date => Date.today)
+      @future = Factory(:event, :user => @user, :date => Date.tomorrow)
+    end
+
+    describe "active scope" do
+      it "should respond to active_events scope" do
+        Event.should respond_to(:active_events)
+      end
+
+      it "should retrieve only active events" do
+        Event.active_events.should == [@future]
+      end
+    end
+
+    describe "past scope" do
+      it "should respond to past_events scope" do
+        Event.should respond_to(:past_events)
+      end
+
+      it "should retrieve only the past events" do
+        Event.past_events.should == [@past]
+      end
+    end
+  end
+
+  describe "is active method" do
+    it "should say no to a past event" do
+      @event = Factory(:event, :user => @user, :date => Date.today)
+      @event.should_not be_active
+    end
+
+    it "should say yes to a future event" do
+      @event = Factory(:event, :user => @user, :date => Date.tomorrow)
+      @event.should be_active
+    end
+  end
+
   describe "bets associations" do
     before(:each) do
       @event = Factory(:event, :user => @user)

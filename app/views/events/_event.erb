@@ -1,6 +1,10 @@
 <li>
   <%= link_to event.name, event_bets_path(:event_id => event.id) %> | <%= event.date %>
+
+  <% if event.date > Date.today %>
   | <%= link_to "My bets", event_user_bets_path(:event_id => event.id) %>
+  <% end %>
+  
   <% if current_user.admin? %>
    | <%= link_to "delete", event, :method => :delete,
                                   :confirm => "You sure?",
