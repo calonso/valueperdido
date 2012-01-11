@@ -1,5 +1,13 @@
 <h1>Payments list</h1>
 
-<ul>
-    <%= render @payments %>
-</ul>
+<% unless @payments.empty? %>
+    <%= will_paginate %>
+    <ul>
+        <%= render @payments %>
+    </ul>
+    <%= will_paginate %>
+<% else %>
+    <p>You haven't paid yet</p>
+<% end %>
+
+<%= link_to "New payment", new_user_payment_path(@user) %>

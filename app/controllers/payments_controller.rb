@@ -3,7 +3,7 @@ class PaymentsController < ApplicationController
   before_filter :owner_or_admin
 
   def index
-    @payments = Payment.find_all_by_user_id(params[:user_id])
+    @payments = @user.payments.paginate(:page => params[:page])
   end
 
   def new

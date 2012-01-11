@@ -1,3 +1,5 @@
+<h1>User's profile</h1>
+
 <%= @user.surname %>, <%= @user.name %> |
 
 <%= link_to "edit", edit_user_path(@user) %> |
@@ -5,3 +7,6 @@
 <%= link_to "delete", @user, :method => :delete,
                             :confirm => "You sure?",
                             :title => "Delete #{@user.name}" %>
+
+<br />
+<%= link_to "Payments", user_payments_path(@user) %>

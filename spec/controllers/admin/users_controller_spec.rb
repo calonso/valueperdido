@@ -65,6 +65,11 @@ describe Admin::UsersController do
         get :validate, :id => @user
         response.should redirect_to admin_users_path
       end
+
+      it "should send the mail" do
+        get :validate, :id => @user
+        ActionMailer::Base.deliveries.should_not be_empty
+      end
     end
 
     describe "GET 'invalidate'" do

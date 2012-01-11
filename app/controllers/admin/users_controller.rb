@@ -8,6 +8,7 @@ class Admin::UsersController < ApplicationController
   def validate
     @user = User.find params[:id]
     if @user.update_attributes({ :validated => true })
+      UserMailer.validated_account_email(@user).deliver
       flash[:success] = "User successfully validated"
     else
       flash[:error] = "User couldn't be validated"
