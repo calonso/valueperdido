@@ -41,25 +41,52 @@ describe Payment do
   end
 
   describe "full accounts info method" do
-    before (:each) do
-      @usr2 = Factory(:user, :email => Factory.next(:email))
-      @event = Factory(:event, :user => @user)
+    before(:each) do
+      @usr2 = Factory(:user, :name => "Frotacho", :email => Factory.next(:email))
+      @event = Factory(:event, :user => @user, :date => Date.yesterday)
       @bet1 = Factory(:bet, :user => @user, :event => @event,
                       :selected => true, :money => 10)
       @bet2 = Factory(:bet, :user => @usr2, :event => @event,
                       :selected => true, :money => 10,
                       :winner => true, :rate => 2)
-      @pay1 = Factory(:payment, :user => @user)
-      @pay2 = Factory(:payment, :user => @usr2)
+      @pay1 = Factory(:payment, :user => @user, :date => Date.today - 2.days)
+      @pay2 = Factory(:payment, :user => @usr2, :date => Date.today)
     end
     it "should respond to full_accounts_info" do
       Payment.should respond_to(:full_accounts_info)
     end
 
-    it "should retrieve the appropriated data" do
+    it "should retrieve the appropriated data in the right order" do
       data = Payment.full_accounts_info
       data.count.should == 4
+      data[0][0].should == @user.id
+      data[1][0].should == @bet1.id
+      data[2][0].should == @bet2.id
+      data[3][0].should == @usr2.id
+    end
 
+    it "should set the right amounts" do
+      data = Payment.full_accounts_info
+      data[0][2].should == @pay1.amount
+      data[1][2].should == -1 * @bet1.money
+      data[2][2].should == @bet2.money * @bet2.rate
+      data[3][2].should == @pay2.amount
+    end
+
+    it "should set the right names" do
+      data = Payment.full_accounts_info
+      data[0][3].should == "#{@user.surname}, #{@user.name}"
+      data[1][3].should == @bet1.event.name
+      data[2][3].should == @bet2.event.name
+      data[3][3].should == "#{@usr2.surname}, #{@usr2.name}"
+    end
+
+    it "should set the right types" do
+      data = Payment.full_accounts_info
+      data[0][4].should == 'payment'
+      data[1][4].should == 'bet'
+      data[2][4].should == 'bet'
+      data[3][4].should == 'payment'
     end
   end
 

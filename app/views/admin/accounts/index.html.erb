@@ -1,2 +1,23 @@
 <h1>Accounts status</h1>
 
+<% unless @items.empty? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Money</th>
+          <th>Total</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% total = 0 %>
+      <% @items.each do |item| %>
+        <% total += item[2] %>
+        <%= render 'admin/accounts/item', :item => item, :total => total %>
+      <% end %>
+      </tbody>
+    </table>
+<% else %>
+    <p>No payments or bets performed yet</p>
+<% end %>
