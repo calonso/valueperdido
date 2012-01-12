@@ -3,8 +3,8 @@
     <td><%= item[2] %></td>
     <td><%= total %></td>
     <td>
-    <% if item[4] == 'payment' %>
-        Payment: <%= link_to item[3], user_path(:id => item[0]) %>
+    <% if item[5] == 'payment' %>
+        Payment: <%= link_to "#{item[4]}, #{item[3]}", user_path(:id => item[0]) %>
     <% else %>
         Bet of: <%= link_to item[3], event_bets_path(:event_id => item[0]) %>
     <% end %>

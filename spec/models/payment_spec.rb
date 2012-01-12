@@ -75,18 +75,23 @@ describe Payment do
 
     it "should set the right names" do
       data = Payment.full_accounts_info
-      data[0][3].should == "#{@user.surname}, #{@user.name}"
+      data[0][3].should == @user.name
       data[1][3].should == @bet1.event.name
       data[2][3].should == @bet2.event.name
-      data[3][3].should == "#{@usr2.surname}, #{@usr2.name}"
+      data[3][3].should == @usr2.name
+
+      data[0][4].should == @user.surname
+      data[1][4].should == ''
+      data[2][4].should == ''
+      data[3][4].should == @usr2.surname
     end
 
     it "should set the right types" do
       data = Payment.full_accounts_info
-      data[0][4].should == 'payment'
-      data[1][4].should == 'bet'
-      data[2][4].should == 'bet'
-      data[3][4].should == 'payment'
+      data[0][5].should == 'payment'
+      data[1][5].should == 'bet'
+      data[2][5].should == 'bet'
+      data[3][5].should == 'payment'
     end
   end
 

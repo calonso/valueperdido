@@ -13,10 +13,10 @@ class Payment < ActiveRecord::Base
 
   def self.full_accounts_info
     data = self.connection.execute(sanitize_sql ["
-      (SELECT user_id as id, date, amount, CONCAT(surname, ', ', name) as name,'payment' as type FROM payments p
+      (SELECT user_id as id, date, amount, name, surname, 'payment' as type FROM payments p
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
-      (SELECT b.id, date, IF (winner, money * rate, -money), name, 'bet' FROM bets b
+      (SELECT b.id, date, IF (winner, money * rate, -money), name, '', 'bet' FROM bets b
         INNER JOIN events e on b.event_id = e.id where b.selected = 1)
       "]).to_a
     data.sort! { |a, b| a[1] <=> b[1] }
