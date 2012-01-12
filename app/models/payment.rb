@@ -17,10 +17,10 @@ class Payment < ActiveRecord::Base
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
       (SELECT b.id, date,
-                  CASE WHEN winner=1 THEN money * rate
+                  CASE WHEN winner=TRUE THEN money * rate
                   ELSE -money
                   END, name, '', 'bet' FROM bets b
-        INNER JOIN events e on b.event_id = e.id where b.selected = 1)
+        INNER JOIN events e on b.event_id = e.id where b.selected = TRUE)
       "]).to_a
     data.sort! { |a, b| a[1] <=> b[1] }
   end
