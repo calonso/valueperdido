@@ -28,6 +28,10 @@ namespace :db do
                           :password => password,
                           :password_confirmation => password,
                           :validated => true)
+
+      user.payments.create!({:amount => 100.50,
+                             :date => Date.today})
+      
       Event.all.each do |event|
         bets = event.bets.shuffle[0..Valueperdido::Application.config.max_votes_per_user - 1]
         bets.each do |bet|

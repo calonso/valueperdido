@@ -9,6 +9,7 @@
         <li><%= link_to "Historic", historic_events_path %></li>
         <% if current_user.admin? %>
           <li><%= link_to "Users", admin_users_path %></li>
+          <li><%= link_to "Accounts", admin_accounts_path %></li>
         <% end %>
         <li><%= link_to "Log out", logout_path, :method => :delete %></li>
       <% else %>

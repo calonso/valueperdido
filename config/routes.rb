@@ -4,6 +4,7 @@ Valueperdido::Application.routes.draw do
     match '/users/:id/validate', :to => 'users#validate', :as => :validate
     match '/users/:id/invalidate', :to => 'users#invalidate', :as => :invalidate
     resources :users, :only => [:index, :destroy]
+    resources :accounts, :only => :index
   end
 
   match '/events/:event_id/bets/list', :to => 'bets#event_user_bets', :as => :event_user_bets

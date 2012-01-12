@@ -210,9 +210,9 @@ describe User do
       @user.should respond_to(:votes)
     end
 
-    it "should not destroy associated bets" do
+    it "should destroy associated bets" do
       @user.destroy
-      Vote.find(@vote.id).should_not be_nil
+      Vote.find_by_id(@vote.id).should be_nil
     end
   end
 

@@ -2,13 +2,12 @@ require 'spec_helper'
 
 describe EventsController do
   render_views
+  before(:each) do
+    @user = Factory(:user)
+    @evt = Factory(:event, :user => @user)
+  end
 
-  describe "access control" do
-    before(:each) do
-      user = Factory(:user)
-      @evt = Factory(:event, :user => user)
-    end
-
+  describe "for not logged users" do
     it "should deny the access to 'index'" do
       get :index
       response.should redirect_to(login_path)
@@ -47,9 +46,7 @@ describe EventsController do
 
   describe "logged users" do
     before(:each) do
-      user = Factory(:user)
-      test_login user
-      @evt = Factory(:event, :user => user)
+      test_login @user
     end
 
     it "should be able to access 'index'" do

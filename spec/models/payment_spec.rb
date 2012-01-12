@@ -40,6 +40,29 @@ describe Payment do
     end
   end
 
+  describe "full accounts info method" do
+    before (:each) do
+      @usr2 = Factory(:user, :email => Factory.next(:email))
+      @event = Factory(:event, :user => @user)
+      @bet1 = Factory(:bet, :user => @user, :event => @event,
+                      :selected => true, :money => 10)
+      @bet2 = Factory(:bet, :user => @usr2, :event => @event,
+                      :selected => true, :money => 10,
+                      :winner => true, :rate => 2)
+      @pay1 = Factory(:payment, :user => @user)
+      @pay2 = Factory(:payment, :user => @usr2)
+    end
+    it "should respond to full_accounts_info" do
+      Payment.should respond_to(:full_accounts_info)
+    end
+
+    it "should retrieve the appropriated data" do
+      data = Payment.full_accounts_info
+      data.count.should == 4
+
+    end
+  end
+
   describe "user association" do
     before(:each) do
       @payment = @user.payments.create(@attr)
