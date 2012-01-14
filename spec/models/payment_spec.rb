@@ -59,39 +59,34 @@ describe Payment do
     it "should retrieve the appropriated data in the right order" do
       data = Payment.full_accounts_info
       data.count.should == 4
-      data[0][0].should == @user.id
-      data[1][0].should == @bet1.id
-      data[2][0].should == @bet2.id
-      data[3][0].should == @usr2.id
+      data[0]["id"].to_i.should == @user.id
+      data[1]["id"].to_i.should == @bet2.id
+      data[2]["id"].to_i.should == @bet1.id
+      data[3]["id"].to_i.should == @usr2.id
     end
 
     it "should set the right amounts" do
       data = Payment.full_accounts_info
-      data[0][2].should == @pay1.amount
-      data[1][2].should == -1 * @bet1.money
-      data[2][2].should == @bet2.money * @bet2.rate
-      data[3][2].should == @pay2.amount
+      data[0]["amount"].to_f.should == @pay1.amount
+      data[1]["amount"].to_f.should == @bet2.money * @bet2.rate
+      data[2]["amount"].to_f.should == -1 * @bet1.money
+      data[3]["amount"].to_f.should == @pay2.amount
     end
 
     it "should set the right names" do
       data = Payment.full_accounts_info
-      data[0][3].should == @user.name
-      data[1][3].should == @bet1.event.name
-      data[2][3].should == @bet2.event.name
-      data[3][3].should == @usr2.name
-
-      data[0][4].should == @user.surname
-      data[1][4].should == ''
-      data[2][4].should == ''
-      data[3][4].should == @usr2.surname
+      data[0]["name"].should == "#{@user.surname}, #{@user.name}"
+      data[1]["name"].should == @bet2.event.name
+      data[2]["name"].should == @bet1.event.name
+      data[3]["name"].should == "#{@usr2.surname}, #{@usr2.name}"
     end
 
     it "should set the right types" do
       data = Payment.full_accounts_info
-      data[0][5].should == 'payment'
-      data[1][5].should == 'bet'
-      data[2][5].should == 'bet'
-      data[3][5].should == 'payment'
+      data[0]["type"].should == 'payment'
+      data[1]["type"].should == 'bet'
+      data[2]["type"].should == 'bet'
+      data[3]["type"].should == 'payment'
     end
   end
 

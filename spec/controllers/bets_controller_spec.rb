@@ -91,7 +91,7 @@ describe BetsController do
         get :index, :event_id => @event
         assigns(:bets).each do |bet|
           @bets.any? { |original|
-            bet[0] == original.id && bet[1] == original.title
+            bet["id"].to_i == original.id && bet["title"] == original.title
           }.should be_true
         end
       end

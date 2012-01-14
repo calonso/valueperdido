@@ -1,17 +1,17 @@
 <li>
-  <%= link_to bet[1], event_bet_path(:event_id => @event.id, :id => bet[0])  %>
-  | Votes: <%= bet[2] %>
+  <%= link_to bet["title"], event_bet_path(:event_id => @event, :id => bet["id"])  %>
+  | Votes: <%= bet["votes"] %>
   <% if @event.active? %>
-  | <% if bet[3] == 1 %>
-      <%= link_to "Unvote", unvote_path(:event_id => @event.id, :id => bet[0]) %>
+  | <% if bet["voted"] == "1" %>
+      <%= link_to "Unvote", unvote_path(:event_id => @event, :id => bet["id"]) %>
     <% else %>
-      <%= link_to "Vote", vote_path(:event_id => @event.id, :id => bet[0]) %>
+      <%= link_to "Vote", vote_path(:event_id => @event, :id => bet["id"]) %>
     <% end %>
   <% else %>
     <% if current_user.admin? %>
-        | <%= link_to "Edit", edit_event_bet_path(:event_id => @event.id, :id => bet[0]) %>
+        | <%= link_to "Edit", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
     <% end %>
-    <% if bet [4] == 1 %>
+    <% if bet["selected"] == "t" %>
       | Selected
     <% end %>
   <% end %>

@@ -13,7 +13,7 @@
       <tbody>
       <% total = 0 %>
       <% @items.each do |item| %>
-        <% total += item[2] %>
+        <% total += item["amount"].to_f %>
         <%= render 'admin/accounts/item', :item => item, :total => total %>
       <% end %>
       </tbody>

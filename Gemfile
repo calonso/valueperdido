@@ -5,7 +5,7 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2'
+gem 'pg'
 gem 'rake', '0.9.3.beta.1'
 gem 'will_paginate', '3.0.2'
 gem 'date_validator'
@@ -30,10 +30,6 @@ group :test do
   gem 'rspec-rails', '2.6.1'
   gem 'webrat', '0.7.1'
   gem 'factory_girl_rails', '1.4.0'
-end
-
-group :production do
-  gem 'pg'
 end
 
 # To use ActiveModel has_secure_password

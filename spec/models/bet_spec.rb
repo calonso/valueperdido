@@ -145,10 +145,10 @@ describe Bet do
         bets = Bet.with_votes_for_event(@attr[:event], @user.id)
         bets.count.should == 1
         bet = bets[0]
-        bet[1].should == @attr[:title]
-        bet[2].should == 2
-        bet[3].should == 1
-        bet[4].should == 0
+        bet["title"].should == @attr[:title]
+        bet["votes"].should == "2"
+        bet["voted"].should == "1"
+        bet["selected"].should == "f"
       end
     end
   end

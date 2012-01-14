@@ -1,12 +1,12 @@
 <tr>
-    <td><%= item[1] %></td>
-    <td><%= item[2] %></td>
+    <td><%= item["date"] %></td>
+    <td><%= item["amount"] %></td>
     <td><%= total %></td>
     <td>
-    <% if item[5] == 'payment' %>
-        Payment: <%= link_to "#{item[4]}, #{item[3]}", user_path(:id => item[0]) %>
+    <% if item["type"] == "payment" %>
+        Payment: <%= link_to item["name"], user_path(:id => item["id"]) %>
     <% else %>
-        Bet of: <%= link_to item[3], event_bets_path(:event_id => item[0]) %>
+        Bet of: <%= link_to item["name"], event_bets_path(:event_id => item["id"]) %>
     <% end %>
     </td>
 </tr>
