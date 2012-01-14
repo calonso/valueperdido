@@ -5,7 +5,7 @@ namespace :db do
     Rake::Task['db:reset'].invoke
     admin = User.create(:name => "Example",
                         :surname => "User",
-                        :email => "user@example.org",
+                        :email => "admin@example.org",
                         :password => "ThePassw0rd",
                         :password_confirmation => "ThePassw0rd",
                         :validated => true)
@@ -13,7 +13,7 @@ namespace :db do
 
     4.times do |n|
       Event.create!(:name => "Event #{n+1}",
-                    :date => Date.today + n * 1.week,
+                    :date => Date.tomorrow + n.week,
                     :user => admin)
     end
 
@@ -44,5 +44,24 @@ namespace :db do
                           :event => event)
       end
     end
+
+    passed = Event.last
+    passed[:date] = Date.today
+    passed.save!
+
+    bets = Bet.with_votes_for_event(passed.id, 1)
+    (0..1).each do |n|
+      bet = Bet.find((bets[n]["id"]).to_i)
+      bet.selected = true
+      bet.money = 10
+      bet.winner = true
+      bet.rate = 2
+      bet.save!
+    end
+
+    bet = Bet.find((bets[2]["id"]).to_i)
+    bet.selected = true
+    bet.money = 10
+    bet.save!
   end
 end
