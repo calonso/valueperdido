@@ -43,6 +43,10 @@ namespace :db do
                           :description => "This is the #{name}'s bet for this event",
                           :event => event)
       end
+
+      2.times do
+        user.messages.create!(:message => Faker::Lorem.sentence(7))
+      end
     end
 
     passed = Event.last

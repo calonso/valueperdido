@@ -1,6 +1,15 @@
 <h1>Home</h1>
-<p>This is ValuePerdido Home page</p>
 
-<% if !current_user %>
+<% if !logged_in? %>
+    <p>This is ValuePerdido Home page</p>
     <p>New user? <%= link_to "Register!", signup_path,%></p>
+<% else %>
+    <%= render 'messages/form' %>
+    
+    <% unless @messages.empty? %>
+        <table summary="Messages board">
+            <%= render @messages %>
+        </table>
+        <%= will_paginate @messages %>
+    <% end %>
 <% end %>

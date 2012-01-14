@@ -1,5 +1,6 @@
 Valueperdido::Application.routes.draw do
 
+
   namespace :admin do
     match '/users/:id/validate', :to => 'users#validate', :as => :validate
     match '/users/:id/invalidate', :to => 'users#invalidate', :as => :invalidate
@@ -18,6 +19,7 @@ Valueperdido::Application.routes.draw do
     resources :payments, :except => [:show, :edit, :update]
   end
   resources :sessions, :only => [:new, :create, :destroy]
+  resources :messages, :only => :create
 
   match '/terms',   :to => 'pages#terms'
   match '/signup',  :to => 'users#new'

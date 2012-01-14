@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   has_many :bets
   has_many :votes, :dependent => :destroy
   has_many :payments
+  has_many :messages, :dependent => :destroy
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 

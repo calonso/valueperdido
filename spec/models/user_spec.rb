@@ -231,4 +231,20 @@ describe User do
       Payment.find(@payment.id).should_not be_nil
     end
   end
+
+  describe "messages associations" do
+    before(:each) do
+      @user = User.create!(@attr)
+      @message = Factory(:message, :user => @user)
+    end
+
+    it "should have a messages attribute" do
+      @user.should respond_to(:messages)
+    end
+
+    it "should destroy associated messages" do
+      @user.destroy
+      Message.find_by_id(@message.id).should be_nil
+    end
+  end
 end

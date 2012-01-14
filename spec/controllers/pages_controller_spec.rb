@@ -3,28 +3,58 @@ require 'spec_helper'
 describe PagesController do
   render_views
 
-  describe "GET 'home'" do
-    it "should be successful" do
-      get 'home'
-      response.should be_success
+  describe "as non logged user" do
+    describe "GET 'home'" do
+      it "should be successful" do
+        get :home
+        response.should be_success
+      end
+
+      it "should not show any messages" do
+        get :home
+        assigns(:messages).should be_nil
+      end
+
+      it "should not show the form" do
+        get :home
+        assigns(:message).should be_nil
+      end
     end
 
-    it "should have the right title" do
-      get 'home'
-      response.should have_selector("title", :content => "Home")
+    describe "GET 'terms'" do
+      it "should be successful" do
+        get 'terms'
+        response.should be_success
+      end
+
+      it "should have the right title" do
+        get 'terms'
+        response.should have_selector("title", :content => "Terms and Conditions")
+      end
     end
   end
 
-  describe "GET 'terms'" do
-    it "should be successful" do
-      get 'terms'
-      response.should be_success
+  describe "as logged users" do
+    before(:each) do
+      user = Factory(:user)
+      @msgs = []
+      5.times do
+        @msgs << Factory(:message, :user => user)
+      end
+
+      test_login user
     end
 
-    it "should have the right title" do
-      get 'terms'
-      response.should have_selector("title", :content => "Terms and Conditions")
+    describe "GET 'home'" do
+      it "should show messages" do
+        get :home
+        assigns(:messages).should == @msgs.reverse
+      end
+
+      it "should show the form" do
+        get :home
+        assigns(:message).should_not be_nil
+      end
     end
   end
-
 end

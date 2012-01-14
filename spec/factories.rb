@@ -39,3 +39,8 @@ Factory.define :payment do |payment|
   payment.date        Date.today
   payment.association :user
 end
+
+Factory.define :message do |message|
+  message.message     "The text"
+  message.association :user
+end
