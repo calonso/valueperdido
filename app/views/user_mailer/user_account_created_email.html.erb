@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>A new account has been created!</h1>
+    <p>Remember to check and validate the newly created account:</p>
+      <ul>
+        <li><%= @user.surname %>, <%= @user.name %></li>
+        <li><%= @user.email %></li>
+      </ul>
+    <p>
+      To check your new user just follow this link: <%= @url %>.
+    </p>
+    <p>Greetings!</p>
+  </body>
+</html>

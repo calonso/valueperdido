@@ -9,7 +9,6 @@ gem 'pg'
 gem 'rake', '0.9.3.beta.1'
 gem 'will_paginate', '3.0.2'
 gem 'date_validator'
-gem 'faker', '0.3.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -24,6 +23,7 @@ gem 'jquery-rails'
 group :development do
   gem 'rspec-rails', '2.6.1'
   gem 'annotate', '2.4.0'
+  gem 'faker', '0.3.1'
 end
 
 group :test do

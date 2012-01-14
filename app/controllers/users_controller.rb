@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
+      UserMailer.user_account_created_email(@user).deliver
       flash[:success] = "Welcome to ValuePerdido Community!"
     else
       @title = "Sign up"

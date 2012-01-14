@@ -57,6 +57,11 @@ describe UsersController do
           post :create, :user => @attr
           flash[:success].should =~ /welcome to ValuePerdido Community!/i
         end
+
+        it "should send the mail" do
+          post :create, :user => @attr
+          ActionMailer::Base.deliveries.should_not be_empty
+        end
       end
     end
 
