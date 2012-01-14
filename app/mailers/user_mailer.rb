@@ -3,14 +3,12 @@ class UserMailer < ActionMailer::Base
 
   def user_account_created_email(user)
     @user = user
-    @url = admin_users_path
     mail_name = "#ValuePerdido <valueperdido@gmail.com>"
     mail(:to => mail_name, :subject => "A new account has been created")
   end
 
   def validated_account_email(user)
     @user = user
-    @url = login_path
     mail_name = "#{@user.name} #{@user.surname} <#{@user.email}>"
     mail(:to => mail_name, :subject => "Your ValuePerdido account has been verified")
   end
