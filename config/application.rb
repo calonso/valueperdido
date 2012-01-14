@@ -60,7 +60,7 @@ module Valueperdido
       :port                 => 587,
       :domain               => 'baci.lindsaar.net',
       :user_name            => 'valueperdido',
-      :password             => 'bombonera',
+      :password             => 'gURsh102n',
       :authentication       => 'plain',
       :enable_starttls_auto => true  }
   end

@@ -5,7 +5,7 @@
   <% else %>
     <%= link_to "Validate", admin_validate_path(:id => user.id) %>
   <% end %>
-  | <%= link_to "delete", admin_user, :method => :delete,
+  | <%= link_to "delete", admin_user_path(user), :method => :delete,
                                       :confirm => "You sure?",
                                       :title => "Delete #{user.name}" %>
 </li>
