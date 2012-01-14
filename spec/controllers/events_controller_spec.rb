@@ -97,20 +97,20 @@ describe EventsController do
       before(:each) do
         @events = []
         @past_events = []
-        @events << Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
-        @events << Factory(:event, :name => Factory.next(:name), :date => Date.tomorrow, :user => @user)
-        @past_events << Factory(:event, :name => Factory.next(:name), :user => @user)
-        @past_events << Factory(:event, :name => Factory.next(:name), :user => @user)
+        @events << Factory(:event, :name => Factory.next(:name), :user => @user)
+        @events << Factory(:event, :name => Factory.next(:name), :user => @user)
+        @past_events << Factory(:event, :name => Factory.next(:name), :date => Date.today, :user => @user)
+        @past_events << Factory(:event, :name => Factory.next(:name), :date => Date.today, :user => @user)
       end
 
       it "index should only show the following events, not past ones" do
         get :index
-        assigns(:events).should == @events
+        assigns(:events).should == @events.reverse
       end
 
       it "history should show past events, not active ones" do
         get :history
-        assigns(:events).should == @past_events
+        assigns(:events).should == @past_events.reverse
       end
     end
 

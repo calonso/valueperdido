@@ -68,6 +68,12 @@ describe Bet do
       invalid_bet.should_not be_valid
     end
 
+    it "should require an active event" do
+      closed_event = Factory(:event, :user => @user, :date => Date.yesterday)
+      invalid_bet = @user.bets.build(@attr.merge(:event => closed_event))
+      invalid_bet.should_not be_valid
+    end
+
     it "should reject invalid money amounts" do
       invalid_bet = @user.bets.build(@attr.merge(:money => "a01.1"))
       invalid_bet.should_not be_valid

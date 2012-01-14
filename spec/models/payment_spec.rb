@@ -43,12 +43,14 @@ describe Payment do
   describe "full accounts info method" do
     before(:each) do
       @usr2 = Factory(:user, :name => "Frotacho", :email => Factory.next(:email))
-      @event = Factory(:event, :user => @user, :date => Date.yesterday)
+      @event = Factory(:event, :user => @user)
       @bet1 = Factory(:bet, :user => @user, :event => @event,
                       :selected => true, :money => 10)
       @bet2 = Factory(:bet, :user => @usr2, :event => @event,
                       :selected => true, :money => 10,
                       :winner => true, :rate => 2)
+      @event[:date] = Date.yesterday
+      @event.save!
       @pay1 = Factory(:payment, :user => @user, :date => Date.today - 2.days)
       @pay2 = Factory(:payment, :user => @usr2, :date => Date.today)
     end

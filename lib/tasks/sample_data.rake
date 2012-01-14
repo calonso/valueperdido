@@ -5,7 +5,7 @@ namespace :db do
     Rake::Task['db:reset'].invoke
     admin = User.create(:name => "Example",
                         :surname => "User",
-                        :email => "user@example.com",
+                        :email => "user@example.org",
                         :password => "ThePassw0rd",
                         :password_confirmation => "ThePassw0rd",
                         :validated => true)

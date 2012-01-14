@@ -10,4 +10,6 @@
     <p>There are still no bets proposed for this event</p>
 <% end %>
 
-<%= link_to "New bet", new_event_bet_path %>
+<% if @event.active? %>
+    <%= link_to "New bet", new_event_bet_path %>
+<% end %>

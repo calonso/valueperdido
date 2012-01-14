@@ -14,6 +14,7 @@ class Bet < ActiveRecord::Base
   validates :rate, :numericality => true
   validates :rate, :numericality => { :greater_than => 0 }, :if => :winner
   validate :no_more_than_max_bets_per_user, :on => :create
+  validate :event_is_active, :on => :create, :if => :event_id
 
   scope :selected, where(:selected => true)
 
@@ -31,6 +32,12 @@ class Bet < ActiveRecord::Base
     bets = Bet.where("user_id = ? AND event_id = ?", user, event)
     if bets.count >= Valueperdido::Application.config.max_bets_per_user
       errors.add(:event, "You already made max bets for this event")
+    end
+  end
+
+  def event_is_active
+    unless Event.find(event).active?
+      errors.add(:event, "The event is already closed.")
     end
   end
 end

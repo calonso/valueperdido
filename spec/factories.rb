@@ -17,7 +17,7 @@ end
 
 Factory.define :event do |event|
   event.name        "Event name"
-  event.date        Date.today
+  event.date        Date.tomorrow
   event.association :user
 end
 
