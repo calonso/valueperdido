@@ -22,9 +22,10 @@ class Bet < ActiveRecord::Base
   
   def self.with_votes_for_event(evt, usr)
     self.connection.execute(sanitize_sql ["
-      SELECT id, title, COALESCE(votes, 0) as votes, COALESCE(voted, 0) as voted, selected FROM bets b
+      SELECT b.id as id, title, COALESCE(votes, 0) as votes, COALESCE(voted, 0) as voted, selected, user_id, author FROM bets b
       left outer join (SELECT bet_id, count(*) as votes FROM votes group by bet_id) as v on b.id = v.bet_id
       left outer join (SELECT bet_id, 1 as voted from votes where user_id = ? and event_id = ?) as usr on usr.bet_id = b.id
+      left outer join (SELECT id, name||' '||surname as author from users) as users on b.user_id = users.id
       where event_id = ? order by votes desc", usr, evt, evt]).to_a
   end
 

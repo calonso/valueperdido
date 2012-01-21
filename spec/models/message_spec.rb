@@ -19,6 +19,15 @@ describe Message do
       invalid_message = @user.messages.build(@attr.merge(:message => ''))
       invalid_message.should_not be_valid
     end
+
+    it "should accept very long messages" do
+      valid_message = @user.messages.build(@attr.merge(:message => 'a' * 500))
+      valid_message.should be_valid
+    end
+
+    it "should create the instance with the very long message" do
+      @user.messages.create!(@attr.merge(:message => 'a' * 500))
+    end
   end
 
   describe "associations" do

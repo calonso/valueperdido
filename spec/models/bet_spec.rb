@@ -147,14 +147,16 @@ describe Bet do
         Bet.should respond_to(:with_votes_for_event)
       end
 
-      it "should retrieve the bet with the votes info" do
+      it "should retrieve the bet with the votes and author info" do
         bets = Bet.with_votes_for_event(@attr[:event], @user.id)
         bets.count.should == 1
         bet = bets[0]
         bet["title"].should == @attr[:title]
-        bet["votes"].should == "2"
-        bet["voted"].should == "1"
+        bet["votes"].to_i.should == 2
+        bet["voted"].to_i.should == 1
         bet["selected"].should == "f"
+        bet["user_id"].to_i.should == @user.id
+        bet["author"].should == "#{@user.name} #{@user.surname}"
       end
     end
   end

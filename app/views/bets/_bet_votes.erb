@@ -1,18 +1,27 @@
-<li>
-  <%= link_to bet["title"], event_bet_path(:event_id => @event, :id => bet["id"])  %>
-  | Votes: <%= bet["votes"] %>
-  <% if @event.active? %>
-  | <% if bet["voted"] == "1" %>
-      <%= link_to "Unvote", unvote_path(:event_id => @event, :id => bet["id"]) %>
-    <% else %>
-      <%= link_to "Vote", vote_path(:event_id => @event, :id => bet["id"]) %>
-    <% end %>
-  <% else %>
-    <% if current_user.admin? %>
-        | <%= link_to "Edit", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
-    <% end %>
-    <% if bet["selected"] == "t" %>
-      | Selected
-    <% end %>
-  <% end %>
-</li>
+<tr>
+  <td>
+    <%= link_to bet["title"], event_bet_path(:event_id => @event, :id => bet["id"])  %>
+  </td>
+  <td>
+    <%= bet["votes"] %>
+  </td>
+  <td>
+    <%= link_to bet["author"], user_path(:id => bet["user_id"]) %>
+  </td>
+  <td>
+      <% if @event.active? %>
+        <% if bet["voted"] == "1" %>
+          <%= link_to "Unvote", unvote_path(:event_id => @event, :id => bet["id"]) %>
+        <% else %>
+          <%= link_to "Vote", vote_path(:event_id => @event, :id => bet["id"]) %>
+        <% end %>
+      <% else %>
+        <% if current_user.admin? %>
+          <%= link_to "Edit", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
+        <% end %>
+        <% if bet["selected"] == "t" %>
+          | Selected
+        <% end %>
+      <% end %>
+  </td>
+</tr>

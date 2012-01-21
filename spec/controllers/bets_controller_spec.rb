@@ -95,13 +95,6 @@ describe BetsController do
           }.should be_true
         end
       end
-
-      it "should show bets belonging to the requested event" do
-        get :index, :event_id => @event
-        @bets.each do |bet|
-          response.should have_selector('li', :content => bet.title)
-        end
-      end
     end
 
     describe "GET 'new'" do

@@ -1,7 +1,7 @@
 <%= form_for @message do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
   <div class="field">
-    <%= f.text_field :message %>
+    <%= f.text_field :message, :size => 127 %>
   </div>
   <div class="actions">
     <%= f.submit "Submit" %>

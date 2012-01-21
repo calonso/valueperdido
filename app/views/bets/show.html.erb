@@ -1,11 +1,31 @@
 <h1><%= @bet.title %></h1>
-<p><%= @bet.description %></p>
-<p>Bet is selected: <%= @bet.selected.to_s.underscore.humanize %></p>
-<p>Money bet: <%= @bet.money %> €</p>
-<p>Bet is winner: <%= @bet.winner.to_s.underscore.humanize %></p>
-<p>Bet's rate: <%= @bet.rate %> %</p>
-<% if current_user?(@bet.user) && @bet.event.active? %>
-  <%= link_to "Delete", event_bet_path(:event_id => @bet.event, :id => @bet), :method => :delete,
-                                                                         :confirm => "Are you sure?",
-                                                                         :title => "Delete bet" %>
-<% end %>
+<div class="first span-8">
+    <p><%= @bet.description %></p>
+    <p>Bet is selected: <%= @bet.selected.to_s.underscore.humanize %></p>
+    <p>Money bet: <%= @bet.money %> €</p>
+    <p>Bet is winner: <%= @bet.winner.to_s.underscore.humanize %></p>
+    <p>Bet's rate: <%= @bet.rate %> %</p>
+    <% if current_user?(@bet.user) && @bet.event.active? %>
+      <%= link_to "Delete", event_bet_path(:event_id => @bet.event, :id => @bet), :method => :delete,
+                                                                             :confirm => "Are you sure?",
+                                                                             :title => "Delete bet" %>
+    <% end %>
+</div>
+<div class="prepend-3 span-8 last">
+  <table>
+    <thead>
+        <tr>
+          <th>Votes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @bet.votes.each do |vote| %>
+            <tr>
+              <td>
+                <%= vote.user.name %> <%= vote.user.surname %>
+              </td>
+            </tr>
+        <%end %>
+    </tbody>
+  </table>
+</div>
