@@ -22,7 +22,8 @@ describe User do
               :surname => "Example surname",
               :email => "user@example.com",
               :password => "thepassword",
-              :password_confirmation => "thepassword"}
+              :password_confirmation => "thepassword",
+              :terms => "1" }
   end
 
   it "should create a new instance given valid attributes" do
@@ -89,6 +90,11 @@ describe User do
   it "should reject email addresses with same up to case" do
     User.create!(@attr)
     invalid_user = User.new(@attr.merge(:email => @attr[:email].upcase))
+    invalid_user.should_not be_valid
+  end
+
+  it "should require terms to be validated" do
+    invalid_user = User.new(@attr.merge(:terms => "0"))
     invalid_user.should_not be_valid
   end
 

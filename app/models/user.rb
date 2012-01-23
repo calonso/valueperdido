@@ -15,8 +15,8 @@
 
 require "digest"
 class User < ActiveRecord::Base
-  attr_accessor :password
-  attr_accessible :name, :surname, :email, :admin, :validated, :password, :password_confirmation
+  attr_accessor :password, :terms
+  attr_accessible :name, :surname, :email, :admin, :validated, :password, :password_confirmation, :terms
 
   has_many :events
   has_many :bets
@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
                        :length => { :within => 8..45 },
                        :unless => Proc.new { |a| a.password.blank? }
   validates :password, :presence => true, :on => :create
+  validates :terms, :acceptance => true, :on => :create
 
 
   before_save :encrypt_password, :unless => Proc.new { |a| a.password.blank? }

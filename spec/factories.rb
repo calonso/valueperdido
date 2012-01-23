@@ -5,6 +5,7 @@ Factory.define :user do |user|
   user.email                  "valueperdido@gmail.com"
   user.password               "ThePassw0rd"
   user.password_confirmation  "ThePassw0rd"
+  user.terms                  "1"
 end
 
 Factory.sequence :name do |n|
