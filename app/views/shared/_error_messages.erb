@@ -1,9 +1,12 @@
 <% if object.errors.any? %>
   <div id="error_explanation">
-    <h2><%= pluralize(object.errors.count, "error") %>
-        prohibited this <%= object.class.to_s.underscore.humanize.downcase %>
-        from being saved:</h2>
-    <p>There were problems with the following fields:</p>
+    <h2>
+      <% if object.errors.count == 1 %>
+        <%= t :one, :scope => [:activerecord, :errors, :template, :header] %>
+      <% else %>
+        <%= t :other, :scope => [:activerecord, :errors, :template, :header], :count => object.errors.count %>
+      <% end %></h2>
+    <p><%= t :body, :scope => [:activerecord, :errors, :template] %></p>
     <ul>
     <% object.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>

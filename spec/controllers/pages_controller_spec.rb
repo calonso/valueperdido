@@ -26,11 +26,6 @@ describe PagesController do
         get 'terms'
         response.should be_success
       end
-
-      it "should have the right title" do
-        get 'terms'
-        response.should have_selector("title", :content => "Terms and Conditions")
-      end
     end
   end
 

@@ -17,7 +17,7 @@ class EventsController < ApplicationController
   def create
     @event = current_user.events.build(params[:event])
     if @event.save
-      flash[:success] = "Event successfully created!"
+      flash[:success] = t :event_created_flash
       redirect_to events_path
     else
       render 'new'
@@ -25,24 +25,22 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @title = "Edit event"
     @event = Event.find(params[:id])
   end
 
   def update
     @event = Event.find(params[:id])
     if @event.update_attributes(params[:event])
-      flash[:success] = "Event successfully updated."
+      flash[:success] = t :event_updated_flash
       redirect_to @event
     else
-      @title = "Edit event"
       render 'edit'
     end
   end
 
   def destroy
     Event.find(params[:id]).destroy
-    flash[:success] = "Event destroyed"
+    flash[:success] = t :event_destroyed_flash
     redirect_to events_path
   end
 end

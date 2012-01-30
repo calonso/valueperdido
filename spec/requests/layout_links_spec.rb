@@ -3,17 +3,17 @@ require 'spec_helper'
 describe "LayoutLinks" do
   it "should have a Home page at '/'" do
     get root_path
-    response.should have_selector('title', :content => 'Home')
+    response.should be_success
   end
 
   it "should have a Terms page at '/terms'" do
     get terms_path
-    response.should have_selector('title', :content => 'Terms and Conditions')
+    response.should be_success
   end
 
   it "should have a signup page at '/signup'" do
     get signup_path
-    response.should have_selector('title', :content => 'Sign up')
+    response.should be_success
   end
 
   describe "when not logged in" do
@@ -26,8 +26,8 @@ describe "LayoutLinks" do
   describe "when logged in" do
     before(:each) do
       @user = Factory(:user, :validated => true)
-      visit login_path
-      fill_in :email,     :with => @user.email
+      visit login_path(:locale => :en)
+      fill_in :Email,     :with => @user.email
       fill_in :password,  :with => @user.password
       click_button
     end

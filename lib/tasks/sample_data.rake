@@ -41,7 +41,7 @@ namespace :db do
 
         user.bets.create!(:title => "#{name}'s bet",
                           :description => "This is the #{name}'s bet for this event",
-                          :event => event)
+                          :event_id => event.id)
       end
 
       2.times do

@@ -8,11 +8,6 @@ describe SessionsController do
       get :new
       response.should be_success
     end
-
-    it "should have the right title" do
-      get :new
-      response.should have_selector('title', :content => "Login")
-    end
   end
 
   describe "POST 'create'" do
@@ -24,11 +19,6 @@ describe SessionsController do
       it "should re-render the new page" do
         post :create, :session => @attr
         response.should render_template('new')
-      end
-
-      it "should have the right title" do
-        post :create, :session => @attr
-        response.should have_selector('title', :content => 'Login')
       end
 
       it "should have a flash.now message" do

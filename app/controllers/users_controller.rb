@@ -8,37 +8,33 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @title = "Sign up"
   end
 
   def create
     @user = User.new(params[:user])
     if @user.save
       UserMailer.user_account_created_email(@user).deliver
-      flash[:success] = "Welcome to ValuePerdido Community!"
+      flash[:success] = t :welcome_flash
     else
-      @title = "Sign up"
       render 'new'
     end
   end
 
   def edit
-    @title = "Edit user"
   end
 
   def update
     if @user.update_attributes(params[:user])
-      flash[:success] = "Profile successfully updated."
+      flash[:success] = t :user_update_flash
       redirect_to @user
     else
-      @title = "Edit user"
       render 'edit'
     end
   end
 
   def destroy
     @user.destroy
-    flash[:success] = "User destroyed"
+    flash[:success] = t :user_deleted_flash
     logout
     redirect_to root_path
   end

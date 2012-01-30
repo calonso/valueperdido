@@ -1,19 +1,20 @@
 <header class="first span-24 last">
-  <h1 class="first span-24 last">Comunidad ValuePerdido</h1>
+  <%= link_to "#{t :translations}", locales_path, :class => "first prepend-20 span-4 last" %>
+  <h1 class="first span-24 last"><%= t :header_title %></h1>
   <nav class="first span-24 last">
     <ul class="first span-24 last">
-      <li><%= link_to "Home", root_path %></li>
+      <li><%= link_to "#{t :home}", root_path %></li>
       <% if logged_in? %>
-        <li><%= link_to "My Profile", current_user %></li>
-        <li><%= link_to "Events", events_path %></li>
-        <li><%= link_to "Historic", historic_events_path %></li>
+        <li><%= link_to "#{t :my_profile}", current_user %></li>
+        <li><%= link_to "#{t :events}", events_path %></li>
+        <li><%= link_to "#{t :historic}", historic_events_path %></li>
         <% if current_user.admin? %>
-          <li><%= link_to "Users", admin_users_path %></li>
-          <li><%= link_to "Accounts", admin_accounts_path %></li>
+          <li><%= link_to "#{t :users}", admin_users_path %></li>
+          <li><%= link_to "#{t :accounts}", admin_accounts_path %></li>
         <% end %>
-        <li><%= link_to "Log out", logout_path, :method => :delete %></li>
+        <li><%= link_to "#{t :log_out}", logout_path, :method => :delete %></li>
       <% else %>
-        <li><%= link_to "Log in", login_path %></li>
+        <li><%= link_to "#{t :log_in}", login_path %></li>
       <% end %>
     </ul>
   </nav>

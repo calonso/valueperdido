@@ -14,6 +14,14 @@ describe Event do
     @user.events.create!(@attr)
   end
 
+  it "should have the right attributes" do
+    event = @user.events.create(@attr)
+    event.user.should == @user
+    event.user_id.should == @user.id
+    event.name.should == @attr[:name]
+    event.date.should == @attr[:date]
+  end
+
   describe "user associations" do
     before(:each) do
       @event = @user.events.create(@attr)

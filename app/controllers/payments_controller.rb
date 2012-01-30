@@ -13,7 +13,7 @@ class PaymentsController < ApplicationController
   def create
     @payment = @user.payments.build(params[:payment])
     if @payment.save
-      flash[:success] = "Payment successfully saved"
+      flash[:success] = t :payment_created_flash
       redirect_to user_payments_path, :user_id => @user
     else
       render 'new'
@@ -22,7 +22,7 @@ class PaymentsController < ApplicationController
 
   def destroy
     @payment.destroy
-    flash[:success] = "Payment successfully destroyed"
+    flash[:success] = t :payment_deleted_flash
     redirect_to user_payments_path, :user_id => @user
   end
 

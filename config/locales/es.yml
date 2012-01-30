@@ -1,0 +1,196 @@
+es:
+  header_title: "Comunidad ValuePerdido"
+  translations: "Traducciones"
+  errors_head:  "Existen problemas en los siguientes campos:"
+
+  home:       "Home"
+  my_profile: "Perfil"
+  events:     "Eventos"
+  historic:   "Histórico"
+  users:      "Usuarios"
+  accounts:   "Contabilidad"
+  log_out:    "Salir"
+  log_in:     "Acceder"
+
+  home_intro:   "Esta es la home de ValuePerdido"
+  home_newuser: "¿Eres nuevo?"
+  register:     "¡Regístrate!"
+
+  locale_select: "Selecciona tu idioma"
+  english:       "Inglés"
+  spanish:       "Español"
+
+  delete:         "Borrar"
+  delete_confirm: "¿Estás seguro?"
+  edit:           "Editar"
+  update:         "Actualizar"
+  title:          "Título"
+  submit:         "Enviar"
+
+  bet_delete:             "Borrar tu apuesta"
+  vote:                   "Votar"
+  unvote:                 "Retirar voto"
+  selected:               "Seleccionada"
+  bet_selection:          "Efectuando apuesta"
+  new_bet:                "Nueva apuesta"
+  votes:                  "Votos"
+  author:                 "Autor"
+  actions:                "Acciones"
+  money:                  "Dinero"
+  winner:                 "Ganadora"
+  rate:                   "Cuota"
+  description:            "Descripción"
+  bet_created_flash:      "Apuesta creada con éxito"
+  bet_voted_flash:        "Apuesta votada con éxito"
+  bet_voted_flash_err:    "No se pudo votar la apuesta"
+  vote_deleted_flash:     "Voto retirado correctamente"
+  vote_deleted_flash_err: "No se pudo encontrar el voto"
+  bet_updated_flash:      "Apuesta actualizada con éxito"
+  bet_deleted_flash:      "Apuesta borrada con éxito"
+  max_bets_err:           "Ya has hecho el máximo número de apuestas para este evento"
+  my_bets_for:            "Mis apuestas para"
+  no_my_bets:             "No has propuesto ninguna apuesta para este evento"
+  no_bets:                "No se ha propuesto ninguna apuesta para este evento"
+  bet_selected:           "La apuesta ha sido seleccionada"
+  bet_money:              "Dinero apostado"
+  bet_winner:             "La apuesta es ganadora"
+  bet_rate:               "Cuota"
+  votes:                  "Votos"
+
+  my_bets:               "Mis apuestas"
+  name:                  "Nombre"
+  fdate:                 "Fecha"
+  event_edit:            "Editar evento"
+  events_history:        "Histórico de eventos"
+  no_events_hist:        "Aún no ha terminado ningún evento"
+  events_index:          "Eventos activos"
+  max_votes_err:         "Ya has votado al número máximo de apuestas para un evento"
+  no_events_index:       "Lo sentimos, actualmente no hay ningún evento activo"
+  new_event:             "Nuevo evento"
+  event_created_flash:   "Evento creado con éxito"
+  event_updated_flash:   "Evento actualizado con éxito"
+  event_destroyed_flash: "Evento borrado"
+  event_closed_err:      "El evento ya está cerrado."
+
+  message_created_flash: "Mensaje creado correctamente"
+
+  amount:                "Cantidad"
+  payment_list:          "Lista de pagos"
+  no_payment_list:       "No has realizado ningún pago aún"
+  new_payment:           "Nuevo pago"
+  payment_created_flash: "Pago creado con éxito"
+  payment_deleted_flash: "Pago borrado con éxito"
+  total:                 "Total"
+  accounts_empty:        "No se han registrado pagos ni efectuado apuestas"
+  payment_of:            "Pago de"
+  bet_of:                "Apuesta de"
+
+  users_list: "Lista de usuarios"
+  invalidate: "Invalidar"
+  validate:   "Validar"
+
+
+  email:              "Email"
+  password:           "Contraseña"
+  surname:            "Apellido"
+  confirmation:       "Confirmación"
+  congratulations:    "¡Enhorabuena!"
+  user_created:       "Has sido dado de alta en la comunidad, ahora debes esperar a que validemos tu cuenta."
+  edit_user:          "Editar usuario"
+  new_user:           "Nuevo usuario"
+  accept_terms:       "Acepto los"
+  terms_and_conds:    "Términos y condiciones"
+  user_profile:       "Perfil del usuario"
+  login_flash_err:    "Combinación email/contraseña inválida."
+  welcome_flash:      "¡Bienvenidoa la comunidad ValuePerdido!"
+  user_update_flash:  "Perfil actualizado correctamente"
+  user_deleted_flash: "Usuario borrado"
+
+  date:
+    formats:
+      default: "%d/%m/%Y"
+    order: [ :day, :month, :year]
+    month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+
+
+  will_paginate:
+    next_label: "Sig"
+    previous_label: "Prev"
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:   "1 error no permitió completar la operación"
+          other: "%{count} errores no permitieron completar la operación"
+        body:    "Hay errores en los siguientes campos:"
+      models:
+        user:
+          attributes:
+            name:
+              blank:        "El nombre está vacío"
+              too_long:     "El nombre es demasiado largo"
+            surname:
+              blank:        "El apellido está vacío"
+              too_long:     "El apellido es demasiado largo"
+            email:
+              blank:        "El email está vacío"
+              invalid:      "Email inválido"
+              taken:        "El email ya está cogido"
+            password:
+              confirmation: "La contraseña y la confirmación no son iguales"
+              too_long:     "La contraseña es demasiado larga"
+              too_short:    "La contraseña es demasiado corta"
+              blank:        "La contraseña está vacía"
+            terms:
+              accepted:     "No has aceptado los términos y condiciones"
+        bet:
+          attributes:
+            title:
+              blank:        "El título está vacío"
+              too_long:     "El título es demasiado largo"
+            description:
+              blank:        "La descripción está vacía"
+            event:
+              blank:        "La apuesta debe estar asociada a un evento"
+            money:
+              not_a_number: "El campo dinero no es un número válido"
+              greater_than: "El campo dinero debe ser un valor positivo"
+            rate:
+              not_a_number: "El campo cuota no es un número válido"
+              greater_than: "El campo cuota debe ser un valor positivo"
+        event:
+          attributes:
+            name:
+              blank:    "El nombre está vacío"
+              too_long: "El nombre es demasiado largo"
+              taken:    "El nombre ya existe"
+            date:
+              invalid:  "El campo fecha no es válido"
+        message:
+          attributes:
+            user:
+              blank:  "El mensaje debe pertenecer a un usuario"
+            message:
+              blank:  "El mensaje no puede estar vacío"
+        payment:
+          attributes:
+            user:
+              blank:        "El pago debe pertenecer a un usuario"
+            amount:
+              blank:        "La cantidad pagada no puede estar vacía"
+              not_a_number: "La cantidad pagada no es un número válido"
+            date:
+              invalid:      "La fecha es no es válida"
+        vote:
+          attributes:
+            event:
+              blank:  "El voto debe estar asociado a un evento"
+            user:
+              blank:  "El voto debe pertenecer a un usuario"
+            bet:
+              blank:  "El voto debe estar asociado a una apuesta"
+              taken:  "Ya has votado a esta apuesta una vez"
+
+
+              

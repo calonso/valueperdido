@@ -10,6 +10,13 @@ describe Message do
     @user.messages.create!(@attr)
   end
 
+  it "should have the right attributes" do
+    msg = @user.messages.create(@attr)
+    msg.user.should == @user
+    msg.user_id.should == @user.id
+    msg.message.should == @attr[:message]
+  end
+
   describe "validations" do
     it "should require a user" do
       Message.new(@attr).should_not be_valid

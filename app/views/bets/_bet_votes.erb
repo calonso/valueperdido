@@ -11,16 +11,16 @@
   <td>
       <% if @event.active? %>
         <% if bet["voted"] == "1" %>
-          <%= link_to "Unvote", unvote_path(:event_id => @event, :id => bet["id"]) %>
+          <%= link_to "#{t :unvote}", unvote_path(:event_id => @event, :id => bet["id"]) %>
         <% else %>
-          <%= link_to "Vote", vote_path(:event_id => @event, :id => bet["id"]) %>
+          <%= link_to "#{t :vote}", vote_path(:event_id => @event, :id => bet["id"]) %>
         <% end %>
       <% else %>
         <% if current_user.admin? %>
-          <%= link_to "Edit", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
+          <%= link_to "#{t :edit}", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
         <% end %>
         <% if bet["selected"] == "t" %>
-          | Selected
+          | <%= t :selected %>
         <% end %>
       <% end %>
   </td>

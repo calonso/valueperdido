@@ -30,45 +30,12 @@ describe User do
     User.create! @attr
   end
 
-  it "should require a name" do
-    invalid_user = User.new(@attr.merge(:name => ''))
-    invalid_user.should_not be_valid
-  end
-
-  it "should require a surname" do
-    invalid_user = User.new(@attr.merge(:surname => ''))
-    invalid_user.should_not be_valid
-  end
-
-  it "should require an email" do
-    invalid_user = User.new(@attr.merge(:email => ''))
-    invalid_user.should_not be_valid
-  end
-
-  it "should reject too long names" do
-    invalid_user = User.new(@attr.merge(:name => 'a' * 46))
-    invalid_user.should_not be_valid
-  end
-
-  it "should reject too long surnames" do
-    invalid_user = User.new(@attr.merge(:surname => 'a' * 46))
-    invalid_user.should_not be_valid
-  end
-
-  it "should accept valid emails" do
-    emails = %w[user@foo.com THE_USER@foo.bar.org the.user@foo.jp]
-    emails.each do |address|
-      user = User.new(@attr.merge(:email => address))
-      user.should be_valid
-    end
-  end
-
-  it "should reject invalid emails" do
-    emails = %w[user@foo,com THE_USER_at_foo.bar.org the.user@foo. user@foo]
-    emails.each do |address|
-      invalid_user = User.new(@attr.merge(:email => address))
-      invalid_user.should_not be_valid
-    end
+  it "should have the right attributes" do
+    user = User.create @attr
+    user.name.should == @attr[:name]
+    user.surname.should == @attr[:surname]
+    user.email.should == @attr[:email]
+    user.encrypted_password.should_not be_blank
   end
 
   it "should not be an admin by default" do
@@ -81,25 +48,67 @@ describe User do
     user.should_not be_validated
   end
 
-  it "should reject duplicated email addresses" do
-    User.create!(@attr)
-    invalid_user = User.new(@attr)
-    invalid_user.should_not be_valid
-  end
+  describe "validations" do
+    it "should require a name" do
+      invalid_user = User.new(@attr.merge(:name => ''))
+      invalid_user.should_not be_valid
+    end
 
-  it "should reject email addresses with same up to case" do
-    User.create!(@attr)
-    invalid_user = User.new(@attr.merge(:email => @attr[:email].upcase))
-    invalid_user.should_not be_valid
-  end
+    it "should require a surname" do
+      invalid_user = User.new(@attr.merge(:surname => ''))
+      invalid_user.should_not be_valid
+    end
 
-  it "should require terms to be validated" do
-    invalid_user = User.new(@attr.merge(:terms => "0"))
-    invalid_user.should_not be_valid
+    it "should require an email" do
+      invalid_user = User.new(@attr.merge(:email => ''))
+      invalid_user.should_not be_valid
+    end
+
+    it "should reject too long names" do
+      invalid_user = User.new(@attr.merge(:name => 'a' * 46))
+      invalid_user.should_not be_valid
+    end
+
+    it "should reject too long surnames" do
+      invalid_user = User.new(@attr.merge(:surname => 'a' * 46))
+      invalid_user.should_not be_valid
+    end
+
+    it "should accept valid emails" do
+      emails = %w[user@foo.com THE_USER@foo.bar.org the.user@foo.jp]
+      emails.each do |address|
+        user = User.new(@attr.merge(:email => address))
+        user.should be_valid
+      end
+    end
+
+    it "should reject invalid emails" do
+      emails = %w[user@foo,com THE_USER_at_foo.bar.org the.user@foo. user@foo]
+      emails.each do |address|
+        invalid_user = User.new(@attr.merge(:email => address))
+        invalid_user.should_not be_valid
+      end
+    end
+
+    it "should reject duplicated email addresses" do
+      User.create!(@attr)
+      invalid_user = User.new(@attr)
+      invalid_user.should_not be_valid
+    end
+
+    it "should reject email addresses with same up to case" do
+      User.create!(@attr)
+      invalid_user = User.new(@attr.merge(:email => @attr[:email].upcase))
+      invalid_user.should_not be_valid
+    end
+
+    it "should require terms to be validated" do
+      invalid_user = User.new(@attr.merge(:terms => "0"))
+      invalid_user.should_not be_valid
+    end
   end
 
   describe "password validations" do
-
     it "should require a password" do
       invalid_user = User.new(@attr.merge(:password => '', :password_confirmation => ''))
       invalid_user.should_not be_valid

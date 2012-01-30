@@ -2,4 +2,129 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  header_title: "ValuePerdido Community"
+  translations: "Translations"
+  errors_head:  "There were problems with the following fields:"
+
+  home:       "Home"
+  my_profile: "My Profile"
+  events:     "Events"
+  historic:   "Historic"
+  users:      "Users"
+  accounts:   "Accounts"
+  log_out:    "Log out"
+  log_in:     "Log in"
+
+  home_intro:   "This is ValuePerdido home page"
+  home_newuser: "New user?"
+  register:     "Register!"
+
+  locale_select: "Select your locale"
+  english:       "English"
+  spanish:       "Spanish"
+
+  delete:         "Delete"
+  delete_confirm: "Are you sure?"
+  edit:           "Edit"
+  update:         "Update"
+  title:          "Title"
+  submit:         "Submit"
+
+  bet_delete:             "Delete your bet"
+  vote:                   "Vote"
+  unvote:                 "Unvote"
+  selected:               "Selected"
+  bet_selection:          "Bet selection"
+  new_bet:                "New bet"
+  votes:                  "Votes"
+  author:                 "Author"
+  actions:                "Actions"
+  money:                  "Money"
+  winner:                 "Winner"
+  rate:                   "Rate"
+  description:            "Description"
+  bet_created_flash:      "Bet successfully created"
+  bet_voted_flash:        "Bet successfully voted"
+  bet_voted_flash_err:    "The bet couldn't be voted"
+  vote_deleted_flash:     "Vote successfully deleted"
+  vote_deleted_flash_err: "The vote could not be found"
+  bet_updated_flash:      "Bet successfully updated"
+  bet_deleted_flash:      "Bet successfully deleted"
+  max_bets_err:           "Maximum bets for this event already created"
+  my_bets_for:            "My bets for"
+  no_my_bets:             "You haven't made any bet for this event yet"
+  no_bets:                "There are still no bets proposed for this event"
+  bet_selected:           "Bet is selected"
+  bet_money:              "Money bet"
+  bet_winner:             "Bet is winner"
+  bet_rate:               "Bet's rate"
+  votes:                  "Votes"
+
+  my_bets:               "My bets"
+  name:                  "Name"
+  date:                  "Date"
+  event_edit:            "Edit Event"
+  events_history:        "Events history"
+  no_events_hist:        "No events have finished yet"
+  events_index:          "Active events"
+  no_events_index:       "Sorry, there are no active events available"
+  new_event:             "New event"
+  event_created_flash:   "Event successfully created"
+  event_updated_flash:   "Event successfully updated"
+  event_destroyed_flash: "Event destroyed"
+  max_votes_err:         "You already made max bets for this event"
+  event_closed_err:      "The event is already closed."
+
+  message_created_flash: "Message successfully created"
+
+  amount:                "Amount"
+  payment_list:          "Payments list"
+  no_payment_list:       "You haven't paid yet"
+  new_payment:           "New payment"
+  payment_created_flash: "Payment successfully saved"
+  payment_deleted_flash: "Payment successfully destroyed"
+  total:                 "Total"
+  accounts_empty:        "No payments of bets performed yet"
+  payment_of:            "Payment of"
+  bet_of:                "Bet of"
+
+  users_list: "Users List"
+  invalidate: "Invalidate"
+  validate:   "Validate"
+
+  email:              "Email"
+  password:           "Password"
+  surname:            "Surname"
+  confirmation:       "Confirmation"
+  congratulations:    "Congratulations!"
+  user_created:       "You have successfully been signed up, now wait for your account to be verified"
+  edit_user:          "Edit user"
+  new_user:           "New user"
+  accept_terms:       "I accept the"
+  terms_and_conds:    "Terms and Conditions"
+  user_profile:       "User's profile"
+  login_flash_err:    "Wrong email/password combination."
+  welcome_flash:      "Welcome to ValuePerdido Community!"
+  user_update_flash:  "Profile successfully updated"
+  user_deleted_flash: "User deleted"
+
+  date:
+    formats:
+      default: "%Y/%m/%d"
+    order: [ :year, :month, :day]
+    month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:   "1 error prohibited this operation from being completed"
+          other: "%{count} errors prohibited this operation from being completed"
+        body:    "There were problems with the following fields:"
+      models:
+        event:
+          attributes:
+            date: "Date is not a valid date"
+        payment:
+          attributes:
+            date: "Date is not a valid date"

@@ -15,6 +15,16 @@ describe Vote do
     @user.votes.create!(@attr)
   end
 
+  it "should have the right attributes" do
+    vote = @user.votes.create(@attr)
+    vote.user.should == @user
+    vote.user_id.should == @user.id
+    vote.event.should == @event
+    vote.event_id.should == @event.id
+    vote.bet.should == @attr[:bet]
+    vote.bet_id.should == @attr[:bet].id
+  end
+
   describe "validations" do
     it "should require an event" do
       invalid_vote = @user.votes.build(@attr.merge(:event => nil))

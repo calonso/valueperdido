@@ -3,14 +3,14 @@
 <%= form_for(@bet, :url => event_bets_path, :event_id => @event) do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
   <div class="field">
-    <%= f.label :title %><br />
+    <%= f.label :title, "#{t :title}" %><br />
     <%= f.text_field :title %>
   </div>
   <div class="field">
-    <%= f.label :description %><br />
+    <%= f.label :description, "#{t :description}" %><br />
     <%= f.text_area :description %>
   </div>
   <div class="actions">
-    <%= f.submit "Submit" %>
+    <%= f.submit "#{t :submit}" %>
   </div>
 <% end %>

@@ -1,4 +1,4 @@
-<h1>Events history</h1>
+<h1><%= t :events_history %></h1>
 
 <% if @events.count > 0 %>
     <%= will_paginate %>
@@ -7,5 +7,5 @@
     </ul>
     <%= will_paginate %>
 <% else %>
-    <p>No events have finished yet</p>
+    <p><%= t :no_events_hist %></p>
 <% end %>

@@ -1,0 +1,8 @@
+<h1><%= t :locale_select %></h1>
+
+<% host = request.env['REQUEST_URI'].sub(request.env['PATH_INFO'], "") %>
+
+<ul>
+  <li><%= link_to "#{t :english}", "#{host}/en" %></li>
+  <li><%= link_to "#{t :spanish}", "#{host}/es" %></li>
+</ul>

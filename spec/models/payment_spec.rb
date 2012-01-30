@@ -11,6 +11,14 @@ describe Payment do
     @user.payments.create!(@attr)
   end
 
+  it "should have the right attributes" do
+    payment = @user.payments.create(@attr)
+    payment.user.should == @user
+    payment.user_id.should == @user.id
+    payment.amount.should == @attr[:amount]
+    payment.date.should == @attr[:date]
+  end
+
   describe "validations" do
     it "should require a user" do
       Payment.new(@attr).should_not be_valid

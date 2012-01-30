@@ -1,9 +1,9 @@
-<h1>New event</h1>
+<h1><%= t :new_event %></h1>
 
 <%= form_for(@event) do |f| %>
     <%= render 'shared/error_messages', :object => f.object %>
     <%= render 'events/form', :f => f %>
     <div class="actions">
-    <%= f.submit "Create" %>
+    <%= f.submit "#{t :submit}" %>
   </div>
 <% end %>

@@ -1,13 +1,13 @@
 <li>
-  <%= link_to event.name, event_bets_path(:event_id => event.id) %> | <%= event.date %>
+  <%= link_to event.name, event_bets_path(:event_id => event.id) %> | <%= l event.date %>
 
-  <% if event.date > Date.today %>
-  | <%= link_to "My bets", event_user_bets_path(:event_id => event.id) %>
+  <% if event.active? %>
+  | <%= link_to "#{t :my_bets}", event_user_bets_path(:event_id => event.id) %>
   <% end %>
   
   <% if current_user.admin? %>
-   | <%= link_to "delete", event, :method => :delete,
-                                  :confirm => "You sure?",
-                                  :title => "Delete #{event.name}" %>
+   | <%= link_to "#{t :delete}", event, :method => :delete,
+                                  :confirm => "#{t :delete_confirm}",
+                                  :title => "#{t :delete} #{event.name}" %>
   <% end %>
 </li>

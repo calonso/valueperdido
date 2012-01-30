@@ -7,7 +7,7 @@ class Payment < ActiveRecord::Base
   validates :amount, :presence => true,
                      :numericality => true
   validates :date, :presence => true,
-                   :date => {:after => Date.civil(1980, 1, 1), :message => "Must be a valid date!"}
+                   :date => {:after => Date.civil(1980, 1, 1), :message => "Invalid date"}
 
   default_scope :order => 'payments.date DESC'
 

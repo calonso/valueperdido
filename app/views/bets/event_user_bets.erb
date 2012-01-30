@@ -1,10 +1,10 @@
-<h1>My bets for: <%= @event.name %></h1>
+<h1><%= t :my_bets_for %>: <%= @event.name %></h1>
 
 <% if @bets.count > 0 %>
     <ul>
       <%= render @bets %>
     </ul>
 <% else %>
-    <p>You haven't made any bet for this event yet</p>
-    <%= link_to "New bet", new_event_bet_path(:event_id => @event) %>
+    <p><%= t :no_my_bets %></p>
+    <%= link_to "#{t :new_bet}", new_event_bet_path(:event_id => @event) %>
 <% end %>

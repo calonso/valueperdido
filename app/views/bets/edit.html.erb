@@ -1,28 +1,28 @@
-<h1>Bet Selection</h1>
+<h1><%= t :bet_selection %></h1>
 
 <%= form_for(@bet, :url => event_bet_path, :event_id => @event, :id => @bet) do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
   <%= f.hidden_field :selected, :value => true %>
   <div class="field">
-    <%= f.label :title %> <%= f.text_field :title, :disabled => true %>
+    <%= f.label :title, "#{t :title}" %> <%= f.text_field :title, :disabled => true %>
   </div>
   <div class="field">
-    <%= f.label :selected %> <%= f.check_box :selected %>
+    <%= f.label :selected, "#{t :selected}" %> <%= f.check_box :selected %>
   </div>
   <div class="field">
-    <%= f.label :money %> <%= f.text_field :money %>
+    <%= f.label :money, "#{t :money}" %> <%= f.text_field :money %>
   </div>
   <div class="field">
-    <%= f.label :winner %> <%= f.check_box :winner %>
+    <%= f.label :winner, "#{t :winner}" %> <%= f.check_box :winner %>
   </div>
   <div class="field">
-    <%= f.label :rate %> <%= f.text_field :rate %>
+    <%= f.label :rate, "#{t :rate}" %> <%= f.text_field :rate %>
   </div>
   <div class="field">
-    <%= f.label :description %><br />
+    <%= f.label :description, "#{t :description}" %><br />
     <%= f.text_area :description, :disabled => true %>
   </div>
   <div class="actions">
-    <%= f.submit "Update" %>
+    <%= f.submit "#{t :update}" %>
   </div>
 <% end %>

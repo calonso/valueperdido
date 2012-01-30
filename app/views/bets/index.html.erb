@@ -1,25 +1,25 @@
-<h1><%= @event.name %>'s Bets</h1>
+<h1><%= @event.name %></h1>
 
 <% if @bets.count > 0 %>
     <table>
       <thead>
         <tr>
-            <th>Title</th>
-            <th>Votes</th>
-            <th>Author</th>
-            <th>Actions</th>
+            <th><%= t :title %></th>
+            <th><%= t :votes %></th>
+            <th><%= t :author %></th>
+            <th><%= t :actions %></th>
         </tr>
       </thead>
       <tbody>
-          <% @bets.each do |bet| %>
+        <% @bets.each do |bet| %>
           <%= render 'bet_votes', :bet => bet %>
-          <% end %>
+        <% end %>
       </tbody>
     </table>
 <% else %>
-    <p>There are still no bets proposed for this event</p>
+    <p><%= t :no_bets %></p>
 <% end %>
 
 <% if @event.active? %>
-    <%= link_to "New bet", new_event_bet_path %>
+    <%= link_to "#{t :new_bet}", new_event_bet_path %>
 <% end %>

@@ -1,4 +1,4 @@
-<h1>Payments list</h1>
+<h1><%= t :payment_list %></h1>
 
 <% unless @payments.empty? %>
     <%= will_paginate %>
@@ -7,7 +7,7 @@
     </ul>
     <%= will_paginate %>
 <% else %>
-    <p>You haven't paid yet</p>
+    <p><%= t :no_payment_list %></p>
 <% end %>
 
-<%= link_to "New payment", new_user_payment_path(@user) %>
+<%= link_to "#{t :new_payment}", new_user_payment_path(@user) %>

@@ -1,13 +1,13 @@
-<h1>Accounts status</h1>
+<h1><%= t :accounts %></h1>
 
 <% unless @items.empty? %>
     <table>
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Money</th>
-          <th>Total</th>
-          <th>Description</th>
+          <th><%= t :fdate %></th>
+          <th><%= t :money %></th>
+          <th><%= t :total %></th>
+          <th><%= t :description %></th>
         </tr>
       </thead>
       <tbody>
@@ -19,5 +19,5 @@
       </tbody>
     </table>
 <% else %>
-    <p>No payments or bets performed yet</p>
+    <p><%= t :accounts_empty %></p>
 <% end %>

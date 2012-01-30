@@ -1,5 +1,5 @@
 class Bet < ActiveRecord::Base
-  attr_accessible :title, :description, :selected, :winner, :money, :rate, :event
+  attr_accessible :title, :description, :selected, :winner, :money, :rate, :event_id
 
   belongs_to :user
   belongs_to :event
@@ -32,13 +32,13 @@ class Bet < ActiveRecord::Base
   def no_more_than_max_bets_per_user
     bets = Bet.where("user_id = ? AND event_id = ?", user, event)
     if bets.count >= Valueperdido::Application.config.max_bets_per_user
-      errors.add(:event, "You already made max bets for this event")
+      errors.add(:event, "#{I18n.t :max_bets_err}")
     end
   end
 
   def event_is_active
-    unless Event.find(event).active?
-      errors.add(:event, "The event is already closed.")
+    unless Event.find(event_id).active?
+      errors.add(:event, "#{I18n.t :event_closed_err}")
     end
   end
 end

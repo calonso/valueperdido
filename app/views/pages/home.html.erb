@@ -1,8 +1,8 @@
-<h1>Home</h1>
+<h1><%= t :home %></h1>
 
 <% if !logged_in? %>
-    <p>This is ValuePerdido Home page</p>
-    <p>New user? <%= link_to "Register!", signup_path,%></p>
+    <p><%= t :home_intro %></p>
+    <p><%= t :home_newuser %> <%= link_to "#{t :register}", signup_path,%></p>
 <% else %>
     <%= render 'messages/form' %>
     

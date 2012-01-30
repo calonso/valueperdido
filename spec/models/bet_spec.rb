@@ -6,11 +6,21 @@ describe Bet do
     @event = Factory(:event, :user => @user)
     @attr = { :title => "The title",
               :description => "This is the description",
-              :event => @event}
+              :event_id => @event.id }
   end
 
   it "should create a new instance given valid attributes" do
     @user.bets.create!(@attr)
+  end
+
+  it "should have the right attributes" do
+    bet = @user.bets.create(@attr)
+    bet.user.should == @user
+    bet.user_id.should == @user.id
+    bet.title.should == @attr[:title]
+    bet.description.should == @attr[:description]
+    bet.event.should == @event
+    bet.event_id.should == @event.id
   end
 
   it "should not be selected by default" do
@@ -64,13 +74,13 @@ describe Bet do
     end
 
     it "should require an event" do
-      invalid_bet = @user.bets.build(@attr.merge(:event => nil))
+      invalid_bet = @user.bets.build(@attr.merge(:event_id => nil))
       invalid_bet.should_not be_valid
     end
 
     it "should require an active event" do
       closed_event = Factory(:event, :user => @user, :date => Date.yesterday)
-      invalid_bet = @user.bets.build(@attr.merge(:event => closed_event))
+      invalid_bet = @user.bets.build(@attr.merge(:event_id => closed_event.id))
       invalid_bet.should_not be_valid
     end
 
@@ -139,8 +149,8 @@ describe Bet do
       before(:each) do
         bet = @user.bets.create!(@attr)
         sec_user = Factory(:user, :email => Factory.next(:email))
-        Factory(:vote, :event => @attr[:event], :bet => bet, :user => @user)
-        Factory(:vote, :event => @attr[:event], :bet => bet, :user => sec_user)
+        Factory(:vote, :event => @event, :bet => bet, :user => @user)
+        Factory(:vote, :event => @event, :bet => bet, :user => sec_user)
       end
 
       it "should respond to the with votes info for event scope" do
@@ -148,7 +158,7 @@ describe Bet do
       end
 
       it "should retrieve the bet with the votes and author info" do
-        bets = Bet.with_votes_for_event(@attr[:event], @user.id)
+        bets = Bet.with_votes_for_event(@event, @user.id)
         bets.count.should == 1
         bet = bets[0]
         bet["title"].should == @attr[:title]
