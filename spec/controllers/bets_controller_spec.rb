@@ -235,8 +235,9 @@ describe BetsController do
                   :description => "The new description",
                   :selected => true,
                   :money => 1.1,
-                  :rate => 0.67,
-                  :winner => true}
+                  :odds => 1.67,
+                  :winner => true,
+                  :earned => 40}
       end
 
       describe "for non admin users" do
@@ -264,16 +265,18 @@ describe BetsController do
                      :description => @bet.description,
                      :selected => @bet.selected,
                      :money => @bet.money,
-                     :rate => @bet.rate,
-                     :winner => @bet.winner}
+                     :odds => @bet.odds,
+                     :winner => @bet.winner,
+                     :earned => @bet.earned }
             put :update, :event_id => @event, :id => @bet, :bet => @attr
             @bet.reload
             @bet.title.should == prev[:title]
             @bet.description.should == prev[:description]
             @bet.selected.should == prev[:selected]
             @bet.money.should == prev[:money]
-            @bet.rate.should == prev[:rate]
+            @bet.odds.should == prev[:odds]
             @bet.winner.should == prev[:winner]
+            @bet.earned.should == prev[:earned]
           end
         end
 
@@ -285,8 +288,9 @@ describe BetsController do
             @bet.description.should == @attr[:description]
             @bet.selected.should == @attr[:selected]
             @bet.money.should == @attr[:money]
-            @bet.rate.should == @attr[:rate]
+            @bet.odds.should == @attr[:odds]
             @bet.winner.should == @attr[:winner]
+            @bet.earned.should == @attr[:earned]
           end
 
           it "should redirect to the bet's show path" do

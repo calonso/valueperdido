@@ -89,8 +89,8 @@ describe Bet do
       invalid_bet.should_not be_valid
     end
 
-    it "should reject invalid rate amounts" do
-      invalid_bet = @user.bets.build(@attr.merge(:rate => "a01.1"))
+    it "should reject invalid odds amounts" do
+      invalid_bet = @user.bets.build(@attr.merge(:odds => "a01.1"))
       invalid_bet.should_not be_valid
     end
 
@@ -102,10 +102,23 @@ describe Bet do
       end
     end
 
-    it "should accept valid rate amounts" do
+    it "should accept valid odds amounts" do
       valid_nums = %w[1000 1.000 999.0]
       valid_nums.each do |num|
-        valid_bet = @user.bets.build(@attr.merge(:rate => num))
+        valid_bet = @user.bets.build(@attr.merge(:odds => num))
+        valid_bet.should be_valid
+      end
+    end
+
+    it "should reject invalid earned amounts" do
+      invalid_bet = @user.bets.build(@attr.merge(:earned => "a01.1"))
+      invalid_bet.should_not be_valid
+    end
+
+    it "should accept valid earned amounts" do
+      valid_nums = %w[1000 1.000 999.0]
+      valid_nums.each do |num|
+        valid_bet = @user.bets.build(@attr.merge(:earned => num))
         valid_bet.should be_valid
       end
     end
@@ -118,12 +131,18 @@ describe Bet do
     end
 
     it "should require a money amount if selected" do
-      invalid_bet = @user.bets.build(@attr.merge(:selected => true))
+      invalid_bet = @user.bets.build(@attr.merge(:selected => true, :odds => 1.1))
       invalid_bet.should_not be_valid
     end
 
-    it "should require a rate amount if winner" do
-      invalid_bet = @user.bets.build(@attr.merge(:winner => true))
+    it "should require an odds amount if selected" do
+      invalid_bet = @user.bets.build(@attr.merge(:selected => true, :money => 5))
+      invalid_bet.should_not be_valid
+    end
+
+    it "should require an earned amount if winner" do
+      select_hash = { :selected => true, :money => 5, :odds => 1.6 , :winner => true }
+      invalid_bet = @user.bets.build(@attr.merge(select_hash))
       invalid_bet.should_not be_valid
     end
   end
@@ -133,7 +152,7 @@ describe Bet do
       before(:each) do
         sec_user = Factory(:user, :email => Factory.next(:email))
         sec_user.bets.create!(@attr)
-        @sel_bet = @user.bets.create!(@attr.merge(:selected => true, :money => 1.0))
+        @sel_bet = @user.bets.create!(@attr.merge(:selected => true, :money => 1.0, :odds => 1.5))
       end
 
       it "should have the selected scope" do

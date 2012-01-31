@@ -1,5 +1,5 @@
 class Bet < ActiveRecord::Base
-  attr_accessible :title, :description, :selected, :winner, :money, :rate, :event_id
+  attr_accessible :title, :description, :selected, :winner, :money, :odds, :event_id, :earned
 
   belongs_to :user
   belongs_to :event
@@ -11,8 +11,10 @@ class Bet < ActiveRecord::Base
   validates :event_id, :presence => true
   validates :money, :numericality => true
   validates :money, :numericality => { :greater_than => 0 }, :if => :selected
-  validates :rate, :numericality => true
-  validates :rate, :numericality => { :greater_than => 0 }, :if => :winner
+  validates :odds, :numericality => true
+  validates :odds, :numericality => { :greater_than => 0 }, :if => :selected
+  validates :earned, :numericality => true
+  validates :earned, :numericality => { :greater_than => 0 }, :if => :winner
   validate :no_more_than_max_bets_per_user, :on => :create
   validate :event_is_active, :on => :create, :if => :event_id
 

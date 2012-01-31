@@ -27,10 +27,15 @@ h3 {
 	font-size: 1.2em;
 }
 
+header > a {
+    color: white;
+    text-align: right;
+}
+
 header > h1 {
     color: white;
     text-align: center;
-    margin: 80px 0;
+    margin: 65px 0 80px;
 }
 
 header > nav {

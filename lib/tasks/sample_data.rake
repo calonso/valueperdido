@@ -58,14 +58,16 @@ namespace :db do
       bet = Bet.find((bets[n]["id"]).to_i)
       bet.selected = true
       bet.money = 10
+      bet.odds = 2
       bet.winner = true
-      bet.rate = 2
+      bet.earned = 20
       bet.save!
     end
 
     bet = Bet.find((bets[2]["id"]).to_i)
     bet.selected = true
     bet.money = 10
+    bet.odds = 2
     bet.save!
   end
 end

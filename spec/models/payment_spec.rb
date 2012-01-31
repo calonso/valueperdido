@@ -53,10 +53,10 @@ describe Payment do
       @usr2 = Factory(:user, :name => "Frotacho", :email => Factory.next(:email))
       @event = Factory(:event, :user => @user)
       @bet1 = Factory(:bet, :user => @user, :event => @event,
-                      :selected => true, :money => 10)
+                      :selected => true, :money => 10, :odds => 1.6)
       @bet2 = Factory(:bet, :user => @usr2, :event => @event,
-                      :selected => true, :money => 10,
-                      :winner => true, :rate => 2)
+                      :selected => true, :money => 10, :odds => 2.0,
+                      :winner => true, :earned => 20)
       @event[:date] = Date.yesterday
       @event.save!
       @pay1 = Factory(:payment, :user => @user, :date => Date.today - 2.days)
@@ -70,15 +70,15 @@ describe Payment do
       data = Payment.full_accounts_info
       data.count.should == 4
       data[0]["id"].to_i.should == @user.id
-      data[1]["id"].to_i.should == @bet2.id
-      data[2]["id"].to_i.should == @bet1.id
+      data[1]["id"].to_i.should == @event.id
+      data[2]["id"].to_i.should == @event.id
       data[3]["id"].to_i.should == @usr2.id
     end
 
     it "should set the right amounts" do
       data = Payment.full_accounts_info
       data[0]["amount"].to_f.should == @pay1.amount
-      data[1]["amount"].to_f.should == @bet2.money * @bet2.rate
+      data[1]["amount"].to_f.should == @bet2.earned
       data[2]["amount"].to_f.should == -1 * @bet1.money
       data[3]["amount"].to_f.should == @pay2.amount
     end

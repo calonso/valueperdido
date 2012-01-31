@@ -4,9 +4,10 @@
     <% if @bet.selected? %>
         <p><%= t :bet_selected %></p>
         <p><%= t :bet_money %>: <%= @bet.money %> €</p>
+        <p><%= t :bet_odds %>: <%= @bet.odds %></p>
         <% if @bet.winner? %>
             <p><%= t :bet_winner %></p>
-            <p><%= t :bet_rate %>: <%= @bet.rate %> %</p>
+            <p><%= t :earned %>: <%= @bet.earned %></p>
         <% end %>
     <% end %>
     <% if current_user?(@bet.user) && @bet.event.active? %>

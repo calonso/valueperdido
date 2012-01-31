@@ -41,7 +41,8 @@ en:
   actions:                "Actions"
   money:                  "Money"
   winner:                 "Winner"
-  rate:                   "Rate"
+  odds:                   "Odds"
+  earned:                 "Earns"
   description:            "Description"
   bet_created_flash:      "Bet successfully created"
   bet_voted_flash:        "Bet successfully voted"
@@ -57,7 +58,7 @@ en:
   bet_selected:           "Bet is selected"
   bet_money:              "Money bet"
   bet_winner:             "Bet is winner"
-  bet_rate:               "Bet's rate"
+  bet_odds:               "Bet's odds"
   votes:                  "Votes"
 
   my_bets:               "My bets"
@@ -92,21 +93,25 @@ en:
   invalidate: "Invalidate"
   validate:   "Validate"
 
-  email:              "Email"
-  password:           "Password"
-  surname:            "Surname"
-  confirmation:       "Confirmation"
-  congratulations:    "Congratulations!"
-  user_created:       "You have successfully been signed up, now wait for your account to be verified"
-  edit_user:          "Edit user"
-  new_user:           "New user"
-  accept_terms:       "I accept the"
-  terms_and_conds:    "Terms and Conditions"
-  user_profile:       "User's profile"
-  login_flash_err:    "Wrong email/password combination."
-  welcome_flash:      "Welcome to ValuePerdido Community!"
-  user_update_flash:  "Profile successfully updated"
-  user_deleted_flash: "User deleted"
+  email:                      "Email"
+  password:                   "Password"
+  surname:                    "Surname"
+  confirmation:               "Confirmation"
+  congratulations:            "Congratulations!"
+  user_created:               "You have successfully been signed up, now wait for your account to be verified"
+  edit_user:                  "Edit user"
+  new_user:                   "New user"
+  accept_terms:               "I accept the"
+  terms_and_conds:            "Terms and Conditions"
+  user_profile:               "User's profile"
+  login_flash_err:            "Wrong email/password combination."
+  welcome_flash:              "Welcome to ValuePerdido Community!"
+  user_update_flash:          "Profile successfully updated"
+  user_deleted_flash:         "User deleted"
+  user_validated_flash:       "User successfully validated"
+  user_validated_flash_err:   "User couldn't be validated"
+  user_invalidated_flash:     "User successfully invalidated"
+  user_invalidated_flash_err: "User couldn't be invalidated"
 
   activerecord:
     errors:
@@ -316,7 +321,7 @@ en:
   time:
     am: am
     formats:
-      default: ! '%a, %d %b %Y %H:%M:%S %z'
+      default: ! '%Y/%m/%d %H:%M'
       long: ! '%d %B, %Y %H:%M'
       short: ! '%d %b %H:%M'
     pm: pm

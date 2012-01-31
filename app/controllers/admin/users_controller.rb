@@ -10,9 +10,9 @@ class Admin::UsersController < ApplicationController
     @user = User.find params[:id]
     if @user.update_attributes({ :validated => true })
       UserMailer.validated_account_email(@user).deliver
-      flash[:success] = "User successfully validated"
+      flash[:success] = "#{ t :user_validated_flash }"
     else
-      flash[:error] = "User couldn't be validated"
+      flash[:error] = "#{ t :user_validated_flash_err }"
     end
     redirect_to admin_users_path
   end
@@ -20,16 +20,16 @@ class Admin::UsersController < ApplicationController
   def invalidate
     @user = User.find params[:id]
     if @user.update_attributes({ :validated => false })
-      flash[:success] = "User successfully invalidated"
+      flash[:success] = "#{ t :user_invalidated_flash }"
     else
-      flash[:error] = "User couldn't be invalidated"
+      flash[:error] = "#{ t :user_invalidated_flash_err }"
     end
     redirect_to admin_users_path
   end
 
   def destroy
     User.find(params[:id]).destroy
-    flash[:success] = "User successfully destroyed"
+    flash[:success] = "#{ t :user_deleted_flash}"
     redirect_to admin_users_path
   end
 

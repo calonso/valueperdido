@@ -16,8 +16,8 @@ class Payment < ActiveRecord::Base
       (SELECT user_id as id, date, amount, surname||', '||name as name, 'payment' as type FROM payments p
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
-      (SELECT b.id, date,
-                  CASE WHEN winner=TRUE THEN money * rate
+      (SELECT b.event_id, date,
+                  CASE WHEN winner=TRUE THEN earned
                   ELSE -money
                   END, name, 'bet' FROM bets b
         INNER JOIN events e on b.event_id = e.id where b.selected = TRUE)

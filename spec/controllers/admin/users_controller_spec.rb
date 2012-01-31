@@ -104,7 +104,7 @@ describe Admin::UsersController do
 
       it "should have a flash message" do
         delete :destroy, :id => @user
-        flash[:success].should =~ /successfully/i
+        flash[:success].should =~ /deleted/i
       end
 
       it "should redirect to the index page" do

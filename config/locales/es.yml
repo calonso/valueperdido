@@ -38,7 +38,8 @@ es:
   actions:                "Acciones"
   money:                  "Dinero"
   winner:                 "Ganadora"
-  rate:                   "Cuota"
+  odds:                   "Cuota"
+  earned:                 "Ganancias"
   description:            "Descripción"
   bet_created_flash:      "Apuesta creada con éxito"
   bet_voted_flash:        "Apuesta votada con éxito"
@@ -54,7 +55,7 @@ es:
   bet_selected:           "La apuesta ha sido seleccionada"
   bet_money:              "Dinero apostado"
   bet_winner:             "La apuesta es ganadora"
-  bet_rate:               "Cuota"
+  bet_odds:               "Cuota"
   votes:                  "Votos"
 
   my_bets:               "Mis apuestas"
@@ -90,21 +91,25 @@ es:
   validate:   "Validar"
 
 
-  email:              "Email"
-  password:           "Contraseña"
-  surname:            "Apellido"
-  confirmation:       "Confirmación"
-  congratulations:    "¡Enhorabuena!"
-  user_created:       "Has sido dado de alta en la comunidad, ahora debes esperar a que validemos tu cuenta."
-  edit_user:          "Editar usuario"
-  new_user:           "Nuevo usuario"
-  accept_terms:       "Acepto los"
-  terms_and_conds:    "Términos y condiciones"
-  user_profile:       "Perfil del usuario"
-  login_flash_err:    "Combinación email/contraseña inválida."
-  welcome_flash:      "¡Bienvenidoa la comunidad ValuePerdido!"
-  user_update_flash:  "Perfil actualizado correctamente"
-  user_deleted_flash: "Usuario borrado"
+  email:                      "Email"
+  password:                   "Contraseña"
+  surname:                    "Apellido"
+  confirmation:               "Confirmación"
+  congratulations:            "¡Enhorabuena!"
+  user_created:               "Has sido dado de alta en la comunidad, ahora debes esperar a que validemos tu cuenta."
+  edit_user:                  "Editar usuario"
+  new_user:                   "Nuevo usuario"
+  accept_terms:               "Acepto los"
+  terms_and_conds:            "Términos y condiciones"
+  user_profile:               "Perfil del usuario"
+  login_flash_err:            "Combinación email/contraseña inválida."
+  welcome_flash:              "¡Bienvenidoa la comunidad ValuePerdido!"
+  user_update_flash:          "Perfil actualizado correctamente"
+  user_deleted_flash:         "Usuario borrado"
+  user_validated_flash:       "Usuario validado con éxito"
+  user_validated_flash_err:   "El usuario no pudo ser validado"
+  user_invalidated_flash:     "Usuario invalidado con éxito"
+  user_invalidated_flash_err: "El usuario no pudo ser invalidado"
 
   will_paginate:
     next_label: "Sig"
@@ -149,9 +154,12 @@ es:
             money:
               not_a_number: "El campo dinero no es un número válido"
               greater_than: "El campo dinero debe ser un valor positivo"
-            rate:
+            odds:
               not_a_number: "El campo cuota no es un número válido"
               greater_than: "El campo cuota debe ser un valor positivo"
+            earned:
+              not_a_number: "El campo ganancias no es un número válido"
+              greater_than: "El campo ganancias debe ser un valor positivo"
         event:
           attributes:
             name:
