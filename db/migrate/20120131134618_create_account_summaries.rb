@@ -4,6 +4,7 @@ class CreateAccountSummaries < ActiveRecord::Migration
       t.float :incoming
       t.float :bet
       t.float :earns
+      t.float :expenses
       t.date  :date
 
       t.timestamps

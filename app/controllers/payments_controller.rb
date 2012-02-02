@@ -20,14 +20,7 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def destroy
-    @payment.destroy
-    flash[:success] = t :payment_deleted_flash
-    redirect_to user_payments_path, :user_id => @user
-  end
-
   private
-
     def owner_or_admin
       @user = User.find(params[:user_id])
       redirect_to (root_path) unless current_user?(@user) || current_user.admin?

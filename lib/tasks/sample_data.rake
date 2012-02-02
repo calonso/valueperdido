@@ -15,6 +15,9 @@ namespace :db do
       Event.create!(:name => "Event #{n+1}",
                     :date => Date.tomorrow + n.week,
                     :user => admin)
+      Expense.create!(:date => Date.today + n.week,
+                      :value => 10.1 * n,
+                      :description => "Expense: #{n}" )
     end
 
     40.times do |n|

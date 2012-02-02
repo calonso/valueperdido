@@ -1,0 +1,20 @@
+<h1><%= t :new_expense %></h1>
+
+<%= form_for(@expense, :url => admin_expenses_path) do |f| %>
+    <%= render 'shared/error_messages', :object => f.object %>
+    <div class="field">
+        <%= f.label :value, "#{t :value}" %>
+        <%= f.text_field :value %>
+    </div>
+    <div class="field">
+        <%= f.label :description, "#{t :description}" %>
+        <%= f.text_field :description %>
+    </div>
+    <div class="field">
+        <%= f.label :date, "#{t :fdate}" %>
+        <%= f.date_select :date %>
+    </div>
+    <div class="actions">
+        <%= f.submit "#{t :submit}" %>
+    </div>
+<% end %>

@@ -107,37 +107,6 @@ describe PaymentsController do
         end
       end
     end
-
-    describe "DELETE 'destroy'" do
-      before(:each) do
-        @payment = Factory(:payment, :user => @user)
-      end
-
-      it "should delete the payment" do
-        lambda do
-          delete :destroy, :user_id => @user, :id => @payment
-        end.should change(@user.payments, :count).by(-1)
-      end
-
-      it "should redirect to the index page" do
-        delete :destroy, :user_id => @user, :id => @payment
-        response.should redirect_to(user_payments_path(@user))
-      end
-
-      it "should have a flash message" do
-        delete :destroy, :user_id => @user, :id => @payment
-        flash[:success].should =~ /successfully/i
-      end
-
-      it "should protect others payments" do
-        usr2 = Factory(:user, :email => Factory.next(:email))
-        pay2 = Factory(:payment, :user => usr2)
-        lambda do
-          delete :destroy, :user_id => @user, :id => pay2
-        end.should_not change(Payment, :count)
-        response.should redirect_to(root_path)
-      end
-    end
   end
 
   describe "for admin users" do
@@ -159,13 +128,31 @@ describe PaymentsController do
         assigns(:payments).should == [@payment]
       end
     end
+  end
 
-    describe "DELETE 'destroy'" do
-      it "should destroy the user's payment" do
-        lambda do
-          delete :destroy, :user_id => @user, :id => @payment
-        end.should change(@user.payments, :count).by(-1)
-      end
+  describe "unsupported methods" do
+    # If is required to respond to this methods,
+    # make sure that the AccountSummary is updated
+    before(:each) do
+      @payment = Factory(:payment, :user => @user)
+    end
+
+    it "should not respond to edit" do
+      lambda do
+        get :edit, :user_id => @user, :id => @payment
+      end.should raise_error ActionController::RoutingError
+    end
+
+    it "should not respond to update" do
+      lambda do
+        put :update, :user_id => @user, :id => @payment, :payment => {}
+      end.should raise_error ActionController::RoutingError
+    end
+
+    it "should not respond to destroy" do
+      lambda do
+        delete :destroy, :user_id => @user, :id => @payment
+      end.should raise_error ActionController::RoutingError
     end
   end
 end

@@ -123,6 +123,11 @@ en:
   user_invalidated_flash:     "User successfully invalidated"
   user_invalidated_flash_err: "User couldn't be invalidated"
 
+  new_expense:            "New expense"
+  expenses:               "Expenses"
+  value:                  "Value"
+  expense_created_flash:  "Expense successfully created"
+
   activerecord:
     errors:
       template:

@@ -1,15 +1,11 @@
-class Payment < ActiveRecord::Base
-  attr_accessible :amount, :date
+class Expense < ActiveRecord::Base
+  attr_accessible :date, :value, :description
 
-  belongs_to :user
-
-  validates :user_id, :presence => true
-  validates :amount, :presence => true,
-                     :numericality => true
   validates :date, :presence => true,
                    :date => {:after => Date.civil(1980, 1, 1), :message => "Invalid date"}
-
-  default_scope :order => 'payments.date DESC'
+  validates :value, :presence => true,
+                    :numericality => true
+  validates :description, :presence => true, :length => { :maximum => 255 }
 
   after_save :summarize_if_before_today
 

@@ -45,3 +45,9 @@ Factory.define :message do |message|
   message.message     "The text"
   message.association :user
 end
+
+Factory.define :expense do |expense|
+  expense.date        Date.today
+  expense.value       10.40
+  expense.description "Expense description"
+end

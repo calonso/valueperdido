@@ -121,6 +121,13 @@ es:
   user_invalidated_flash:     "Usuario invalidado con éxito"
   user_invalidated_flash_err: "El usuario no pudo ser invalidado"
 
+  value:                  "Valor"
+  description:            "Descripción"
+  expenses:               "Gastos"
+  new_expense:            "Nuevo gasto"
+  expense_created_flash:  "Gasto creado correctamente"
+
+
   will_paginate:
     next_label: "Sig"
     previous_label: "Prev"
@@ -202,6 +209,17 @@ es:
             bet:
               blank:  "El voto debe estar asociado a una apuesta"
               taken:  "Ya has votado a esta apuesta una vez"
+        expense:
+          attributes:
+            date:
+              blank:  "La fecha no puede estar vacía"
+            value:
+              blank:  "El valor no puede estar vacío"
+              not_a_number: "El valor no es un número válido"
+            description:
+              blank:  "La descripción no puede estar vacía"
+              too_long: "La descripción es demasiado larga"
+              
 
   date:
     abbr_day_names:

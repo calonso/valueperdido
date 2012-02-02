@@ -1,6 +1,7 @@
-<h1><%= t :accounts %></h1>
+<h1 class="first span-5 append-14"><%= t :accounts %></h1>
+<%= link_to "#{ t :new_expense }", new_admin_expense_path, :class => "span-3 last" %>
 
-<div id="tabs">
+<div id="tabs" class="first span-22 last">
   <ul>
     <li><a href="#tabs-1"><%= t :detailed %></a></li>
     <li><a href="#tabs-2"><%= t :summarized %></a></li>
@@ -37,13 +38,14 @@
               <th><%= t :incoming %></th>
               <th><%= t :bet %></th>
               <th><%= t :earned %></th>
+              <th><%= t :expenses %></th>
               <th><%= t :total %></th>
             </tr>
           </thead>
           <tbody>
           <% total = 0 %>
           <% @summaries.each do |item| %>
-            <% total += item.incoming - item.bet + item.earns %>
+            <% total += item.incoming - item.bet + item.earns - item.expenses %>
             <%= render 'admin/accounts/sum_item', :item => item, :total => total %>
           <% end %>
           </tbody>

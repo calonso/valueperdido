@@ -8,6 +8,7 @@ Valueperdido::Application.routes.draw do
       match '/users/:id/invalidate', :to => 'users#invalidate', :as => :invalidate
       resources :users, :only => [:index, :destroy]
       resources :accounts, :only => :index
+      resources :expenses, :only => [:new, :create]
     end
 
     match '/events/:event_id/bets/list', :to => 'bets#event_user_bets', :as => :event_user_bets
@@ -18,7 +19,7 @@ Valueperdido::Application.routes.draw do
       resources :bets
     end
     resources :users, :except => :index do
-      resources :payments, :except => [:show, :edit, :update]
+      resources :payments, :only => [:index, :new, :create]
     end
     resources :sessions, :only => [:new, :create, :destroy]
     resources :messages, :only => :create
