@@ -57,6 +57,11 @@ es:
   bet_winner:             "La apuesta es ganadora"
   bet_odds:               "Cuota"
   votes:                  "Votos"
+  bet_selected_non_editable:  "Una apuesta seleccionada no puede deseleccionarse"
+  bet_money_non_editable:     "Una apuesta seleccionada no puede modificar el dinero apostado"
+  bet_odds_non_editable:      "Una apuesta seleccionada no puede modificar la cuota"
+  bet_winner_non_editable:    "Una apuesta ganadora no puede dejar de serlo"
+  bet_earned_non_editable:    "Una apuesta ganadora no puede cambiar sus ganancias"
 
   my_bets:               "Mis apuestas"
   name:                  "Nombre"
@@ -85,6 +90,11 @@ es:
   accounts_empty:        "No se han registrado pagos ni efectuado apuestas"
   payment_of:            "Pago de"
   bet_of:                "Apuesta de"
+  detailed:              "Detallado"
+  summarized:            "Sumarizado"
+  incoming:              "Ingresado"
+  bet:                   "Apostado"
+  summaries_empty:       "Aún no se ha calculado ningún resúmen"
 
   users_list: "Lista de usuarios"
   invalidate: "Invalidar"

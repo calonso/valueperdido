@@ -1,25 +1,27 @@
 <h1><%= t :bet_selection %></h1>
 
+<% selected = @bet.selected %>
+<% winner = @bet.winner %>
+
 <%= form_for(@bet, :url => event_bet_path, :event_id => @event, :id => @bet) do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
-  <%= f.hidden_field :selected, :value => true %>
   <div class="field">
     <%= f.label :title, "#{t :title}" %> <%= f.text_field :title, :disabled => true %>
   </div>
   <div class="field">
-    <%= f.label :selected, "#{t :selected}" %> <%= f.check_box :selected %>
+    <%= f.label :selected, "#{t :selected}" %> <%= f.check_box :selected, :disabled => selected %>
   </div>
   <div class="field">
-    <%= f.label :money, "#{t :money}" %> <%= f.text_field :money %>
+    <%= f.label :money, "#{t :money}" %> <%= f.text_field :money, :disabled => selected %>
   </div>
   <div class="field">
-    <%= f.label :odds, "#{t :odds}" %> <%= f.text_field :odds %>
+    <%= f.label :odds, "#{t :odds}" %> <%= f.text_field :odds, :disabled => selected %>
   </div>
   <div class="field">
-    <%= f.label :winner, "#{t :winner}" %> <%= f.check_box :winner %>
+    <%= f.label :winner, "#{t :winner}" %> <%= f.check_box :winner, :disabled => winner %>
   </div>
   <div class="field">
-    <%= f.label :earned, "#{t :earned}" %> <%= f.text_field :earned %>
+    <%= f.label :earned, "#{t :earned}" %> <%= f.text_field :earned, :disabled => winner %>
   </div>
   <div class="field">
     <%= f.label :description, "#{t :description}" %><br />

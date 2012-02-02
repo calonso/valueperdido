@@ -1,23 +1,55 @@
 <h1><%= t :accounts %></h1>
 
-<% unless @items.empty? %>
-    <table>
-      <thead>
-        <tr>
-          <th><%= t :fdate %></th>
-          <th><%= t :money %></th>
-          <th><%= t :total %></th>
-          <th><%= t :description %></th>
-        </tr>
-      </thead>
-      <tbody>
-      <% total = 0 %>
-      <% @items.each do |item| %>
-        <% total += item["amount"].to_f %>
-        <%= render 'admin/accounts/item', :item => item, :total => total %>
-      <% end %>
-      </tbody>
-    </table>
-<% else %>
-    <p><%= t :accounts_empty %></p>
-<% end %>
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1"><%= t :detailed %></a></li>
+    <li><a href="#tabs-2"><%= t :summarized %></a></li>
+  </ul>
+  <div id="tabs-1">
+    <% unless @items.empty? %>
+        <table>
+          <thead>
+            <tr>
+              <th><%= t :fdate %></th>
+              <th><%= t :money %></th>
+              <th><%= t :total %></th>
+              <th><%= t :description %></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% total = 0 %>
+          <% @items.each do |item| %>
+            <% total += item["amount"].to_f %>
+            <%= render 'admin/accounts/item', :item => item, :total => total %>
+          <% end %>
+          </tbody>
+        </table>
+    <% else %>
+        <p><%= t :accounts_empty %></p>
+    <% end %>
+  </div>
+  <div id="tabs-2">
+     <% unless @summaries.empty? %>
+        <table>
+          <thead>
+            <tr>
+              <th><%= t :fdate %></th>
+              <th><%= t :incoming %></th>
+              <th><%= t :bet %></th>
+              <th><%= t :earned %></th>
+              <th><%= t :total %></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% total = 0 %>
+          <% @summaries.each do |item| %>
+            <% total += item.incoming - item.bet + item.earns %>
+            <%= render 'admin/accounts/sum_item', :item => item, :total => total %>
+          <% end %>
+          </tbody>
+        </table>
+    <% else %>
+        <p><%= t :summaries_empty %></p>
+    <% end %>
+  </div>
+</div>

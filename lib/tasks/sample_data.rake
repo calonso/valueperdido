@@ -30,7 +30,7 @@ namespace :db do
                           :validated => true)
 
       user.payments.create!({:amount => 100.50,
-                             :date => Date.today})
+                             :date => n%2 == 1 ? Date.today : Date.yesterday})
       
       Event.all.each do |event|
         bets = event.bets.shuffle[0..Valueperdido::Application.config.max_votes_per_user - 1]
@@ -69,5 +69,8 @@ namespace :db do
     bet.money = 10
     bet.odds = 2
     bet.save!
+
+    AccountSummary.summarize Date.yesterday
+    AccountSummary.summarize
   end
 end

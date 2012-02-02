@@ -4,6 +4,7 @@ class Admin::AccountsController < ApplicationController
 
   def index
     @items = Payment.full_accounts_info
+    @summaries = AccountSummary.all
   end
 
 end

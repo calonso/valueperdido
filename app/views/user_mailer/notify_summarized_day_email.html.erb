@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <% if @result %>
+        <h1><%= @day %> has been successfully summarized</h1>
+    <% else %>
+        <h1>An error happened summarizing <%= @day %> </h1>
+    <% end %>
+
+    <p>Greetings!</p>
+  </body>
+</html>

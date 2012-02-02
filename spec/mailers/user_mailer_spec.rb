@@ -15,4 +15,9 @@ describe UserMailer do
     ActionMailer::Base.deliveries.should_not be_empty
   end
 
+  it "should send email when day is summarized" do
+    UserMailer.notify_summarized_day_email(Date.today, true).deliver
+    ActionMailer::Base.deliveries.should_not be_empty
+  end
+
 end

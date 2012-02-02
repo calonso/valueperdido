@@ -145,6 +145,47 @@ describe Bet do
       invalid_bet = @user.bets.build(@attr.merge(select_hash))
       invalid_bet.should_not be_valid
     end
+
+    describe "non editable attrs if selected" do
+      before(:each) do
+        @bet = Factory(:bet, :user => @user, :event => @event,
+                       :selected => true, :money => 10, :odds => 2.0,
+                       :date_selected => Date.today)
+      end
+
+      it "should not allow to edit the selected attribute" do
+        @bet.selected = false
+        @bet.should_not be_valid
+      end
+
+      it "should not allow to edit the money attribute" do
+        @bet.money = 5
+        @bet.should_not be_valid
+      end
+
+      it "should not allow to edit the odds attribute" do
+        @bet.odds = 1.1
+        @bet.should_not be_valid
+      end
+    end
+    describe "non editable attrs if winner" do
+      before(:each) do
+        @bet = Factory(:bet, :user => @user, :event => @event,
+                       :selected => true, :money => 10, :odds => 2.0,
+                       :date_selected => Date.today, :winner => true,
+                       :earned => 10, :date_earned => Date.today)
+      end
+
+      it "should not allow to edit the winner attribute" do
+        @bet.winner = false
+        @bet.should_not be_valid
+      end
+
+      it "should not allow to edit the earned attribute" do
+        @bet.earned = 5
+        @bet.should_not be_valid
+      end
+    end
   end
 
   describe "scopes" do
@@ -159,7 +200,7 @@ describe Bet do
         Bet.should respond_to(:selected)
       end
 
-      it "should retrieve selected scopes" do
+      it "should retrieve selected bets" do
         Bet.selected.should == [@sel_bet]
       end
     end
@@ -206,4 +247,35 @@ describe Bet do
     end
   end
 
+  describe "callbacks" do
+    before(:each) do
+      @bet = Factory(:bet, :event => @event, :user => @user)
+    end
+
+    it "should have selected date to nil" do
+      @bet.date_selected.should be_nil
+    end
+
+    it "should have earned date to nil" do
+      @bet.date_earned.should be_nil
+    end
+
+    it "should set the selected date upon selection" do
+      @bet.update_attributes(:selected => true, :money => 5, :odds => 2.0)
+      @bet.reload
+      @bet.date_selected.should == Date.today
+    end
+
+    describe "with a selected bet" do
+      before(:each) do
+        @bet.update_attributes( :selected => true, :money => 5, :odds => 2 )
+      end
+
+      it "should set the earned date upon earning" do
+        @bet.update_attributes(:winner => true, :earned => 20)
+        @bet.reload
+        @bet.date_earned.should == Date.today
+      end
+    end
+  end
 end
