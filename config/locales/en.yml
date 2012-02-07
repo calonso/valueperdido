@@ -128,6 +128,15 @@ en:
   value:                  "Value"
   expense_created_flash:  "Expense successfully created"
 
+  message_summary_title:                "Summary of the day"
+  message_new_events_summary_title:     "New events"
+  message_selected_bets_summary_title:  "Performed bets"
+  message_winner_bets_summary_title:    "Winner bets"
+  money_bet:                            "Money bet"
+  with_odds:                            "with odds"
+  money_earned:                         "Money earned"
+
+
   activerecord:
     errors:
       template:

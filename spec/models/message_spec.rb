@@ -51,4 +51,64 @@ describe Message do
       @message.user.should == @user
     end
   end
+
+  describe "post summary message task" do
+    describe "with data" do
+      before(:each) do
+        @event = Factory(:event, :user => @user)
+        @event.created_at = Date.yesterday + 2.hours
+        @event.save!
+        Factory(:bet, :user => @user, :event => @event)
+        @selected = Factory(:bet, :user => Factory(:user , :email => Factory.next(:email)), :event => @event,
+                           :selected => true, :date_selected => Date.yesterday, :money => 50, :odds => 2.0)
+        @winner = Factory(:bet, :user => Factory(:user , :email => Factory.next(:email)), :event => @event,
+                           :selected => true, :money => 50, :odds => 2.0, :date_selected => Date.today - 2.days,
+                           :winner => true, :date_earned => Date.yesterday, :earned => 10.0)
+      end
+
+      it "should respond to method" do
+        Message.should respond_to(:post_summary_message)
+      end
+
+      it "should create a new message" do
+        lambda do
+          Message.post_summary_message
+        end.should change(Message, :count).by(1)
+      end
+
+      it "should have the new event" do
+        Message.post_summary_message
+        msg = Message.last
+        msg.message[:events].count.should == 1
+        msg.message[:events][0].should == @event
+      end
+
+      it "should have the selected bet" do
+        Message.post_summary_message
+        msg = Message.last
+        msg.message[:selected].count.should == 1
+        msg.message[:selected][0].should == @selected
+      end
+
+      it "should have the winner bet" do
+        Message.post_summary_message
+        msg = Message.last
+        msg.message[:winner].count.should == 1
+        msg.message[:winner][0].should == @winner
+      end
+
+      it "should be assigned to nil user" do
+        Message.post_summary_message
+        msg = Message.last
+        msg.user.should be_nil
+      end
+    end
+    describe "without data" do
+      it "should not create any message" do
+        lambda do
+          Message.post_summary_message
+        end.should_not change(Message, :count)
+      end
+    end
+  end
 end

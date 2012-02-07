@@ -127,6 +127,14 @@ es:
   new_expense:            "Nuevo gasto"
   expense_created_flash:  "Gasto creado correctamente"
 
+  message_summary_title:                "Resúmen del día"
+  message_new_events_summary_title:     "Nuevos eventos"
+  message_selected_bets_summary_title:  "Apuestas efectuadas"
+  message_winner_bets_summary_title:    "Apuestas ganadas"
+  money_bet:                            "Dinero apostado"
+  with_odds:                            "con couta"
+  money_earned:                         "Dinero ganado"
+
 
   will_paginate:
     next_label: "Sig"

@@ -1,6 +1,43 @@
 <tr>
     <td>
-      <b><%= message.user.name %> <%= message.user.surname %></b> > <%= l message.created_at %><br />
-      <span><%= message.message %></span>
+      <% if message.user %>
+        <b><%= message.user.name %> <%= message.user.surname %></b> > <%= l message.created_at %><br />
+        <span><%= message.message %></span>
+      <% else %>
+        <b>Computer</b> > <%= l message.created_at %><br />
+        <h2><%= t :message_summary_title %></h2>
+        <% events = message.message[:events] %>
+        <% selected = message.message[:selected] %>
+        <% winner = message.message[:winner] %>
+        <% if events.count > 0 %>
+            <h3><%= t :message_new_events_summary_title %></h3>
+            <ul>
+              <% events.each do |event| %>
+                <li><%= link_to event.name, event %></li>
+              <% end %>
+            </ul>
+        <% end %>
+
+        <% if selected.count > 0 %>
+            <h3><%= t :message_selected_bets_summary_title %></h3>
+            <ul>
+              <% selected.each do |bet| %>
+                <li><%= link_to bet.title, event_bet_path(bet.event, bet) %>
+                  <%= t :money_bet %>: <%= bet.money %> € <%= t :with_odds %>: <%= bet.odds %></li>
+              <% end %>
+            </ul>
+        <% end %>
+
+        <% if winner.count > 0 %>
+          <h3><%= t :message_winner_bets_summary_title %></h3>
+          <ul>
+            <% winner.each do |bet| %>
+              <li><%= link_to bet.title, event_bet_path(bet.event, bet) %>
+                <%= t :money_earned %>: <%= bet.earned %> €</li>
+            <% end %>
+          </ul>
+       <% end %>
+
+      <% end %>
     </td>
 </tr>
