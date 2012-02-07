@@ -13,7 +13,7 @@
             <h3><%= t :message_new_events_summary_title %></h3>
             <ul>
               <% events.each do |event| %>
-                <li><%= link_to event.name, event %></li>
+                <li><%= link_to event.name, event_bets_path(event) %></li>
               <% end %>
             </ul>
         <% end %>
