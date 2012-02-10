@@ -51,6 +51,12 @@ describe PagesController do
     end
 
     describe "GET 'home'" do
+      before(:each) do
+        Factory(:user, :email => Factory.next(:email), :validated => true)
+        Factory(:user, :email => Factory.next(:email), :validated => true, :passive => true)
+        Factory(:user, :email => Factory.next(:email), :validated => true)
+      end
+
       it "should show messages" do
         get :home
         assigns(:messages).should == @msgs.reverse
@@ -63,12 +69,12 @@ describe PagesController do
 
       it "should show active users information" do
         get :home
-        assigns(:active).should_not be_nil
+        assigns(:active).should == 2
       end
 
       it "should show passive users information" do
         get :home
-        assigns(:passive).should_not be_nil
+        assigns(:passive).should == 1
       end
     end
   end
