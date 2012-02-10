@@ -43,7 +43,7 @@
           <file leaf-file-name="_message.erb" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/views/messages/_message.erb">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="12" column="25" selection-start="539" selection-end="539" vertical-scroll-proportion="0.29912025">
+                <state line="12" column="14" selection-start="528" selection-end="528" vertical-scroll-proportion="0.29912025">
                   <folding />
                 </state>
               </provider>
@@ -826,13 +826,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/message.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/locales/es.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="82" column="2" selection-start="3414" selection-end="3455" vertical-scroll-proportion="0.0">
@@ -861,9 +854,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/message.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/messages/_message.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="25" selection-start="539" selection-end="539" vertical-scroll-proportion="0.29912025">
+        <state line="12" column="14" selection-start="528" selection-end="528" vertical-scroll-proportion="0.29912025">
           <folding />
         </state>
       </provider>
