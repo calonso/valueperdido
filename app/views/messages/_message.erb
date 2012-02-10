@@ -10,7 +10,7 @@
         <% events = message.message[:events] %>
         <% selected = message.message[:selected] %>
         <% winner = message.message[:winner] %>
-        <% if closing.count > 0 %>
+        <% if closing && closing.count > 0 %>
             <h3><%= t :closing_events %></h3>
             <ul>
               <% closing.each do |event| %>
