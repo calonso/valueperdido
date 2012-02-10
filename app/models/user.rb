@@ -1,22 +1,9 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer(4)      not null, primary key
-#  name               :string(255)
-#  surname            :string(255)
-#  email              :string(255)
-#  admin              :boolean(1)      default(FALSE)
-#  validated          :boolean(1)      default(FALSE)
-#  encrypted_password :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#
-
 require "digest"
+
 class User < ActiveRecord::Base
   attr_accessor :password, :terms
-  attr_accessible :name, :surname, :email, :admin, :validated, :password, :password_confirmation, :terms
+  attr_accessible :name, :surname, :email, :admin, :validated,
+                  :password, :password_confirmation, :terms, :passive
 
   has_many :events
   has_many :bets

@@ -1,11 +1,22 @@
-<li>
-  <%= link_to "#{user.surname}, #{user.name}", user %> |
+<tr>
+  <td><%= link_to "#{user.surname}, #{user.name}", user %></td>
+  <td>
   <% if user.validated %>
     <%= link_to "#{t :invalidate}", admin_invalidate_path(:id => user.id) %>
   <% else %>
     <%= link_to "#{t :validate}", admin_validate_path(:id => user.id) %>
   <% end %>
-  | <%= link_to "#{t :delete}", admin_user_path(user), :method => :delete,
+  </td>
+  <td>
+  <% if user.passive? %>
+    <%= link_to "#{t :activate}", admin_activate_path(:id => user.id) %>
+  <% else %>
+    <%= link_to "#{t :mark_passive}", admin_passive_path(:id => user.id) %>
+  <% end %>
+  </td>
+  <td>
+  <%= link_to "#{t :delete}", admin_user_path(user), :method => :delete,
                                       :confirm => "#{t :delete_confirm}",
                                       :title => "#{t :delete} #{user.name}" %>
-</li>
+  </td>
+</tr>

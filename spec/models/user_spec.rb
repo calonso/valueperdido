@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer(4)      not null, primary key
-#  name               :string(255)
-#  surname            :string(255)
-#  email              :string(255)
-#  admin              :boolean(1)      default(FALSE)
-#  validated          :boolean(1)      default(FALSE)
-#  encrypted_password :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#
-
 require 'spec_helper'
 
 describe User do
@@ -46,6 +31,11 @@ describe User do
   it "should not be validated by default" do
     user = User.new(@attr)
     user.should_not be_validated
+  end
+
+  it "should not be passive by default" do
+    user = User.new @attr
+    user.should_not be_passive
   end
 
   describe "validations" do

@@ -18,6 +18,9 @@ en:
   home_intro:   "This is ValuePerdido home page"
   home_newuser: "New user?"
   register:     "Register!"
+  active_users_intro: "Currently there are "
+  active_users_middle: " active users and "
+  active_users_end: " passive ones."
 
   locale_select: "Select your locale"
   english:       "English"
@@ -122,6 +125,12 @@ en:
   user_validated_flash_err:   "User couldn't be validated"
   user_invalidated_flash:     "User successfully invalidated"
   user_invalidated_flash_err: "User couldn't be invalidated"
+  user_activated_flash:       "User successfully activated"
+  user_activated_flash_err:   "User couldn't be activated"
+  user_passive_flash:         "User successfully marked as passive"
+  user_passive_flash_err:     "User couldn't be marked as passive"
+  activate:                   "Activate"
+  mark_passive:               "Mark as passive"
 
   new_expense:            "New expense"
   expenses:               "Expenses"

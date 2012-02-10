@@ -13,6 +13,12 @@ class UserMailer < ActionMailer::Base
     mail(:to => mail_name, :subject => "Your ValuePerdido account has been verified")
   end
 
+  def passive_account_email(user, passive)
+    @passive = passive
+    mail_name = "#{user.name} #{user.surname} <#{user.email}>"
+    mail(:to => mail_name, :subject => "Your ValuePerdido account profile has changed")
+  end
+
   def notify_summarized_day_email(day, result)
     @day = "#{ l day, :locale => :en }"
     @result = result

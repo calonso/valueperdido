@@ -10,10 +10,12 @@
   </td>
   <td>
       <% if @event.active? %>
-        <% if bet["voted"] == "1" %>
-          <%= link_to "#{t :unvote}", unvote_path(:event_id => @event, :id => bet["id"]) %>
-        <% else %>
-          <%= link_to "#{t :vote}", vote_path(:event_id => @event, :id => bet["id"]) %>
+        <% unless current_user.passive? %>
+            <% if bet["voted"] == "1" %>
+              <%= link_to "#{t :unvote}", unvote_path(:event_id => @event, :id => bet["id"]) %>
+            <% else %>
+              <%= link_to "#{t :vote}", vote_path(:event_id => @event, :id => bet["id"]) %>
+            <% end %>
         <% end %>
       <% else %>
         <% if current_user.admin? %>

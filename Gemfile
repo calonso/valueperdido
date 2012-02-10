@@ -6,7 +6,7 @@ gem 'rails', '3.1.3'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-gem 'rake', '0.9.3.beta.1'
+gem 'rake', '0.9.2.2'
 gem 'will_paginate', '3.0.2'
 gem 'date_validator'
 

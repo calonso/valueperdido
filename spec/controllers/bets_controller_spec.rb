@@ -66,6 +66,68 @@ describe BetsController do
     end
   end
 
+  describe "for passive users" do
+    before(:each) do
+      @user.passive = true
+      @user.save!
+
+      user2 = Factory(:user, :email => Factory.next(:email))
+      @bet = Factory(:bet, :user => user2, :event => @event)
+
+      test_login @user
+    end
+
+    it "should allow the 'index' action" do
+      get :index, :event_id => @event
+      response.should be_success
+    end
+
+    it "should protect the 'new' action" do
+      get :new, :event_id => @event
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'create' action" do
+      post :create, :event_id => @event, :bet => @attr
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'user_bets' action" do
+      get :event_user_bets, :event_id => @event
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'vote' action" do
+      get :vote, :event_id => @event, :id => @bet
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'unvote' action" do
+      get :unvote, :event_id => @event, :id => @bet
+      response.should redirect_to root_path
+    end
+
+    it "should allow the 'show' action" do
+      get :show, :event_id => @event, :id => @bet
+      response.should be_success
+    end
+
+    it "should protect the 'edit' action" do
+      get :edit, :event_id => @event, :id => @bet
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'update' action" do
+      put :update, :event_id => @event, :id => @bet, :event => @attr
+      response.should redirect_to root_path
+    end
+
+    it "should protect the 'destroy' action" do
+      delete :destroy, :event_id => @event, :id => @bet
+      response.should redirect_to root_path
+    end
+  end
+
   describe "for logged users" do
     before(:each) do
       sec_user = Factory(:user, :email => Factory.next(:email))

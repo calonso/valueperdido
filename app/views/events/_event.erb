@@ -1,7 +1,7 @@
 <li>
   <%= link_to event.name, event_bets_path(:event_id => event.id) %> | <%= l event.date %>
 
-  <% if event.active? %>
+  <% if event.active? and !current_user.passive? %>
   | <%= link_to "#{t :my_bets}", event_user_bets_path(:event_id => event.id) %>
   <% end %>
   

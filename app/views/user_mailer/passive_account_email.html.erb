@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+  <% if @passive %>
+    <h1>Your account has been marked as passive</h1>
+    <p>
+      You cannot propose bets or vote other's.
+      Please request your account to be marked as active
+    </p>
+  <% else %>
+    <h1>Your account has been marked as active</h1>
+    <p>
+      You can now contribute to the community proposing bets and voting other's. Enjoy!
+    </p>
+  <% end %>
+    <p>Greetings!</p>
+  </body>
+</html>

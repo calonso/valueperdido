@@ -1,8 +1,12 @@
 class PagesController < ApplicationController
 
   def home
-    @messages = Message.where("TRUE").paginate(:page => params[:page]) if logged_in?
-    @message = Message.new if logged_in?
+    if logged_in?
+      @messages = Message.where("TRUE").paginate(:page => params[:page])
+      @message = Message.new
+      @active = User.where(:passive => false).count
+      @passive = User.where(:passive => true).count
+    end
   end
 
   def terms

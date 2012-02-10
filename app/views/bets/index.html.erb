@@ -20,6 +20,6 @@
     <p><%= t :no_bets %></p>
 <% end %>
 
-<% if @event.active? %>
+<% if @event.active? and !current_user.passive?%>
     <%= link_to "#{t :new_bet}", new_event_bet_path %>
 <% end %>

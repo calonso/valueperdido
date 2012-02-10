@@ -19,6 +19,16 @@ describe PagesController do
         get :home
         assigns(:message).should be_nil
       end
+
+      it "should not show active information" do
+        get :home
+        assigns(:active).should be_nil
+      end
+
+      it "should not show passive information" do
+        get :home
+        assigns(:passive).should be_nil
+      end
     end
 
     describe "GET 'terms'" do
@@ -49,6 +59,16 @@ describe PagesController do
       it "should show the form" do
         get :home
         assigns(:message).should_not be_nil
+      end
+
+      it "should show active users information" do
+        get :home
+        assigns(:active).should_not be_nil
+      end
+
+      it "should show passive users information" do
+        get :home
+        assigns(:passive).should_not be_nil
       end
     end
   end

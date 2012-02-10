@@ -24,6 +24,16 @@ describe Admin::UsersController do
       response.should redirect_to(root_path)
     end
 
+    it "should protect the activate action" do
+      get :activate, :id => @user
+      response.should redirect_to root_path
+    end
+
+    it "should protect the passive action" do
+      get :passive, :id => @user
+      response.should redirect_to root_path
+    end
+
     it "should protect the destroy action" do
       delete :destroy, :id => @user
       response.should redirect_to(root_path)
@@ -92,6 +102,56 @@ describe Admin::UsersController do
       it "should redirect to index" do
         get :invalidate, :id => @user
         response.should redirect_to admin_users_path
+      end
+    end
+
+    describe "GET 'activate'" do
+      before(:each) do
+        @user.passive = true
+        @user.save!
+      end
+      it "should activate the user" do
+        get :activate, :id => @user
+        @user.reload
+        @user.passive.should be_false
+      end
+
+      it "should have a flash message" do
+        get :activate, :id => @user
+        flash[:success].should =~ /successfully/i
+      end
+
+      it "should redirect to index" do
+        get :activate, :id => @user
+        response.should redirect_to admin_users_path
+      end
+
+      it "should send the mail" do
+        get :activate, :id => @user
+        ActionMailer::Base.deliveries.should_not be_empty
+      end
+    end
+
+    describe "GET 'passive'" do
+      it "should passive the user" do
+        get :passive, :id => @user
+        @user.reload
+        @user.passive.should be_true
+      end
+
+      it "should have a flash message" do
+        get :passive, :id => @user
+        flash[:success].should =~ /successfully/i
+      end
+
+      it "should redirect to index" do
+        get :passive, :id => @user
+        response.should redirect_to admin_users_path
+      end
+
+      it "should send the mail" do
+        get :passive, :id => @user
+        ActionMailer::Base.deliveries.should_not be_empty
       end
     end
 

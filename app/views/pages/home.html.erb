@@ -4,6 +4,8 @@
     <p><%= t :home_intro %></p>
     <p><%= t :home_newuser %> <%= link_to "#{t :register}", signup_path,%></p>
 <% else %>
+    <p><%= t :active_users_intro %><%= @active %>
+      <%= t :active_users_middle %><%= @passive %><%= t :active_users_end %></p>
     <%= render 'messages/form' %>
     
     <% unless @messages.empty? %>

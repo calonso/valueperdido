@@ -3,6 +3,7 @@ class BetsController < ApplicationController
   before_filter :more_bets_allowed, :only => [:new, :create]
   before_filter :admin_user, :only => [:edit, :update]
   before_filter :owner, :only => :destroy
+  before_filter :non_passive_user, :only => [:new, :create, :event_user_bets, :vote, :unvote]
 
   def index
     @event = Event.find(params[:event_id])
@@ -81,17 +82,21 @@ class BetsController < ApplicationController
 
   private
 
-    def more_bets_allowed
-      bets = Bet.where("user_id = ? AND event_id = ?", current_user, params[:event_id])
-      if bets.count >= Valueperdido::Application.config.max_bets_per_user
-        flash[:notice] = t :max_bets_err
-        redirect_to event_user_bets_path, :event_id => params[:event_id]
-      end
+  def more_bets_allowed
+    bets = Bet.where("user_id = ? AND event_id = ?", current_user, params[:event_id])
+    if bets.count >= Valueperdido::Application.config.max_bets_per_user
+      flash[:notice] = t :max_bets_err
+      redirect_to event_user_bets_path, :event_id => params[:event_id]
     end
+  end
 
-    def owner
-      bet = Bet.find(params[:id])
-      redirect_to root_path unless current_user?(bet.user)
-    end
+  def owner
+    bet = Bet.find(params[:id])
+    redirect_to root_path unless current_user?(bet.user)
+  end
+
+  def non_passive_user
+    redirect_to root_path if current_user.passive?
+  end
 
 end

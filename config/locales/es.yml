@@ -15,6 +15,9 @@ es:
   home_intro:   "Esta es la home de ValuePerdido"
   home_newuser: "¿Eres nuevo?"
   register:     "¡Regístrate!"
+  active_users_intro: "Actualmente tenemos "
+  active_users_middle: " usuarios activos y "
+  active_users_end: " pasivos."
 
   locale_select: "Selecciona tu idioma"
   english:       "Inglés"
@@ -120,6 +123,12 @@ es:
   user_validated_flash_err:   "El usuario no pudo ser validado"
   user_invalidated_flash:     "Usuario invalidado con éxito"
   user_invalidated_flash_err: "El usuario no pudo ser invalidado"
+  user_activated_flash:       "Usuario activado con éxito"
+  user_activated_flash_err:   "El usuario no pudo ser activado"
+  user_passive_flash:         "Usuario marcado como pasivo"
+  user_passive_flash_err:     "El usuario no pudo ser marcado como pasivo"
+  activate:                   "Activar"
+  mark_passive:               "Marcar como pasivo"
 
   value:                  "Valor"
   description:            "Descripción"
