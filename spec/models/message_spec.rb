@@ -97,6 +97,13 @@ describe Message do
         msg.message[:winner][0].should == @winner
       end
 
+      it "should have the closing event" do
+        Message.post_summary_message
+        msg = Message.last
+        msg.message[:closing].count.should == 1
+        msg.message[:closing][0].should == @event
+      end
+
       it "should be assigned to nil user" do
         Message.post_summary_message
         msg = Message.last

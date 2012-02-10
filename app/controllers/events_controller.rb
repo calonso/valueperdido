@@ -3,6 +3,7 @@ class EventsController < ApplicationController
   before_filter :admin_user, :only => [:new, :create, :edit, :update, :destroy]
 
   def index
+    @closing_events = Event.closing_events
     @events = Event.active_events.paginate(:page => params[:page])
   end
 

@@ -6,9 +6,19 @@
       <% else %>
         <b>Computer</b> > <%= l message.created_at %><br />
         <h2><%= t :message_summary_title %></h2>
+        <% closing = message.message[:closing] %>
         <% events = message.message[:events] %>
         <% selected = message.message[:selected] %>
         <% winner = message.message[:winner] %>
+        <% if closing.count > 0 %>
+            <h3><%= t :closing_events %></h3>
+            <ul>
+              <% closing.each do |event| %>
+                <li><%= link_to event.name, event_bets_path(event) %></li>
+              <% end %>
+            </ul>
+        <% end %>
+
         <% if events.count > 0 %>
             <h3><%= t :message_new_events_summary_title %></h3>
             <ul>

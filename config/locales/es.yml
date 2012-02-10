@@ -80,6 +80,7 @@ es:
   event_updated_flash:   "Evento actualizado con éxito"
   event_destroyed_flash: "Evento borrado"
   event_closed_err:      "El evento ya está cerrado."
+  closing_events:        "Eventos cerrando"
 
   message_created_flash: "Mensaje creado correctamente"
 

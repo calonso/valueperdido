@@ -1437,3 +1437,21 @@ REQUESTING PAGE: GET /en/login with {} and HTTP headers {}
 REQUESTING PAGE: POST /en/sessions with {"utf8"=>"✓", "session"=>{"email"=>"valueperdido@gmail.com", "password"=>"ThePassw0rd"}, "commit"=>"Log in"} and HTTP headers {"HTTP_REFERER"=>"/en/login"}
 REQUESTING PAGE: GET http://www.example.com/?locale=en with {} and HTTP headers {"HTTP_REFERER"=>"/en/sessions"}
 REQUESTING PAGE: GET / with {} and HTTP headers {"HTTP_REFERER"=>"http://www.example.com/?locale=en"}
+REQUESTING PAGE: GET /en/users/2500/edit with {} and HTTP headers {}
+REQUESTING PAGE: GET http://www.example.com/en/login with {} and HTTP headers {"HTTP_REFERER"=>"/en/users/2500/edit"}
+REQUESTING PAGE: POST /en/sessions with {"utf8"=>"✓", "session"=>{"email"=>"valueperdido@gmail.com", "password"=>"ThePassw0rd"}, "commit"=>"Log in"} and HTTP headers {"HTTP_REFERER"=>"http://www.example.com/en/login"}
+REQUESTING PAGE: GET http://www.example.com/en/users/2500/edit with {} and HTTP headers {"HTTP_REFERER"=>"/en/sessions"}
+REQUESTING PAGE: GET / with {} and HTTP headers {}
+REQUESTING PAGE: GET /en/login with {} and HTTP headers {}
+REQUESTING PAGE: POST /en/sessions with {"utf8"=>"✓", "session"=>{"email"=>"valueperdido@gmail.com", "password"=>"ThePassw0rd"}, "commit"=>"Log in"} and HTTP headers {"HTTP_REFERER"=>"/en/login"}
+REQUESTING PAGE: GET http://www.example.com/?locale=en with {} and HTTP headers {"HTTP_REFERER"=>"/en/sessions"}
+REQUESTING PAGE: GET / with {} and HTTP headers {"HTTP_REFERER"=>"http://www.example.com/?locale=en"}
+REQUESTING PAGE: GET /en/users/3009/edit with {} and HTTP headers {}
+REQUESTING PAGE: GET http://www.example.com/en/login with {} and HTTP headers {"HTTP_REFERER"=>"/en/users/3009/edit"}
+REQUESTING PAGE: POST /en/sessions with {"utf8"=>"✓", "session"=>{"email"=>"valueperdido@gmail.com", "password"=>"ThePassw0rd"}, "commit"=>"Log in"} and HTTP headers {"HTTP_REFERER"=>"http://www.example.com/en/login"}
+REQUESTING PAGE: GET http://www.example.com/en/users/3009/edit with {} and HTTP headers {"HTTP_REFERER"=>"/en/sessions"}
+REQUESTING PAGE: GET / with {} and HTTP headers {}
+REQUESTING PAGE: GET /en/login with {} and HTTP headers {}
+REQUESTING PAGE: POST /en/sessions with {"utf8"=>"✓", "session"=>{"email"=>"valueperdido@gmail.com", "password"=>"ThePassw0rd"}, "commit"=>"Log in"} and HTTP headers {"HTTP_REFERER"=>"/en/login"}
+REQUESTING PAGE: GET http://www.example.com/?locale=en with {} and HTTP headers {"HTTP_REFERER"=>"/en/sessions"}
+REQUESTING PAGE: GET / with {} and HTTP headers {"HTTP_REFERER"=>"http://www.example.com/?locale=en"}

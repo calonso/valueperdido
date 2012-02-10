@@ -83,6 +83,7 @@ en:
   event_destroyed_flash: "Event destroyed"
   max_votes_err:         "You already made max bets for this event"
   event_closed_err:      "The event is already closed."
+  closing_events:        "Closing events"
 
   message_created_flash: "Message successfully created"
 

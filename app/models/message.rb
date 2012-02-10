@@ -13,13 +13,15 @@ class Message < ActiveRecord::Base
   default_scope :order => "messages.created_at DESC"
 
   def self.post_summary_message
+    closing = Event.closing_events
     events = Event.where("created_at BETWEEN ? AND ?", Date.yesterday, Date.today)
     selected = Bet.find_all_by_date_selected Date.yesterday
     winner = Bet.find_all_by_date_earned Date.yesterday
 
     message = nil
-    unless events.empty? && selected.empty? && winner.empty?
-      message = Message.new(:message => { :events => events.to_a, :selected => selected, :winner => winner})
+    unless closing.empty? && events.empty? && selected.empty? && winner.empty?
+      message = Message.new(:message => { :events => events.to_a, :closing => closing.to_a,
+                                          :selected => selected, :winner => winner})
       #Skip validation as no user id is being assigned
       message.save(:validate => false)
     end

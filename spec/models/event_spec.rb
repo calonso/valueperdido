@@ -78,7 +78,18 @@ describe Event do
   describe "scopes" do
     before (:each) do
       @past = Factory(:event, :user => @user, :date => Date.today)
-      @future = Factory(:event, :user => @user, :date => Date.tomorrow)
+      @closing = Factory(:event, :user => @user, :date => Date.tomorrow)
+      @future = Factory(:event, :user => @user, :date => Date.tomorrow + 1.day)
+    end
+
+    describe "closing scope" do
+      it "should respond to closing_events scope" do
+        Event.should respond_to(:closing_events)
+      end
+
+      it "should retrieve only closing events" do
+        Event.closing_events.should == [@closing]
+      end
     end
 
     describe "active scope" do
