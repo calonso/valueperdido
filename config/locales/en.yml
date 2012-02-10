@@ -132,6 +132,8 @@ en:
   user_passive_flash_err:     "User couldn't be marked as passive"
   activate:                   "Activate"
   mark_passive:               "Mark as passive"
+  passive_profile:            "Profile: Passive"
+  active_profile:             "Profile: Active"
 
   new_expense:            "New expense"
   expenses:               "Expenses"

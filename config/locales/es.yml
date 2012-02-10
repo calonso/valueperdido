@@ -130,6 +130,8 @@ es:
   user_passive_flash_err:     "El usuario no pudo ser marcado como pasivo"
   activate:                   "Activar"
   mark_passive:               "Marcar como pasivo"
+  passive_profile:            "Perfil: Pasivo"
+  active_profile:             "Perfil: Activo"
 
   value:                  "Valor"
   description:            "Descripción"
