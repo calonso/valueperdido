@@ -7,11 +7,11 @@ class AccountSummary < ActiveRecord::Base
       (SELECT user_id as id, date, amount, surname||', '||name as name, 'payment' as type FROM payments p
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
-      (SELECT b.event_id, date,
-                  CASE WHEN winner=TRUE THEN earned
-                  ELSE -money
-                  END, name, 'bet' FROM bets b
-        INNER JOIN events e on b.event_id = e.id where b.selected = TRUE)
+      (SELECT b.event_id, date_selected, -money, name, 'bet' FROM bets b
+        inner join events e on b.event_id = e.id where selected = TRUE)
+      UNION ALL
+      (SELECT b.event_id, date_earned, earned + money, name, 'bet' FROM bets b
+        inner join events e on b.event_id = e.id where winner = TRUE)
       UNION ALL
       (SELECT 0, date, -value, description, 'expense' FROM expenses)
       "]).to_a

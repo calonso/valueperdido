@@ -133,15 +133,15 @@ describe AccountSummary do
       @usr2 = Factory(:user, :name => "Frotacho", :email => Factory.next(:email))
       @event = Factory(:event, :user => @user)
       @bet1 = Factory(:bet, :user => @user, :event => @event,
-                      :selected => true, :money => 10, :odds => 1.6)
+                      :selected => true, :money => 10, :odds => 1.6,
+                      :date_selected => Date.yesterday)
       @bet2 = Factory(:bet, :user => @usr2, :event => @event,
                       :selected => true, :money => 10, :odds => 2.0,
-                      :winner => true, :earned => 20)
-      @event[:date] = Date.yesterday
-      @event.save!
+                      :date_selected => Date.today, :winner => true,
+                      :earned => 20, :date_earned => Date.tomorrow)
       @pay1 = Factory(:payment, :user => @user, :date => Date.today - 2.days)
       @pay2 = Factory(:payment, :user => @usr2, :date => Date.today)
-      @expense = Factory(:expense, :date => Date.tomorrow)
+      @expense = Factory(:expense, :date => Date.tomorrow + 1.day)
     end
     it "should respond to full_accounts_info" do
       AccountSummary.should respond_to(:full_accounts_info)
@@ -149,30 +149,33 @@ describe AccountSummary do
 
     it "should retrieve the appropriated data in the right order" do
       data = AccountSummary.full_accounts_info
-      data.count.should == 5
+      data.count.should == 6
       data[0]["id"].to_i.should == @user.id
       data[1]["id"].to_i.should == @event.id
       data[2]["id"].to_i.should == @event.id
       data[3]["id"].to_i.should == @usr2.id
-      data[4]["id"].to_i.should == 0
+      data[4]["id"].to_i.should == @event.id
+      data[5]["id"].to_i.should == 0
     end
 
     it "should set the right amounts" do
       data = AccountSummary.full_accounts_info
       data[0]["amount"].to_f.should == @pay1.amount
-      data[1]["amount"].to_f.should == @bet2.earned
-      data[2]["amount"].to_f.should == -1 * @bet1.money
+      data[1]["amount"].to_f.should == -1 * @bet1.money
+      data[2]["amount"].to_f.should == -1 * @bet2.money
       data[3]["amount"].to_f.should == @pay2.amount
-      data[4]["amount"].to_f.should == -1 * @expense.value
+      data[4]["amount"].to_f.should == @bet2.money + @bet2.earned
+      data[5]["amount"].to_f.should == -1 * @expense.value
     end
 
     it "should set the right names" do
       data = AccountSummary.full_accounts_info
       data[0]["name"].should == "#{@user.surname}, #{@user.name}"
-      data[1]["name"].should == @bet2.event.name
-      data[2]["name"].should == @bet1.event.name
+      data[1]["name"].should == @bet1.event.name
+      data[2]["name"].should == @bet2.event.name
       data[3]["name"].should == "#{@usr2.surname}, #{@usr2.name}"
-      data[4]["name"].should == @expense.description
+      data[4]["name"].should == @bet2.event.name
+      data[5]["name"].should == @expense.description
     end
 
     it "should set the right types" do
@@ -181,7 +184,8 @@ describe AccountSummary do
       data[1]["type"].should == 'bet'
       data[2]["type"].should == 'bet'
       data[3]["type"].should == 'payment'
-      data[4]["type"].should == 'expense'
+      data[4]["type"].should == 'bet'
+      data[5]["type"].should == 'expense'
     end
   end
 end

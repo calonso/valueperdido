@@ -15,6 +15,13 @@
                                                                              :confirm => "#{ t :delete_confirm }",
                                                                              :title => "#{ t :bet_delete }" %>
     <% end %>
+    <% if @bet.event.active? %>
+        <% if @bet.votes.collect{|vote| vote.user_id}.include? current_user.id %>
+          <%= link_to "#{t :unvote}", unvote_path(@bet.event, @bet) %>
+        <% else %>
+          <%= link_to "#{t :vote}", vote_path(@bet.event, @bet) %>
+        <% end %>
+    <% end %>
 </div>
 <div class="prepend-3 span-8 last">
   <table>
