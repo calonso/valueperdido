@@ -177,11 +177,16 @@ describe BetsController do
       end
 
       describe "for users with other bets created" do
+        before(:each) do
+          Valueperdido::Application.config.max_bets_per_user-1.times do
+            Factory(:bet, :user => @user, :event => @event)
+          end
+        end
+
         it "should redirect to the user's bets page" do
           get :new, :event_id => @event
           response.should redirect_to event_user_bets_path(@event)
         end
-
       end
     end
 
@@ -228,6 +233,12 @@ describe BetsController do
       end
 
       describe "for user with other bets created" do
+        before(:each) do
+          Valueperdido::Application.config.max_bets_per_user-1.times do
+            Factory(:bet, :user => @user, :event => @event)
+          end
+        end
+        
         it "should not create a bet" do
           lambda do
             post :create, :event_id => @event, :bet => @attr
@@ -238,7 +249,6 @@ describe BetsController do
           get :new, :event_id => @event
           response.should redirect_to event_user_bets_path(@event)
         end
-
       end
     end
 
