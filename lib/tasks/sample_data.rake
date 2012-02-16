@@ -59,21 +59,28 @@ namespace :db do
     bets = Bet.with_votes_for_event(passed.id, 1)
     (0..1).each do |n|
       bet = Bet.find((bets[n]["id"]).to_i)
-      bet.selected = true
+      bet.status = Bet::STATUS_WINNER
       bet.money = 10
       bet.odds = 2
-      bet.winner = true
       bet.earned = 20
       bet.save!
     end
 
     bet = Bet.find((bets[2]["id"]).to_i)
-    bet.selected = true
+    bet.status = Bet::STATUS_PERFORMED
+    bet.money = 10
+    bet.odds = 2
+    bet.save!
+
+    bet = Bet.find((bets[3]["id"]).to_i)
+    bet.status = Bet::STATUS_LOSER
     bet.money = 10
     bet.odds = 2
     bet.save!
 
     AccountSummary.summarize Date.yesterday
     AccountSummary.summarize
+
+    Message.post_summary_message
   end
 end

@@ -9,6 +9,22 @@ describe Bet do
               :event_id => @event.id }
   end
 
+  it "should define STATUS_IDLE constant" do
+    Bet::STATUS_IDLE.should_not be_nil
+  end
+
+  it "should define STATUS_PERFORMED constant" do
+    Bet::STATUS_PERFORMED.should_not be_nil
+  end
+
+  it "should define STATUS_LOSER constant" do
+    Bet::STATUS_LOSER.should_not be_nil
+  end
+
+  it "should define STATUS_WINNER constant" do
+    Bet::STATUS_WINNER.should_not be_nil
+  end
+
   it "should create a new instance given valid attributes" do
     @user.bets.create!(@attr)
   end
@@ -23,14 +39,9 @@ describe Bet do
     bet.event_id.should == @event.id
   end
 
-  it "should not be selected by default" do
+  it "should be idle by default" do
     bet = @user.bets.create(@attr)
-    bet.should_not be_selected
-  end
-
-  it "should not be winner by default" do
-    bet = @user.bets.create(@attr)
-    bet.should_not be_winner
+    bet.should_not be_performed
   end
 
   describe "associations" do
@@ -126,35 +137,48 @@ describe Bet do
     it "should reject more than max bets per user and event" do
       max = Valueperdido::Application.config.max_bets_per_user
       max.times { @user.bets.create!(@attr)}
-      second_bet = @user.bets.build(@attr)
-      second_bet.should_not be_valid
+      extra_bet = @user.bets.build(@attr)
+      extra_bet.should_not be_valid
+    end
+
+    it "should reject invalid status values" do
+      invalid_bet = @user.bets.build(@attr.merge(:status => 'invalid_status'))
+      invalid_bet.should_not be_valid
+    end
+
+    it "should accept valid status values" do
+      statuses = [Bet::STATUS_IDLE, Bet::STATUS_PERFORMED, Bet::STATUS_LOSER, Bet::STATUS_WINNER]
+      statuses.each do |status|
+        valid_bet = @user.bets.build(@attr.merge(:status => status, :money => 1.0, :odds => 1.0, :earned => 1.0))
+        valid_bet.should be_valid
+      end
     end
 
     it "should require a money amount if selected" do
-      invalid_bet = @user.bets.build(@attr.merge(:selected => true, :odds => 1.1))
+      invalid_bet = @user.bets.build(@attr.merge(:status => Bet::STATUS_PERFORMED, :odds => 1.1))
       invalid_bet.should_not be_valid
     end
 
     it "should require an odds amount if selected" do
-      invalid_bet = @user.bets.build(@attr.merge(:selected => true, :money => 5))
+      invalid_bet = @user.bets.build(@attr.merge(:status => Bet::STATUS_PERFORMED, :money => 5))
       invalid_bet.should_not be_valid
     end
 
     it "should require an earned amount if winner" do
-      select_hash = { :selected => true, :money => 5, :odds => 1.6 , :winner => true }
+      select_hash = { :status => Bet::STATUS_WINNER, :money => 5, :odds => 1.6 , :winner => true }
       invalid_bet = @user.bets.build(@attr.merge(select_hash))
       invalid_bet.should_not be_valid
     end
 
-    describe "non editable attrs if selected" do
+    describe "non editable attrs if performed" do
       before(:each) do
         @bet = Factory(:bet, :user => @user, :event => @event,
-                       :selected => true, :money => 10, :odds => 2.0,
-                       :date_selected => Date.today)
+                       :status => Bet::STATUS_PERFORMED, :money => 10,
+                       :odds => 2.0, :date_performed => Date.today)
       end
 
-      it "should not allow to edit the selected attribute" do
-        @bet.selected = false
+      it "should not allow to edit the status back to idle" do
+        @bet.status = Bet::STATUS_IDLE
         @bet.should_not be_valid
       end
 
@@ -168,16 +192,16 @@ describe Bet do
         @bet.should_not be_valid
       end
     end
-    describe "non editable attrs if winner" do
+    describe "non editable attrs if finished" do
       before(:each) do
         @bet = Factory(:bet, :user => @user, :event => @event,
-                       :selected => true, :money => 10, :odds => 2.0,
-                       :date_selected => Date.today, :winner => true,
-                       :earned => 10, :date_earned => Date.today)
+                       :status => Bet::STATUS_WINNER, :money => 10,
+                       :odds => 2.0, :date_performed => Date.today,
+                       :earned => 10, :date_finished => Date.today)
       end
 
-      it "should not allow to edit the winner attribute" do
-        @bet.winner = false
+      it "should not allow to edit the status attribute" do
+        @bet.status = Bet::STATUS_LOSER
         @bet.should_not be_valid
       end
 
@@ -189,19 +213,23 @@ describe Bet do
   end
 
   describe "scopes" do
-    describe "selected scope" do
+    describe "performed scope" do
       before(:each) do
         sec_user = Factory(:user, :email => Factory.next(:email))
         sec_user.bets.create!(@attr)
-        @sel_bet = @user.bets.create!(@attr.merge(:selected => true, :money => 1.0, :odds => 1.5))
+        @sel_bet = @user.bets.create!(@attr.merge(:status => Bet::STATUS_PERFORMED, :money => 1.0, :odds => 1.5))
+        third_user = Factory(:user, :email => Factory.next(:email))
+        @loser_bet = third_user.bets.create!(@attr.merge(:status => Bet::STATUS_LOSER, :money => 1.0, :odds => 1.1, :earned => 0.0))
+        fourth_user = Factory(:user, :email => Factory.next(:email))
+        @winner_bet = fourth_user.bets.create!(@attr.merge(:status => Bet::STATUS_WINNER, :money => 1.0, :odds => 1.1, :earned => 10.0))
       end
 
-      it "should have the selected scope" do
-        Bet.should respond_to(:selected)
+      it "should have the performed scope" do
+        Bet.should respond_to(:performed)
       end
 
-      it "should retrieve selected bets" do
-        Bet.selected.should == [@sel_bet]
+      it "should retrieve performed, winner and loser bets" do
+        Bet.performed.should == [@winner_bet, @loser_bet, @sel_bet]
       end
     end
 
@@ -224,7 +252,7 @@ describe Bet do
         bet["title"].should == @attr[:title]
         bet["votes"].to_i.should == 2
         bet["voted"].to_i.should == 1
-        bet["selected"].should == "f"
+        bet["status"].should == Bet::STATUS_IDLE
         bet["user_id"].to_i.should == @user.id
         bet["author"].should == "#{@user.name} #{@user.surname}"
       end
@@ -248,33 +276,67 @@ describe Bet do
   end
 
   describe "callbacks" do
-    before(:each) do
-      @bet = Factory(:bet, :event => @event, :user => @user)
-    end
-
-    it "should have selected date to nil" do
-      @bet.date_selected.should be_nil
-    end
-
-    it "should have earned date to nil" do
-      @bet.date_earned.should be_nil
-    end
-
-    it "should set the selected date upon selection" do
-      @bet.update_attributes(:selected => true, :money => 5, :odds => 2.0)
-      @bet.reload
-      @bet.date_selected.should == Date.today
-    end
-
-    describe "with a selected bet" do
+    describe "set_dates callback" do
       before(:each) do
-        @bet.update_attributes( :selected => true, :money => 5, :odds => 2 )
+        @bet = Factory(:bet, :event => @event, :user => @user)
       end
 
-      it "should set the earned date upon earning" do
-        @bet.update_attributes(:winner => true, :earned => 20)
+      it "should have performed date to nil" do
+        @bet.date_performed.should be_nil
+      end
+
+      it "should have finished date to nil" do
+        @bet.date_finished.should be_nil
+      end
+
+      it "should set the performed date upon performance" do
+        @bet.update_attributes(:status => Bet::STATUS_PERFORMED, :money => 5, :odds => 2.0)
         @bet.reload
-        @bet.date_earned.should == Date.today
+        @bet.date_performed.should == Date.today
+      end
+
+      it "should set the performed date if directly winner" do
+        @bet.update_attributes!(:status => Bet::STATUS_WINNER, :money => 5, :odds => 2.0, :earned => 20.0)
+        @bet.reload
+        @bet.date_performed.should == Date.today
+      end
+
+      it "should set the performed date if directly loser" do
+        @bet.update_attributes(:status => Bet::STATUS_LOSER, :money => 5, :odds => 2.0)
+        @bet.reload
+        @bet.date_performed.should == Date.today
+      end
+
+      describe "with a selected bet" do
+        before(:each) do
+          @bet.update_attributes( :status => Bet::STATUS_PERFORMED, :money => 5, :odds => 2 )
+        end
+
+        it "should set the finished date upon winning" do
+          @bet.update_attributes(:status => Bet::STATUS_WINNER, :earned => 20)
+          @bet.reload
+          @bet.date_finished.should == Date.today
+        end
+
+        it "should set the finished date upon losing" do
+          @bet.update_attributes(:status => Bet::STATUS_LOSER)
+          @bet.reload
+          @bet.date_finished.should == Date.today
+        end
+
+        it "should keep the performed date upon winning" do
+          performed_date = @bet.date_performed
+          @bet.update_attributes(:status => Bet::STATUS_WINNER, :earned => 20)
+          @bet.reload
+          @bet.date_performed.should == performed_date
+        end
+
+        it "should keep the performed date upon losing" do
+          performed_date = @bet.date_performed
+          @bet.update_attributes(:status => Bet::STATUS_LOSER)
+          @bet.reload
+          @bet.date_performed.should == performed_date
+        end
       end
     end
   end

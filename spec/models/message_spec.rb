@@ -60,10 +60,10 @@ describe Message do
         @event.save!
         Factory(:bet, :user => @user, :event => @event)
         @selected = Factory(:bet, :user => Factory(:user , :email => Factory.next(:email)), :event => @event,
-                           :selected => true, :date_selected => Date.yesterday, :money => 50, :odds => 2.0)
+                           :status => Bet::STATUS_PERFORMED, :date_performed => Date.yesterday, :money => 50, :odds => 2.0)
         @winner = Factory(:bet, :user => Factory(:user , :email => Factory.next(:email)), :event => @event,
-                           :selected => true, :money => 50, :odds => 2.0, :date_selected => Date.today - 2.days,
-                           :winner => true, :date_earned => Date.yesterday, :earned => 10.0)
+                           :status => Bet::STATUS_WINNER, :money => 50, :odds => 2.0, :date_performed => Date.today - 2.days,
+                           :date_finished => Date.yesterday, :earned => 10.0)
       end
 
       it "should respond to method" do

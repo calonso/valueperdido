@@ -7,21 +7,24 @@ class AccountSummary < ActiveRecord::Base
       (SELECT user_id as id, date, amount, surname||', '||name as name, 'payment' as type FROM payments p
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
-      (SELECT b.event_id, date_selected, -money, name, 'bet' FROM bets b
-        inner join events e on b.event_id = e.id where selected = TRUE)
+      (SELECT b.event_id, date_performed, -money, name, 'bet' FROM bets b
+        inner join events e on b.event_id = e.id where status != ?)
       UNION ALL
-      (SELECT b.event_id, date_earned, earned + money, name, 'bet' FROM bets b
-        inner join events e on b.event_id = e.id where winner = TRUE)
+      (SELECT b.event_id, date_finished, earned + money, name, 'bet' FROM bets b
+        inner join events e on b.event_id = e.id where status = ?)
+      UNION ALL
+      (SELECT b.event_id, date_finished, 0.0, name, 'bet' FROM bets b
+        inner join events e on b.event_id = e.id where status = ?)
       UNION ALL
       (SELECT 0, date, -value, description, 'expense' FROM expenses)
-      "]).to_a
+      ", Bet::STATUS_IDLE, Bet::STATUS_WINNER, Bet::STATUS_LOSER]).to_a
     data.sort! { |a, b| a["date"] <=> b["date"] }
   end
 
   def self.summarize(day=Date.today)
     payments = Payment.sum(:amount, :conditions => ["date = ?", day])
-    bets = Bet.sum(:money, :conditions => ["selected = true AND date_selected = ?", day])
-    earns = Bet.sum("earned + money", :conditions => ["winner = true AND date_earned = ?", day])
+    bets = Bet.sum(:money, :conditions => ["status != ? AND date_performed = ?", Bet::STATUS_IDLE, day])
+    earns = Bet.sum("earned + money", :conditions => ["status = ? AND date_finished = ?", Bet::STATUS_WINNER, day])
     expenses = Expense.sum(:value, :conditions => ["date = ?", day])
 
     summary = AccountSummary.find_or_create_by_date(day)

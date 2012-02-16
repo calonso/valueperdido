@@ -305,10 +305,9 @@ describe BetsController do
       before(:each) do
         @attr = { :title => "The new title",
                   :description => "The new description",
-                  :selected => true,
+                  :status => Bet::STATUS_WINNER,
                   :money => 1.1,
                   :odds => 1.67,
-                  :winner => true,
                   :earned => 40}
       end
 
@@ -335,19 +334,17 @@ describe BetsController do
           it "should not change the bet's attributes" do
             prev = { :title => @bet.title,
                      :description => @bet.description,
-                     :selected => @bet.selected,
+                     :status => @bet.status,
                      :money => @bet.money,
                      :odds => @bet.odds,
-                     :winner => @bet.winner,
                      :earned => @bet.earned }
             put :update, :event_id => @event, :id => @bet, :bet => @attr
             @bet.reload
             @bet.title.should == prev[:title]
             @bet.description.should == prev[:description]
-            @bet.selected.should == prev[:selected]
+            @bet.status.should == prev[:status]
             @bet.money.should == prev[:money]
             @bet.odds.should == prev[:odds]
-            @bet.winner.should == prev[:winner]
             @bet.earned.should == prev[:earned]
           end
         end
@@ -358,10 +355,9 @@ describe BetsController do
             @bet.reload
             @bet.title.should == @attr[:title]
             @bet.description.should == @attr[:description]
-            @bet.selected.should == @attr[:selected]
+            @bet.status.should == @attr[:status]
             @bet.money.should == @attr[:money]
             @bet.odds.should == @attr[:odds]
-            @bet.winner.should == @attr[:winner]
             @bet.earned.should == @attr[:earned]
           end
 

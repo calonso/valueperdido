@@ -21,8 +21,8 @@
         <% if current_user.admin? %>
           <%= link_to "#{t :edit}", edit_event_bet_path(:event_id => @event, :id => bet["id"]) %>
         <% end %>
-        <% if bet["selected"] == "t" %>
-          | <%= t :selected %>
+        <% if bet["status"] != Bet::STATUS_IDLE %>
+          | <%= t :performed %>
         <% end %>
       <% end %>
   </td>

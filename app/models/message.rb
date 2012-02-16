@@ -15,8 +15,8 @@ class Message < ActiveRecord::Base
   def self.post_summary_message
     closing = Event.closing_events
     events = Event.where("created_at BETWEEN ? AND ?", Date.yesterday, Date.today)
-    selected = Bet.find_all_by_date_selected Date.yesterday
-    winner = Bet.find_all_by_date_earned Date.yesterday
+    selected = Bet.find_all_by_date_performed Date.yesterday
+    winner = Bet.find_all_by_date_finished_and_status Date.yesterday, Bet::STATUS_WINNER
 
     message = nil
     unless closing.empty? && events.empty? && selected.empty? && winner.empty?

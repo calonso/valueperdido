@@ -1,20 +1,28 @@
 <h1><%= @bet.title %></h1>
 <div class="first span-8">
     <p><%= @bet.description %></p>
-    <% if @bet.selected? %>
-        <p><%= t :bet_selected %></p>
-        <p><%= t :bet_money %>: <%= @bet.money %> €</p>
-        <p><%= t :bet_odds %>: <%= @bet.odds %></p>
-        <% if @bet.winner? %>
+    <% case  @bet.status %>
+        <% when Bet::STATUS_PERFORMED %>
+            <p><%= t :bet_performed %></p>
+            <p><%= t :bet_money %>: <%= @bet.money %> €</p>
+            <p><%= t :bet_odds %>: <%= @bet.odds %></p>
+        <% when Bet::STATUS_LOSER %>
+            <p><%= t :bet_loser %></p>
+            <p><%= t :bet_money %>: <%= @bet.money %> €</p>
+            <p><%= t :bet_odds %>: <%= @bet.odds %></p>
+        <% when Bet::STATUS_WINNER %>
             <p><%= t :bet_winner %></p>
+            <p><%= t :bet_money %>: <%= @bet.money %> €</p>
+            <p><%= t :bet_odds %>: <%= @bet.odds %></p>
             <p><%= t :earned %>: <%= @bet.earned %></p>
-        <% end %>
     <% end %>
+  
     <% if current_user?(@bet.user) && @bet.event.active? %>
       <%= link_to "#{ t :delete }", event_bet_path(:event_id => @bet.event, :id => @bet), :method => :delete,
                                                                              :confirm => "#{ t :delete_confirm }",
                                                                              :title => "#{ t :bet_delete }" %>
     <% end %>
+
     <% if @bet.event.active? %>
         <% if @bet.votes.collect{|vote| vote.user_id}.include? current_user.id %>
           <%= link_to "#{t :unvote}", unvote_path(@bet.event, @bet) %>

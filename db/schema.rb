@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120209180948) do
+ActiveRecord::Schema.define(:version => 20120215104546) do
 
   create_table "account_summaries", :force => true do |t|
     t.float    "incoming"
@@ -26,17 +26,16 @@ ActiveRecord::Schema.define(:version => 20120209180948) do
   create_table "bets", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.boolean  "selected",      :default => false
-    t.boolean  "winner",        :default => false
-    t.float    "money",         :default => 0.0
-    t.float    "odds",          :default => 0.0
+    t.float    "money",                       :default => 0.0
+    t.float    "odds",                        :default => 0.0
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "earned",        :default => 0.0
-    t.date     "date_selected"
-    t.date     "date_earned"
+    t.float    "earned",                      :default => 0.0
+    t.date     "date_performed"
+    t.date     "date_finished"
+    t.string   "status",         :limit => 1, :default => "0"
   end
 
   create_table "events", :force => true do |t|
