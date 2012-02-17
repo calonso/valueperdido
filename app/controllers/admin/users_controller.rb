@@ -41,7 +41,7 @@ class Admin::UsersController < ApplicationController
   def passive
     @user = User.find params[:id]
     if @user.update_attribute :passive, true
-      UserMailer.passive_account_email(@user, false).deliver
+      UserMailer.passive_account_email(@user, true).deliver
       flash[:success] = t :user_passive_flash
     else
       flash[:error] = t :user_passive_flash_err

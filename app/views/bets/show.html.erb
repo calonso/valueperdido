@@ -23,7 +23,7 @@
                                                                              :title => "#{ t :bet_delete }" %>
     <% end %>
 
-    <% if @bet.event.active? %>
+    <% if @bet.event.active? && !current_user.passive? %>
         <% if @bet.votes.collect{|vote| vote.user_id}.include? current_user.id %>
           <%= link_to "#{t :unvote}", unvote_path(@bet.event, @bet) %>
         <% else %>
