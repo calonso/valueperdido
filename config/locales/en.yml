@@ -101,7 +101,6 @@ en:
   total:                 "Total"
   accounts_empty:        "No payments of bets performed yet"
   payment_of:            "Payment of"
-  bet_of:                "Bet of"
   detailed:              "Detailed"
   summarized:            "Summarized"
   incoming:              "Incoming"

@@ -77,6 +77,17 @@ describe Event do
 
   describe "scopes" do
     before (:each) do
+      @past_with_bets = Factory(:event, :user => @user)
+      Factory(:bet, :user => @user, :event => @past_with_bets,
+              :status => Bet::STATUS_PERFORMED, :money => 10.0, :odds => 1.1)
+      @past_with_bets.date = Date.yesterday - 1.day
+      @past_with_bets.save!
+
+      past2 = Factory(:event, :user => @user)
+      Factory(:bet, :user => @user, :event => past2)
+      past2.date = Date.yesterday
+      past2.save!
+
       @past = Factory(:event, :user => @user, :date => Date.today)
       @closing = Factory(:event, :user => @user, :date => Date.tomorrow)
       @future = Factory(:event, :user => @user, :date => Date.tomorrow + 1.day)
@@ -107,8 +118,8 @@ describe Event do
         Event.should respond_to(:past_events)
       end
 
-      it "should retrieve only the past events" do
-        Event.past_events.should == [@past]
+      it "should retrieve only the past events and those with performed bets" do
+        Event.past_events.should == [@past_with_bets, @past]
       end
     end
   end

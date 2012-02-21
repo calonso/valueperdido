@@ -14,7 +14,7 @@ class Event < ActiveRecord::Base
   default_scope :order => "events.date ASC"
   scope :closing_events, lambda { where("date = ?", Date.tomorrow)}
   scope :active_events, lambda { where("date > ?", Date.tomorrow) }
-  scope :past_events, lambda { where("date <= ?", Date.today) }
+  scope :past_events, lambda { Event.includes(:bets).where("date = ? or (date < ? and bets.status != ?)", Date.today, Date.today, Bet::STATUS_IDLE).uniq }
 
   def active?
     self.date > Date.today

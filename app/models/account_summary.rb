@@ -4,20 +4,26 @@ class AccountSummary < ActiveRecord::Base
 
   def self.full_accounts_info
     data = self.connection.execute(sanitize_sql ["
-      (SELECT user_id as id, date, amount, surname||', '||name as name, 'payment' as type FROM payments p
+      (SELECT user_id as id, date, amount, surname||', '||name as name, 'payment' as type, 0 as extra FROM payments p
         INNER JOIN users u on p.user_id = u.id)
       UNION ALL
-      (SELECT b.event_id, date_performed, -money, name, 'bet' FROM bets b
-        inner join events e on b.event_id = e.id where status != ?)
+      (SELECT id, date_performed, -money, title, 'bet', event_id FROM bets
+          where status != ? and (date_finished IS NULL OR date_performed != date_finished))
       UNION ALL
-      (SELECT b.event_id, date_finished, earned + money, name, 'bet' FROM bets b
-        inner join events e on b.event_id = e.id where status = ?)
+      (SELECT id, date_finished, earned + money, title, 'bet', event_id FROM bets
+        where status = ? and date_finished != date_performed)
       UNION ALL
-      (SELECT b.event_id, date_finished, 0.0, name, 'bet' FROM bets b
-        inner join events e on b.event_id = e.id where status = ?)
+      (SELECT id, date_finished, earned, title, 'bet', event_id FROM bets
+        where status = ? and date_finished = date_performed)
       UNION ALL
-      (SELECT 0, date, -value, description, 'expense' FROM expenses)
-      ", Bet::STATUS_IDLE, Bet::STATUS_WINNER, Bet::STATUS_LOSER]).to_a
+      (SELECT id, date_finished, 0.0, title, 'bet', event_id FROM bets
+        where status = ? and date_finished != date_performed)
+      UNION ALL
+      (SELECT id, date_finished, -money, title, 'bet', event_id FROM bets
+        where status = ? and date_finished = date_performed)
+      UNION ALL
+      (SELECT 0, date, -value, description, 'expense', 0 FROM expenses)
+      ", Bet::STATUS_IDLE, Bet::STATUS_WINNER, Bet::STATUS_WINNER, Bet::STATUS_LOSER, Bet::STATUS_LOSER]).to_a
     data.sort! { |a, b| a["date"] <=> b["date"] }
   end
 

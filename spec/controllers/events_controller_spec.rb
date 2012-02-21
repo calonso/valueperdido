@@ -103,7 +103,11 @@ describe EventsController do
         @closing_events << Factory(:event, :name => Factory.next(:name), :user => @user)
         @closing_events << Factory(:event, :name => Factory.next(:name), :user => @user)
         @past_events << Factory(:event, :name => Factory.next(:name), :date => Date.today, :user => @user)
-        @past_events << Factory(:event, :name => Factory.next(:name), :date => Date.today, :user => @user)
+        evt = Factory(:event, :name => Factory.next(:name), :user => @user)
+        @past_events << evt
+        Factory(:bet, :event => evt, :user => @user, :status => Bet::STATUS_PERFORMED, :money => 10.0, :odds => 1.1)
+        evt.date = Date.yesterday
+        evt.save!
       end
 
       it "index should only show the following events, not past ones" do
@@ -116,7 +120,7 @@ describe EventsController do
         assigns(:closing_events).sort.should == @closing_events.sort
       end
 
-      it "history should show past events, not active ones" do
+      it "history should show recently closed events and events with bets performed" do
         get :history
         assigns(:events).sort.should == @past_events.sort
       end

@@ -4,9 +4,9 @@
     <td><%= total %></td>
     <td>
     <% if item["type"] == "payment" %>
-        <%= t :payment_of %>: <%= link_to item["name"], user_path(:id => item["id"]) %>
+        <%= t :payment_of %>: <%= link_to item["name"], user_path(item["id"]) %>
     <% elsif item["type"] == "bet" %>
-        <%= t :bet_of %>: <%= link_to item["name"], event_bets_path(:event_id => item["id"]) %>
+        <%= t :bet %>: <%= link_to item["name"], event_bet_path(item["extra"], item["id"]) %>
     <% else %>
         <%= item["name"] %>
     <% end %>
