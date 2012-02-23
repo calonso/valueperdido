@@ -15,9 +15,6 @@
     <%= t :active_profile %>
 <% end %>
 <br />
-    <% money = 0 %>
-    <% AccountSummary.full_accounts_info.each do |sum| %>
-        <% money += sum["amount"].to_f %>
-    <% end %>
-    <p>Money: <%= (money/23).round(2) %> €</p>
+    <% money = AccountSummary.total_money %>
+    <p>Money: <%= (money * @user.percentage / 100).round(2) %> €</p>
 <%= link_to "#{t :payment_list}", user_payments_path(@user) %>

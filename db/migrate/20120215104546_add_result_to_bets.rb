@@ -8,6 +8,7 @@ class AddResultToBets < ActiveRecord::Migration
         else
           bet.status = Bet::STATUS_LOSER
         end
+        bet.save!
       end
     end
     remove_column :bets, :winner
@@ -28,6 +29,7 @@ class AddResultToBets < ActiveRecord::Migration
           bet.winner = true
           bet.selected = true
       end
+      bet.save!
     end
     remove_column :bets, :status
     rename_column :bets, :date_performed, :date_selected

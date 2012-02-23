@@ -2,6 +2,8 @@
 namespace :db do
   desc "Fill database with sample data"
   task :populate => :environment do
+    NUM_USERS = 40
+    PERCENTAGE = 100.0 / (NUM_USERS + 1)
     Rake::Task['db:reset'].invoke
     admin = User.create(:name => "Example",
                         :surname => "User",
@@ -10,6 +12,7 @@ namespace :db do
                         :password_confirmation => "ThePassw0rd",
                         :validated => true)
     admin.toggle!(:admin)
+    admin.payments.create!({:amount => 100.50})
 
     4.times do |n|
       Event.create!(:name => "Event #{n+1}",
@@ -20,7 +23,7 @@ namespace :db do
                       :description => "Expense: #{n}" )
     end
 
-    40.times do |n|
+    NUM_USERS.times do |n|
       name = Faker::Name.name
       surname = Faker::Name.last_name
       email = "user-#{n+1}@example.org"
@@ -32,9 +35,8 @@ namespace :db do
                           :password_confirmation => password,
                           :validated => true)
 
-      user.payments.create!({:amount => 100.50,
-                             :date => n%2 == 1 ? Date.today : Date.yesterday})
-      
+      user.payments.create!({:amount => 100.50})
+
       Event.all.each do |event|
         bets = event.bets.shuffle[0..Valueperdido::Application.config.max_votes_per_user - 1]
         bets.each do |bet|

@@ -38,6 +38,11 @@ describe User do
     user.should_not be_passive
   end
 
+  it "should have 0 percentage by default" do
+    user = User.new @attr
+    user.percentage.should == 0.0
+  end
+
   describe "validations" do
     it "should require a name" do
       invalid_user = User.new(@attr.merge(:name => ''))

@@ -36,7 +36,7 @@ describe PaymentsController do
     describe "GET 'index'" do
       before(:each) do
         @payments = []
-        @payments << Factory(:payment, :user => @user, :date => Date.today - 1.month)
+        @payments << Factory(:payment, :user => @user)
         @payments << Factory(:payment, :user => @user)
       end
 

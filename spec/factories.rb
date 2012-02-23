@@ -37,7 +37,6 @@ end
 
 Factory.define :payment do |payment|
   payment.amount      300.50
-  payment.date        Date.today
   payment.association :user
 end
 

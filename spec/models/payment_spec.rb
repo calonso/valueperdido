@@ -16,7 +16,6 @@ describe Payment do
     payment.user.should == @user
     payment.user_id.should == @user.id
     payment.amount.should == @attr[:amount]
-    payment.date.should == @attr[:date]
   end
 
   describe "validations" do
@@ -36,16 +35,6 @@ describe Payment do
         invalid_payment.should_not be_valid
       end
     end
-
-    it "should require a date" do
-      invalid_payment = @user.payments.build(@attr.merge(:date => nil))
-      invalid_payment.should_not be_valid
-    end
-
-    it "should reject invalid dates" do
-      invalid_payment = @user.payments.build(@attr.merge(:date => "aaa"))
-      invalid_payment.should_not be_valid
-    end
   end
 
   describe "user association" do
@@ -63,21 +52,46 @@ describe Payment do
   end
 
   describe "callbacks" do
-    it "should summarize if payment was before today" do
-      lambda do
-        @user.payments.create(@attr.merge(:date => Date.yesterday))
-      end.should change(AccountSummary, :count).by(1)
-    end
+    describe "recalculate_percentages" do
+      describe "for one user" do
+        before(:each) do
+          @user.payments.create!(:amount => 100.2)
+        end
 
-    it "should not summarize if today or in future" do
-      lambda do
-        @user.payments.create(@attr)
-      end.should_not change(AccountSummary, :count)
-    end
+        it "should give 100% to the first user" do
+          @user.reload
+          @user.percentage.should == 100
+        end
 
-    it "should pass the right date" do
-      @user.payments.create(@attr.merge(:date => Date.yesterday))
-      AccountSummary.last.date.should == Date.yesterday
+        it "should still give 100% if makes a new payment" do
+          @user.payments.create!(:amount => 5)
+          @user.reload
+          @user.percentage.should == 100
+        end
+      end
+
+      describe "for various users" do
+        before(:each) do
+          @user.payments.create!(:amount => 100.2)
+          @user2 = Factory(:user, :email => Factory.next(:email))
+        end
+
+        it "should be 50% if all same amount" do
+          @user2.payments.create!(:amount => 100.2)
+          [@user, @user2].each do |usr|
+            usr.reload
+            usr.percentage.should == 50
+          end
+        end
+
+        it "should respect the amounts relation" do
+          @user2.payments.create!(:amount => 50.1)
+          @user.reload
+          @user.percentage.round(2).should == 66.67
+          @user2.reload
+          @user2.percentage.round(2).should == 33.33
+        end
+      end
     end
   end
 end

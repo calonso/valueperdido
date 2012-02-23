@@ -42,6 +42,7 @@ es:
   votes:                  "Votos"
   author:                 "Autor"
   actions:                "Acciones"
+  percentage:             "Porcentaje"
   money:                  "Dinero"
   status:                 "Estado"
   odds:                   "Cuota"
