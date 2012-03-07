@@ -5,6 +5,7 @@ class EventsController < ApplicationController
   def index
     @closing_events = Event.closing_events
     @events = Event.active_events.paginate(:page => params[:page])
+    @running_events = Event.running_events
   end
 
   def history

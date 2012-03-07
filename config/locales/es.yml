@@ -84,6 +84,7 @@ es:
   event_destroyed_flash: "Evento borrado"
   event_closed_err:      "El evento ya está cerrado."
   closing_events:        "Eventos cerrando"
+  running_events:        "Eventos en curso"
 
   message_created_flash: "Mensaje creado correctamente"
 

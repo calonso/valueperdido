@@ -76,17 +76,20 @@ describe Event do
   end
 
   describe "scopes" do
-    before (:each) do
+    before(:each) do
+      @with_finished_bets = Factory(:event, :user => @user)
+      Factory(:bet, :user => @user, :event => @with_finished_bets,
+                    :status => Bet::STATUS_LOSER, :money => 10.0, :odds => 1.1)
+      @with_finished_bets.update_attribute :date, Date.yesterday
+
       @past_with_bets = Factory(:event, :user => @user)
       Factory(:bet, :user => @user, :event => @past_with_bets,
               :status => Bet::STATUS_PERFORMED, :money => 10.0, :odds => 1.1)
-      @past_with_bets.date = Date.yesterday - 1.day
-      @past_with_bets.save!
+      @past_with_bets.update_attribute :date, Date.yesterday - 1.day
 
       past2 = Factory(:event, :user => @user)
       Factory(:bet, :user => @user, :event => past2)
-      past2.date = Date.yesterday
-      past2.save!
+      past2.update_attribute :date, Date.yesterday
 
       @past = Factory(:event, :user => @user, :date => Date.today)
       @closing = Factory(:event, :user => @user, :date => Date.tomorrow)
@@ -119,7 +122,17 @@ describe Event do
       end
 
       it "should retrieve only the past events and those with performed bets" do
-        Event.past_events.should == [@past_with_bets, @past]
+        Event.past_events.should == [@past, @with_finished_bets]
+      end
+    end
+
+    describe "running scope" do
+      it "should respond to running_events scope" do
+        Event.should respond_to(:running_events)
+      end
+
+      it "should retrieve the running events" do
+        Event.running_events.should == [@past_with_bets]
       end
     end
   end

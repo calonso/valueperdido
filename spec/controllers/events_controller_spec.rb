@@ -96,33 +96,132 @@ describe EventsController do
     describe "GET 'index' and 'history'" do
       before(:each) do
         @events = []
-        @past_events = []
-        @closing_events = []
-        @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow + 1.day)
-        @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow + 1.day)
-        @closing_events << Factory(:event, :name => Factory.next(:name), :user => @user)
-        @closing_events << Factory(:event, :name => Factory.next(:name), :user => @user)
-        @past_events << Factory(:event, :name => Factory.next(:name), :date => Date.today, :user => @user)
-        evt = Factory(:event, :name => Factory.next(:name), :user => @user)
-        @past_events << evt
-        Factory(:bet, :event => evt, :user => @user, :status => Bet::STATUS_PERFORMED, :money => 10.0, :odds => 1.1)
-        evt.date = Date.yesterday
-        evt.save!
+      end
+      describe "active events section" do
+        before(:each) do
+          @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow + 1.day)
+          @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow + 1.day)
+        end
+
+        it "should only show the active events" do
+          get :index
+          assigns(:events).sort.should == @events.sort
+        end
+
+        it "should not get any closing event" do
+          get :index
+          assigns(:closing_events).should be_empty
+        end
+
+        it "should not get any running event" do
+          get :index
+          assigns(:running_events).should be_empty
+        end
+
+        it "historic should be empty" do
+          get :history
+          assigns(:events).should be_empty
+        end
       end
 
-      it "index should only show the following events, not past ones" do
-        get :index
-        assigns(:events).sort.should == @events.sort
+      describe "closing events section" do
+        before(:each) do
+          @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          @events << Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+        end
+
+        it "should not get any active events" do
+          get :index
+          assigns(:events).should be_empty
+        end
+
+        it "should show the closing events" do
+          get :index
+          assigns(:closing_events).sort.should == @events.sort
+        end
+
+        it "should not get any running event" do
+          get :index
+          assigns(:running_events).should be_empty
+        end
+
+        it "historic should be empty" do
+          get :history
+          assigns(:events).should be_empty
+        end
       end
 
-      it "index should separate closing events" do
-        get :index
-        assigns(:closing_events).sort.should == @closing_events.sort
+      describe "running events section" do
+        before(:each) do
+          evt = Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          Factory(:bet, :event => evt, :user => @user, :status => Bet::STATUS_PERFORMED, :money => 10, :odds => 2)
+          Factory(:bet, :event => evt, :user => @user, :status => Bet::STATUS_IDLE)
+          evt.update_attribute :date, Date.today
+
+          evt2 = Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          Factory(:bet, :event => evt2, :user => @user, :status => Bet::STATUS_IDLE)
+          evt2.update_attribute :date, Date.yesterday
+
+          @events = [evt]
+        end
+
+        it "should not get any active events" do
+          get :index
+          assigns(:events).should be_empty
+        end
+
+        it "should not get any closing events" do
+          get :index
+          assigns(:closing_events).should be_empty
+        end
+
+        it "should show the running event" do
+          get :index
+          assigns(:running_events).should == @events
+        end
+
+        it "historic should have the event also as is historic" do
+          get :history
+          assigns(:events).should == @events
+        end
       end
 
-      it "history should show recently closed events and events with bets performed" do
-        get :history
-        assigns(:events).sort.should == @past_events.sort
+      describe "historic events" do
+        before(:each) do
+          evt1 = Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          Factory(:bet, :event => evt1, :user => @user, :status => Bet::STATUS_IDLE)
+          evt1.update_attribute :date, Date.yesterday
+
+          evt2 = Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          Factory(:bet, :event => evt2, :user => @user, :status => Bet::STATUS_LOSER, :money => 10, :odds => 2)
+          evt2.update_attribute :date, Date.today
+
+          evt3 = Factory(:event, :name => Factory.next(:name), :user => @user, :date => Date.tomorrow)
+          Factory(:bet, :event => evt3, :user => @user, :status => Bet::STATUS_WINNER, :money => 10, :odds => 2, :earned => 20)
+          evt3.update_attribute :date, Date.yesterday
+
+          @events = [evt2, evt3]
+        end
+
+        it "should not get any active events" do
+          get :index
+          assigns(:events).should be_empty
+        end
+
+        it "should not get any closing events" do
+          get :index
+          assigns(:closing_events).should be_empty
+        end
+
+        it "should not get any running event" do
+          get :index
+          assigns(:running_events).should be_empty
+        end
+
+        it "historic should show the events" do
+          get :history
+          assigns(:events).should == @events
+        end
       end
     end
 

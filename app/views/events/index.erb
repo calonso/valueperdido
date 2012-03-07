@@ -1,12 +1,18 @@
 <h1><%= t :events_index %></h1>
 
-<% if @closing_events.count > 0 %>
+<% if @running_events.any? %>
+    <h2><%= t :running_events %></h2>
+    <ul>
+      <%= render @running_events %>
+    </ul>
+<% end %>
+<% if @closing_events.any? %>
     <h2><%= t :closing_events %></h2>
     <ul>
       <%= render @closing_events %>
     </ul>
 <% end %>
-<% if @events.count > 0 %>
+<% if @events.any? %>
     <h2><%= t :events_index %></h2>
     <%= will_paginate %>
     <ul>

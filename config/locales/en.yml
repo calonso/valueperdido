@@ -88,6 +88,7 @@ en:
   max_votes_err:         "You already made max bets for this event"
   event_closed_err:      "The event is already closed."
   closing_events:        "Closing events"
+  running_events:        "Running events"
 
   message_created_flash: "Message successfully created"
 
