@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate, :only => [:show, :edit, :update]
-  before_filter :authorize,    :only => [:edit, :update]
+  before_filter :authorize,    :only => [:show, :edit, :update]
 
   def show
     @user = User.find(params[:id])
@@ -33,9 +33,8 @@ class UsersController < ApplicationController
   end
 
   private
-    def authorize
-      @user = User.find(params[:id])
-      redirect_to(root_path) unless current_user?(@user) || current_user.admin?
-    end
-
+  def authorize
+    @user = User.find(params[:id])
+    redirect_to(root_path) unless current_user?(@user) || current_user.admin?
+  end
 end

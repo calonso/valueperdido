@@ -10,4 +10,6 @@
     <p><%= t :no_payment_list %></p>
 <% end %>
 
-<%= link_to "#{t :new_payment}", new_user_payment_path(@user) %>
+<% if current_user.admin? %>
+    <%= link_to "#{t :new_payment}", new_user_payment_path(@user) %>
+<% end %>

@@ -1,6 +1,6 @@
 <h1><%= @event.name %></h1>
 
-<% if @bets.count > 0 %>
+<% if @bets.any? %>
     <table>
       <thead>
         <tr>

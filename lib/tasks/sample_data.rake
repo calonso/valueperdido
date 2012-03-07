@@ -65,7 +65,7 @@ namespace :db do
     end
 
     passed = Event.last
-    passed.save!
+    passed.update_attribute :date, Date.yesterday
 
     bets = Bet.with_votes_for_event(passed.id, 1)
     (0..1).each do |n|

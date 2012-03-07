@@ -1,6 +1,7 @@
 class PaymentsController < ApplicationController
   before_filter :authenticate
-  before_filter :owner_or_admin
+  before_filter :owner_or_admin, :only => :index
+  before_filter :admin, :only => [:new, :create]
 
   def index
     @payments = @user.payments.paginate(:page => params[:page])
@@ -11,6 +12,7 @@ class PaymentsController < ApplicationController
   end
 
   def create
+    @user = User.find(params[:user_id])
     @payment = @user.payments.build(params[:payment])
     Payment.transaction do
       begin
@@ -18,7 +20,7 @@ class PaymentsController < ApplicationController
         @payment.recalculate_percentages
         flash[:success] = t :payment_created_flash
         redirect_to user_payments_path, :user_id => @user
-      rescue Exception => e
+      rescue Exception
         render 'new'
         raise ActiveRecord::Rollback
       end
@@ -26,12 +28,12 @@ class PaymentsController < ApplicationController
   end
 
   private
-    def owner_or_admin
-      @user = User.find(params[:user_id])
-      redirect_to (root_path) unless current_user?(@user) || current_user.admin?
-      if params[:id]
-        @payment = Payment.find(params[:id])
-        redirect_to(root_path) unless @payment.user == @user
-      end
-    end
+  def admin
+    redirect_to (root_path) unless current_user.admin?
+  end
+
+  def owner_or_admin
+    @user = User.find(params[:user_id])
+    redirect_to (root_path) unless current_user?(@user) || current_user.admin?
+  end
 end

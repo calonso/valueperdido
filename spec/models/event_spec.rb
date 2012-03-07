@@ -122,7 +122,7 @@ describe Event do
       end
 
       it "should retrieve only the past events and those with performed bets" do
-        Event.past_events.should == [@past, @with_finished_bets]
+        Event.past_events.should == [@with_finished_bets, @past]
       end
     end
 

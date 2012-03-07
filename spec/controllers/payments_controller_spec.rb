@@ -30,6 +30,16 @@ describe PaymentsController do
       test_login @user
     end
 
+    it "should protect the 'new' action" do
+      get :new, :user_id => @user
+      response.should redirect_to (root_path)
+    end
+
+    it "should protect the 'create' action" do
+      post :create, :user_id => @user, :payment => @attr
+      response.should redirect_to(root_path)
+    end
+
     describe "GET 'index'" do
       before(:each) do
         @payments = []
@@ -51,6 +61,27 @@ describe PaymentsController do
         other_usr = build_valid_user
         get :index, :user_id => other_usr
         response.should redirect_to(root_path)
+      end
+    end
+  end
+
+  describe "for admin users" do
+    before(:each) do
+      @admin = build_admin
+      @payment = payment_at @user
+      payment_at @admin
+      test_login @admin
+    end
+
+    describe "GET 'index'" do
+      it "should be success" do
+        get :index, :user_id => @user
+        response.should be_success
+      end
+
+      it "should see requested user's payments" do
+        get :index, :user_id => @user
+        assigns(:payments).should == [@payment]
       end
     end
 
@@ -104,27 +135,6 @@ describe PaymentsController do
     end
   end
 
-  describe "for admin users" do
-    before(:each) do
-      @admin = build_admin
-      @payment = payment_at @user
-      payment_at @admin
-      test_login @admin
-    end
-
-    describe "GET 'index'" do
-      it "should be success" do
-        get :index, :user_id => @user
-        response.should be_success
-      end
-
-      it "should see requested user's payments" do
-        get :index, :user_id => @user
-        assigns(:payments).should == [@payment]
-      end
-    end
-  end
-
   describe "unsupported methods" do
     # If is required to respond to this methods,
     # make sure that the AccountSummary is updated
@@ -153,9 +163,11 @@ describe PaymentsController do
   end
 
   describe "percentages" do
+    before(:each) do
+      test_login build_admin
+    end
     describe "for one user" do
       before(:each) do
-        test_login @user
         post :create, :user_id => @user, :payment => @attr
       end
 
@@ -176,7 +188,6 @@ describe PaymentsController do
         payment_at @user, Time.now, 100.2
         @user2 = build_valid_user
         @user3 = build_valid_user
-        test_login @user2
       end
 
       it "should be 50% if all same amount" do
@@ -217,7 +228,6 @@ describe PaymentsController do
         @user2.percentage = 11
         @user2.save!
         @user3 = build_valid_user
-        test_login @user3
       end
 
       it "should not count invalidated users" do
@@ -237,7 +247,6 @@ describe PaymentsController do
         @user2 = build_valid_user
         payment_at @user2, Time.now, 100.2
         @user3 = build_valid_user
-        test_login @user3
       end
 
       it "should keep the previous percentages" do

@@ -96,6 +96,12 @@ describe UsersController do
         get :show, :id => @user
         assigns(:user).should == @user
       end
+
+      it "should protect others profiles" do
+        usr2 = build_valid_user
+        get :show, :id => usr2
+        response.should redirect_to root_path
+      end
     end
 
     describe "GET 'edit'" do

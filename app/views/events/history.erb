@@ -1,6 +1,6 @@
 <h1><%= t :events_history %></h1>
 
-<% if @events.count > 0 %>
+<% if @events.any? %>
     <%= will_paginate %>
     <ul>
       <%= render @events %>
