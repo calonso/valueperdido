@@ -8,21 +8,11 @@ class Admin::UsersController < ApplicationController
 
   def validate
     @user = User.find params[:id]
-    if @user.update_attributes({ :validated => true })
+    if @user.update_attribute :validated, true
       UserMailer.validated_account_email(@user).deliver
       flash[:success] = t :user_validated_flash
     else
       flash[:error] = t :user_validated_flash_err
-    end
-    redirect_to admin_users_path
-  end
-
-  def invalidate
-    @user = User.find params[:id]
-    if @user.update_attributes({ :validated => false })
-      flash[:success] = t :user_invalidated_flash
-    else
-      flash[:error] = t :user_invalidated_flash_err
     end
     redirect_to admin_users_path
   end
@@ -50,9 +40,16 @@ class Admin::UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = t :user_deleted_flash
+    User.transaction do
+      begin
+        User.find(params[:id]).do_destroy
+        flash[:success] = t :user_deleted_flash
+      rescue Exception => e
+        puts e
+        flash[:error] = t :user_deleted_flash_err
+        raise ActiveRecord::Rollback
+      end
+    end
     redirect_to admin_users_path
   end
-
 end

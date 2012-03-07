@@ -101,6 +101,22 @@ describe User do
       invalid_user = User.new(@attr.merge(:terms => "0"))
       invalid_user.should_not be_valid
     end
+
+    it "should accept valid percentages" do
+      user = User.create! @attr
+      (0..100).to_a.shuffle[0..5].each do |percentage|
+        user.percentage = percentage
+        user.should be_valid
+      end
+    end
+
+    it "should reject invalid percentages" do
+      user = User.create! @attr
+      %w(100.1 -0.1 abc).each do |percentage|
+        user.percentage = percentage
+        user.should_not be_valid
+      end
+    end
   end
 
   describe "password validations" do
@@ -228,8 +244,8 @@ describe User do
 
   describe "payments associations" do
     before(:each) do
-      @user = User.create!(@attr)
-      @payment = Factory(:payment, :user => @user)
+      @user = build_valid_user
+      @payment = payment_at @user
     end
 
     it "should have a payments attribute" do
@@ -255,6 +271,87 @@ describe User do
     it "should destroy associated messages" do
       @user.destroy
       Message.find_by_id(@message.id).should be_nil
+    end
+  end
+
+  describe "any user first payed between method" do
+    before(:each) do
+      @user1 = Factory(:user, :validated => true)
+    end
+
+    describe "with various users" do
+      before(:each) do
+        payment_at @user1, Date.yesterday.to_datetime
+        payment_at @user1, Date.today.to_datetime
+        payment_at @user1, Date.tomorrow.to_datetime
+
+        @user2 = build_valid_user
+        payment_at @user2, Date.today.to_datetime
+        payment_at @user2, Date.tomorrow.to_datetime
+
+        @user3 = build_valid_user
+        payment_at @user3, Date.tomorrow.to_datetime
+      end
+
+      it "should be true if some first paid" do
+        User.any_user_first_payed_between?(Date.yesterday, Date.today).should be_true
+        User.any_user_first_payed_between?(Date.today, Date.tomorrow).should be_true
+        User.any_user_first_payed_between?(Date.tomorrow, Date.tomorrow + 1.day).should be_true
+      end
+
+      it "should be false if none first paid" do
+        User.any_user_first_payed_between?(Date.tomorrow + 1.day, Date.tomorrow + 2.days).should be_false
+      end
+
+      it "should work with differences in seconds" do
+        prev = Date.tomorrow.to_datetime
+        fol = Date.tomorrow.to_datetime + 1.second
+        User.any_user_first_payed_between?(prev, prev).should be_true
+        User.any_user_first_payed_between?(fol, fol).should be_false
+      end
+    end
+
+    describe "with various payments of the same user" do
+      before(:each) do
+        payment_at @user1, Date.yesterday.to_datetime
+        payment_at @user1, Date.today.to_datetime
+        payment_at @user1, Date.tomorrow.to_datetime
+      end
+
+      it "should not find the user if not the first payment" do
+        any = User.any_user_first_payed_between? Date.today, Date.tomorrow
+        any.should be_false
+      end
+
+      it "should find the user only once even if various payments match" do
+        any = User.any_user_first_payed_between? Date.yesterday, Date.tomorrow
+        any.should be_true
+      end
+    end
+
+    describe "with non validated users" do
+      before(:each) do
+        payment_at @user1, Date.today.to_datetime
+        @user1.update_attribute :validated, false
+      end
+
+      it "should not find the user if not validated" do
+        any = User.any_user_first_payed_between? Date.yesterday, Date.tomorrow
+        any.should be_false
+      end
+    end
+  end
+
+  describe "scopes" do
+    describe "validated scope" do
+      before(:each) do
+        @validated = build_valid_user
+        build_not_valid_user
+      end
+
+      it "should retrieve only validated users" do
+        User.validated.should == [@validated]
+      end
     end
   end
 end

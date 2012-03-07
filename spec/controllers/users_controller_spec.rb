@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UsersController do
   render_views
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @attr = {:name => "username", :surname => "usersurname",
              :email => "user@example.com", :password => "UserPAssw0rd",
              :password_confirmation => "UserPAssw0rd"}
@@ -79,11 +79,6 @@ describe UsersController do
       put :update, :id => @user, :user => @attr
       response.should redirect_to login_path
     end
-
-    it "should protect the 'destroy' action" do
-      delete :destroy, :id => @user
-      response.should redirect_to login_path
-    end
   end
 
   describe "for logged users" do
@@ -118,7 +113,7 @@ describe UsersController do
 
       describe "as not auth user" do
         it "should protect the page" do
-          other_user = Factory(:user, :email => Factory.next(:email))
+          other_user = build_valid_user
           get :edit, :id => other_user
           response.should redirect_to root_path
         end
@@ -218,41 +213,11 @@ describe UsersController do
         end
       end
     end
-
-    describe "DELETE 'destroy'" do
-      describe "as auth user" do
-        it "should destroy the user" do
-          lambda do
-            delete :destroy, :id => @user
-          end.should change(User, :count).by(-1)
-        end
-
-        it "should redirect to the root page" do
-          delete :destroy, :id => @user
-          response.should redirect_to root_path
-        end
-
-        it "should log the user out" do
-          delete :destroy, :id => @user
-          controller.should_not be_logged_in
-        end
-      end
-
-      describe "as not auth user" do
-        it "should not destroy the user" do
-          other_user = Factory(:user, :email => Factory.next(:email))
-          lambda do
-            delete :destroy, :id => other_user
-          end.should_not change(User, :count)
-        end
-      end
-    end
   end
 
   describe "for admin users" do
     before(:each) do
-      @admin = Factory(:user, :email => Factory.next(:email), :admin => true)
-      test_login @admin
+      test_login build_admin
     end
 
     describe "GET 'show'" do
@@ -326,18 +291,19 @@ describe UsersController do
         end
       end
     end
+  end
 
-    describe "DELETE 'destroy'" do
-      it "should destroy the user" do
-        lambda do
-          delete :destroy, :id => @user
-        end.should change(User, :count).by(-1)
-      end
-
-      it "should redirect to the root page" do
+  describe "unsupported methods" do
+    it "should not respond to destroy" do
+      lambda do
         delete :destroy, :id => @user
-        response.should redirect_to root_path
-      end
+      end.should raise_error ActionController::RoutingError
+    end
+
+    it "should not respond to index" do
+      lambda do
+        get :index
+      end.should raise_error ActionController::RoutingError
     end
   end
 end

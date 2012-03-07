@@ -3,7 +3,7 @@ require 'spec_helper'
 describe MessagesController do
   render_views
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @attr = { :message => "The message" }
   end
 
@@ -54,5 +54,4 @@ describe MessagesController do
       end
     end
   end
-
 end

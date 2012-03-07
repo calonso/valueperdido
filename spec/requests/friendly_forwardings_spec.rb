@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "FriendlyForwardings" do
 
   it "should forward to the requested page after login" do
-    user = Factory(:user, :validated => true)
+    user = build_valid_user
     visit edit_user_path(user, :locale => :en)
     # Test automatically follows the redirect to the login page
     fill_in :Email, :with => user.email

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Event do
 
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @attr = {
         :name => "Event name",
         :date => Date.today,

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Bet do
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @event = Factory(:event, :user => @user)
     @attr = { :title => "The title",
               :description => "This is the description",
@@ -215,12 +215,12 @@ describe Bet do
   describe "scopes" do
     describe "performed scope" do
       before(:each) do
-        sec_user = Factory(:user, :email => Factory.next(:email))
+        sec_user = build_valid_user
         sec_user.bets.create!(@attr)
         @sel_bet = @user.bets.create!(@attr.merge(:status => Bet::STATUS_PERFORMED, :money => 1.0, :odds => 1.5))
-        third_user = Factory(:user, :email => Factory.next(:email))
+        third_user = build_valid_user
         @loser_bet = third_user.bets.create!(@attr.merge(:status => Bet::STATUS_LOSER, :money => 1.0, :odds => 1.1, :earned => 0.0))
-        fourth_user = Factory(:user, :email => Factory.next(:email))
+        fourth_user = build_valid_user
         @winner_bet = fourth_user.bets.create!(@attr.merge(:status => Bet::STATUS_WINNER, :money => 1.0, :odds => 1.1, :earned => 10.0))
       end
 
@@ -236,7 +236,7 @@ describe Bet do
     describe "votes info scope" do
       before(:each) do
         bet = @user.bets.create!(@attr)
-        sec_user = Factory(:user, :email => Factory.next(:email))
+        sec_user = build_valid_user
         Factory(:vote, :event => @event, :bet => bet, :user => @user)
         Factory(:vote, :event => @event, :bet => bet, :user => sec_user)
       end
@@ -295,18 +295,6 @@ describe Bet do
         @bet.date_performed.should == Date.today
       end
 
-      it "should set the performed date if directly winner" do
-        @bet.update_attributes!(:status => Bet::STATUS_WINNER, :money => 5, :odds => 2.0, :earned => 20.0)
-        @bet.reload
-        @bet.date_performed.should == Date.today
-      end
-
-      it "should set the performed date if directly loser" do
-        @bet.update_attributes(:status => Bet::STATUS_LOSER, :money => 5, :odds => 2.0)
-        @bet.reload
-        @bet.date_performed.should == Date.today
-      end
-
       describe "with a selected bet" do
         before(:each) do
           @bet.update_attributes( :status => Bet::STATUS_PERFORMED, :money => 5, :odds => 2 )
@@ -338,6 +326,28 @@ describe Bet do
           @bet.date_performed.should == performed_date
         end
       end
+    end
+  end
+
+  describe "participants association" do
+    before(:each) do
+      @bet = Factory(:bet, :user => @user, :event => @event)
+    end
+
+    it "should have the participants attribute" do
+      @bet.should respond_to :participants
+    end
+
+    it "should create a new BetParticipant object" do
+      lambda do
+        @bet.participants = [@user]
+      end.should change(BetParticipant, :count).by(1)
+    end
+
+    it "should assign the right participants" do
+      @bet.participants = [@user]
+      @bet.reload
+      @bet.participants.should == [@user]
     end
   end
 end

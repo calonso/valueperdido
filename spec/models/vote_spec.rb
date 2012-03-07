@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Vote do
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @event = Factory(:event, :user => @user)
     bet = Factory(:bet, :user => @user, :event => @event)
     @attr = {
@@ -86,5 +86,4 @@ describe Vote do
       @vote.bet.should == @attr[:bet]
     end
   end
-
 end

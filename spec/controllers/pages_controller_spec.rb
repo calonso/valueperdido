@@ -41,7 +41,7 @@ describe PagesController do
 
   describe "as logged users" do
     before(:each) do
-      user = Factory(:user)
+      user = build_valid_user
       @msgs = []
       5.times do
         @msgs << Factory(:message, :user => user)
@@ -52,9 +52,9 @@ describe PagesController do
 
     describe "GET 'home'" do
       before(:each) do
-        Factory(:user, :email => Factory.next(:email), :validated => true)
-        Factory(:user, :email => Factory.next(:email), :validated => true, :passive => true)
-        Factory(:user, :email => Factory.next(:email), :validated => true)
+        build_valid_user
+        build_valid_user.update_attribute :passive, true
+        build_valid_user
       end
 
       it "should show messages" do
@@ -69,7 +69,7 @@ describe PagesController do
 
       it "should show active users information" do
         get :home
-        assigns(:active).should == 2
+        assigns(:active).should == 3
       end
 
       it "should show passive users information" do

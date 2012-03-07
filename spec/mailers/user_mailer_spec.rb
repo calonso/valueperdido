@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe UserMailer do
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
   end
 
   it "should send email when new account is created" do

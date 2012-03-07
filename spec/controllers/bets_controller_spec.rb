@@ -3,7 +3,7 @@ require 'spec_helper'
 describe BetsController do
   render_views
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @event = Factory(:event, :user => @user)
     @attr = { :title => "The title",
               :description => "This is the description",
@@ -68,10 +68,9 @@ describe BetsController do
 
   describe "for passive users" do
     before(:each) do
-      @user.passive = true
-      @user.save!
+      @user.update_attribute :passive, true
 
-      user2 = Factory(:user, :email => Factory.next(:email))
+      user2 = build_not_valid_user
       @bet = Factory(:bet, :user => user2, :event => @event)
 
       test_login @user
@@ -130,17 +129,17 @@ describe BetsController do
 
   describe "for logged users" do
     before(:each) do
-      sec_user = Factory(:user, :email => Factory.next(:email))
+      @sec_user = build_valid_user
       @bets = []
       @bet = Factory(:bet, :user => @user, :event => @event)
       @bets << @bet
-      @not_owned_bet = Factory(:bet, :user => sec_user, :event => @event)
+      @not_owned_bet = Factory(:bet, :user => @sec_user, :event => @event)
       @bets << @not_owned_bet
 
       sec_evt = Factory(:event, :name => Factory.next(:name), :user => @user)
       Factory(:bet, :user => @user, :event => sec_evt)
-      Factory(:bet, :user => sec_user, :event => sec_evt)
-      test_login(@user)
+      Factory(:bet, :user => @sec_user, :event => sec_evt)
+      test_login @user
     end
 
     describe "GET 'index'" do
@@ -286,7 +285,7 @@ describe BetsController do
 
       describe "for admin users" do
         before(:each) do
-          @user.admin = true
+          @user.update_attribute :admin, true
         end
 
         it "should be success" do
@@ -305,10 +304,9 @@ describe BetsController do
       before(:each) do
         @attr = { :title => "The new title",
                   :description => "The new description",
-                  :status => Bet::STATUS_WINNER,
+                  :status => Bet::STATUS_PERFORMED,
                   :money => 1.1,
-                  :odds => 1.67,
-                  :earned => 40}
+                  :odds => 1.67}
       end
 
       describe "for non admin users" do
@@ -320,7 +318,7 @@ describe BetsController do
 
       describe "for admin users" do
         before(:each) do
-          @user.admin = true
+          @user.update_attribute :admin, true
         end
 
         describe "failure" do
@@ -358,7 +356,6 @@ describe BetsController do
             @bet.status.should == @attr[:status]
             @bet.money.should == @attr[:money]
             @bet.odds.should == @attr[:odds]
-            @bet.earned.should == @attr[:earned]
           end
 
           it "should redirect to the bet's show path" do
@@ -369,6 +366,63 @@ describe BetsController do
           it "should display a flash message" do
             put :update, :event_id => @event, :id => @bet, :bet => @attr
             flash[:success].should =~ /successfully/i
+          end
+
+          describe "participants handle" do
+            before(:each) do
+              @users = []
+              @users << @user
+              @users << @sec_user
+            end
+
+            it "should assign all participants" do
+              put :update, :event_id => @event, :id => @bet, :bet => @attr
+              @bet.reload
+              @bet.participants.sort.should == @users.sort
+            end
+
+            it "should create a new BetParticipant register for each participant" do
+              lambda do
+                put :update, :event_id => @event, :id => @bet, :bet => @attr
+              end.should change(BetParticipant, :count).by(@users.count)
+            end
+          end
+
+          describe "percentage recalculation at result" do
+            before(:each) do
+              @user.update_attribute :validated, true
+              @user2 = build_valid_user
+              @user3 = build_valid_user
+              payment_at @user, Date.yesterday - 1.day
+              payment_at @user2, Date.yesterday - 1.day
+              payment_at @user3, Date.tomorrow
+              @bet.participants = User.validated
+              @bet.update_attributes!(:status => Bet::STATUS_PERFORMED, :money => 10.0, :odds => 2.0)
+              @bet.update_attribute(:date_performed, Date.yesterday)
+            end
+
+            it "should not recalculate if no user paid" do
+              put :update, :event_id => @event, :id => @bet, :bet => @bet.attributes.merge(:status => Bet::STATUS_WINNER, :earned => 18.5)
+              [@user, @user2, @user3].each do |usr|
+                usr.reload
+                usr.percentage.round(5).should == 33.33333
+              end
+            end
+
+            it "should recalculate if any user paid" do
+              a_user = build_valid_user
+              payment_at a_user, Date.today
+
+              total = AccountSummary.total_money
+              total += @bet.money + 18.5
+              put :update, :event_id => @event, :id => @bet, :bet => @bet.attributes.merge(:status => Bet::STATUS_WINNER, :earned => 18.5)
+              [@user, @user2, @user3].each do |usr|
+                usr.reload
+                usr.percentage.round(5).should == (((300.5 + (18.5 / 3)) / total) * 100).round(5)
+              end
+              a_user.reload
+              a_user.percentage.round(5).should == ((300.5 / total) * 100).round(5)
+            end
           end
         end
       end

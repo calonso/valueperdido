@@ -25,19 +25,17 @@ describe AccountSummary do
 
   describe "summarize method" do
     before(:each) do
-      user1 = Factory(:user)
-      user2 = Factory(:user, :email => Factory.next(:email))
-      user3 = Factory(:user, :email => Factory.next(:email))
+      user1 = build_valid_user
+      user2 = build_valid_user
+      user3 = build_valid_user
 
       event = Factory(:event, :user => user1)
       event2 = Factory(:event, :user => user1, :name => "name2")
       event3 = Factory(:event, :user => user1, :name => "name3")
 
-      Factory(:payment, :user => user1)
-      Factory(:payment, :user => user2)
-      pay = Factory(:payment, :user => user3)
-      pay.created_at = Date.yesterday.to_datetime
-      pay.save!
+      payment_at user1
+      payment_at user2
+      payment_at user3, Date.yesterday
 
       Factory(:bet, :user => user1, :event => event)
       Factory(:bet, :user => user2, :event => event,
@@ -60,9 +58,11 @@ describe AccountSummary do
               :status => Bet::STATUS_LOSER, :money => 50,
               :odds => 2.0, :date_performed => Date.yesterday)
 
-      Factory(:expense)
-      Factory(:expense, :date => Date.yesterday)
-      Factory(:expense, :date => Date.yesterday)
+      expense_at
+      expense_at Date.yesterday
+      expense_at Date.yesterday
+
+      AccountSummary.full_summarize
     end
 
     it "should respond to summarize" do
@@ -102,8 +102,8 @@ describe AccountSummary do
 
     it "should re-summarize when an already summarized day is required" do
       summary = AccountSummary.summarize
-      user = Factory(:user, :email => Factory.next(:email))
-      payment = Factory(:payment, :user => user)
+      user = build_valid_user
+      payment = payment_at user
       sum2 = AccountSummary.summarize
       sum2.id.should == summary.id
       sum2.date.should == summary.date
@@ -135,8 +135,8 @@ describe AccountSummary do
 
   describe "full accounts info method" do
     before(:each) do
-      @user = Factory(:user)
-      @usr2 = Factory(:user, :name => Factory.next(:name), :email => Factory.next(:email))
+      @user = build_valid_user
+      @usr2 = build_valid_user
       @event = Factory(:event, :user => @user)
     end
 
@@ -146,10 +146,8 @@ describe AccountSummary do
 
     describe "for payments" do
       before(:each) do
-        @pay1 = Factory(:payment, :user => @user)
-        @pay2 = Factory(:payment, :user => @usr2)
-        @pay2.created_at = Date.tomorrow.to_datetime
-        @pay2.save!
+        @pay1 = payment_at @user
+        @pay2 = payment_at @usr2, Date.tomorrow
       end
 
       it "should retrieve the payments in the appropriate order" do
@@ -186,7 +184,7 @@ describe AccountSummary do
 
     describe "for performed and long term bets" do
       before(:each) do
-        @usr3 = Factory(:user, :name => Factory.next(:name), :email => Factory.next(:email))
+        @usr3 = build_valid_user
         @performed = Factory(:bet, :user => @user, :event => @event,
                              :status => Bet::STATUS_PERFORMED, :money => 10,
                              :odds => 1.6, :date_performed => Date.yesterday - 3.days)
@@ -291,8 +289,8 @@ describe AccountSummary do
 
     describe "for expenses" do
       before(:each) do
-        @expense1 = Factory(:expense)
-        @expense2 = Factory(:expense, :value => 40, :date => Date.tomorrow)
+        @expense1 = expense_at
+        @expense2 = expense_at Date.tomorrow, 40.0
       end
 
       it "should retrieve the bets in the appropriate order" do
@@ -329,7 +327,7 @@ describe AccountSummary do
   end
   describe "total money method" do
     before(:each) do
-      @user = Factory(:user)
+      @user = build_valid_user
     end
 
     describe "with no registers" do
@@ -341,24 +339,13 @@ describe AccountSummary do
     describe "with registers" do
       describe "for payments (first set of results)" do
         before(:each) do
-          @payment1 = Factory(:payment, :user => @user)
-          @payment1.created_at = Date.yesterday.to_datetime
-          @payment1.save!
-          @payment2 = Factory(:payment, :user => @user)
-          @payment2.created_at = Date.today.to_datetime
-          @payment2.save!
-          @payment3 = Factory(:payment, :user => @user)
-          @payment3.created_at = Date.tomorrow.to_datetime
-          @payment3.save!
+          @payment1 = payment_at @user, Date.yesterday.to_datetime
+          @payment2 = payment_at @user, Date.today.to_datetime
+          @payment3 = payment_at @user, Date.tomorrow.to_datetime
         end
 
         it "should summarize until today if no parameter is given" do
           data = AccountSummary.total_money
-          data.should == @payment1.amount + @payment2.amount
-        end
-
-        it "should summarize the specified day if parameter is given" do
-          data = AccountSummary.total_money Date.tomorrow
           data.should == @payment1.amount + @payment2.amount + @payment3.amount
         end
       end
@@ -366,8 +353,8 @@ describe AccountSummary do
       describe "for bets (second and third sets of results)" do
         before(:each) do
           @event = Factory(:event, :user => @user)
-          @user2 = Factory(:user, :email => Factory.next(:email))
-          @user3 = Factory(:user, :email => Factory.next(:email))
+          @user2 = build_valid_user
+          @user3 = build_valid_user
         end
         describe "for idle bets" do
           before(:each) do
@@ -376,11 +363,6 @@ describe AccountSummary do
 
           it "should summarize until today if no parameter is given" do
             data = AccountSummary.total_money
-            data.should == 0
-          end
-
-          it "should summarize the specified day if parameter is given" do
-            data = AccountSummary.total_money Date.tomorrow
             data.should == 0
           end
         end
@@ -400,11 +382,6 @@ describe AccountSummary do
 
           it "should summarize until today if no parameter is given" do
             data = AccountSummary.total_money
-            data.should == -(@past_performed.money + @today_performed.money)
-          end
-
-          it "should summarize the specified day if parameter is given" do
-            data = AccountSummary.total_money Date.tomorrow
             data.should == -(@past_performed.money + @today_performed.money + @tomorrow_performed.money)
           end
         end
@@ -418,18 +395,13 @@ describe AccountSummary do
               @today_lost = Factory(:bet, :event => @event, :user => @user2,
                 :status => Bet::STATUS_LOSER, :money => 10.0, :odds => 2.0,
                 :date_performed => Date.today, :date_finished => Date.today)
-              @tomorrow_lost = @past_lost = Factory(:bet, :event => @event, :user => @user3,
+              @tomorrow_lost = Factory(:bet, :event => @event, :user => @user3,
                 :status => Bet::STATUS_LOSER, :money => 10.0, :odds => 2.0,
                 :date_performed => Date.tomorrow, :date_finished => Date.tomorrow)
             end
 
             it "should summarize until today if no parameter is given" do
               data = AccountSummary.total_money
-              data.should == -(@past_lost.money + @today_lost.money)
-            end
-
-            it "should summarize the specified day if parameter is given" do
-              data = AccountSummary.total_money Date.tomorrow
               data.should == -(@past_lost.money + @today_lost.money + @tomorrow_lost.money)
             end
           end
@@ -449,11 +421,6 @@ describe AccountSummary do
 
             it "should summarize until today if no parameter is given" do
               data = AccountSummary.total_money
-              data.should == -(@today_finished.money + @tomorrow_finished.money)
-            end
-
-            it "should summarize the specified day if parameter is given" do
-              data = AccountSummary.total_money Date.tomorrow
               data.should == -(@today_finished.money + @tomorrow_finished.money + @after_tomorrow_finished.money)
             end
           end
@@ -474,11 +441,6 @@ describe AccountSummary do
 
             it "should summarize until today if no parameter is given" do
               data = AccountSummary.total_money
-              data.should == @past_won.earned + @today_won.earned
-            end
-
-            it "should summarize the specified day if parameter is given" do
-              data = AccountSummary.total_money Date.tomorrow
               data.should == @past_won.earned + @today_won.earned + @tomorrow_won.earned
             end
           end
@@ -497,30 +459,20 @@ describe AccountSummary do
 
             it "should summarize until today if no parameter is given" do
               data = AccountSummary.total_money
-              data.should == @today_finished.earned - @tomorrow_finished.money - @future_finished.money
-            end
-
-            it "should summarize the specified day if parameter is given" do
-              data = AccountSummary.total_money Date.tomorrow
-              data.should == @today_finished.earned + @tomorrow_finished.earned - @future_finished.money
+              data.should == @today_finished.earned + @tomorrow_finished.earned + @future_finished.earned
             end
           end
         end
       end
       describe "for expenses (fourth set of results)" do
         before(:each) do
-          @expense1 = Factory(:expense, :date => Date.yesterday)
-          @expense2 = Factory(:expense, :date => Date.today)
-          @expense3 = Factory(:expense, :date => Date.tomorrow)
+          @expense1 = expense_at Date.yesterday
+          @expense2 = expense_at Date.today
+          @expense3 = expense_at Date.tomorrow
         end
 
         it "should summarize until today if no parameter is given" do
           data = AccountSummary.total_money
-          data.should == -(@expense1.value + @expense2.value)
-        end
-
-        it "should summarize the specified day if parameter is given" do
-          data = AccountSummary.total_money Date.tomorrow
           data.should == -(@expense1.value + @expense2.value + @expense3.value).round(1)
         end
       end

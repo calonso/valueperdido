@@ -26,14 +26,29 @@ class User < ActiveRecord::Base
                        :unless => Proc.new { |a| a.password.blank? }
   validates :password, :presence => true, :on => :create
   validates :terms, :acceptance => true, :on => :create
+  validates :percentage, :numericality => { :greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0 }
 
 
   before_save :encrypt_password, :unless => Proc.new { |a| a.password.blank? }
 
   default_scope :order => "users.surname ASC, users.name ASC"
+  scope :validated, where(:validated => true)
 
   def has_password? (submitted_password)
     encrypted_password == encrypt(submitted_password)
+  end
+
+  def do_destroy
+    total = AccountSummary.total_money
+    deleted_amount = (self.percentage * total / 100).round(2)
+    Expense.create!(:value => deleted_amount,
+                    :description => "#{self.surname}, #{self.name} deletion")
+    self.destroy
+    User.validated.each do |user|
+      user_amount = total * user.percentage / 100
+      user.percentage = user_amount == 0 ? 0 : (user_amount / (total - deleted_amount)) * 100
+      user.save!
+    end
   end
 
   # Here adding a class method User.authenticate, self is User class, not an instance
@@ -45,6 +60,13 @@ class User < ActiveRecord::Base
   def self.auth_with_salt(id, cookie_salt)
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
+  end
+
+  def self.any_user_first_payed_between?(start, finish)
+    data = self.connection.execute(sanitize_sql ["SELECT COUNT(*) AS count FROM users AS u
+      INNER JOIN (SELECT user_id, MIN(created_at) AS payment_date FROM payments group by user_id)
+        AS p ON u.id = p.user_id WHERE validated = 't' AND payment_date BETWEEN ? AND ?", start, finish])
+    data[0]['count'].to_i > 0
   end
 
   private

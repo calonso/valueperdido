@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120223113617) do
+ActiveRecord::Schema.define(:version => 20120307080308) do
 
   create_table "account_summaries", :force => true do |t|
     t.float    "incoming"
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(:version => 20120223113617) do
     t.float    "earns"
     t.float    "expenses"
     t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.float    "total",      :default => 0.0
+  end
+
+  create_table "bet_participants", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "bet_id"
+    t.float    "percentage"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -47,7 +56,6 @@ ActiveRecord::Schema.define(:version => 20120223113617) do
   end
 
   create_table "expenses", :force => true do |t|
-    t.date     "date"
     t.float    "value"
     t.string   "description"
     t.datetime "created_at"

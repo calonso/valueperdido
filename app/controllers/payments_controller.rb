@@ -12,11 +12,16 @@ class PaymentsController < ApplicationController
 
   def create
     @payment = @user.payments.build(params[:payment])
-    if @payment.save
-      flash[:success] = t :payment_created_flash
-      redirect_to user_payments_path, :user_id => @user
-    else
-      render 'new'
+    Payment.transaction do
+      begin
+        @payment.save!
+        @payment.recalculate_percentages
+        flash[:success] = t :payment_created_flash
+        redirect_to user_payments_path, :user_id => @user
+      rescue Exception => e
+        render 'new'
+        raise ActiveRecord::Rollback
+      end
     end
   end
 

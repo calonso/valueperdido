@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :only => [:show, :edit, :update, :destroy]
-  before_filter :authorize,    :only => [:edit, :update, :destroy]
+  before_filter :authenticate, :only => [:show, :edit, :update]
+  before_filter :authorize,    :only => [:edit, :update]
 
   def show
     @user = User.find(params[:id])
@@ -30,13 +30,6 @@ class UsersController < ApplicationController
     else
       render 'edit'
     end
-  end
-
-  def destroy
-    @user.destroy
-    flash[:success] = t :user_deleted_flash
-    logout
-    redirect_to root_path
   end
 
   private

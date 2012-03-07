@@ -28,4 +28,31 @@ RSpec.configure do |config|
   def test_login(user)
     controller.login(user)
   end
+
+  def payment_at(owner, date=DateTime.now, amount=300.5)
+    payment = Factory(:payment, :user => owner, :amount => amount)
+    payment.created_at = date.to_datetime
+    payment.save!
+    payment.recalculate_percentages
+    payment
+  end
+
+  def expense_at(date=DateTime.now, value=10.40)
+    expense = Factory(:expense, :value => value)
+    expense.created_at = date.to_datetime
+    expense.save!
+    expense
+  end
+
+  def build_valid_user
+    Factory(:user, :name => Factory.next(:name), :email => Factory.next(:email), :validated => true)
+  end
+
+  def build_not_valid_user
+    Factory(:user, :name => Factory.next(:name), :email => Factory.next(:email), :validated => false)
+  end
+
+  def build_admin
+    Factory(:user, :name => Factory.next(:name), :email => Factory.next(:email), :validated => true, :admin => true)
+  end
 end

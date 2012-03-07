@@ -25,7 +25,7 @@ describe "LayoutLinks" do
 
   describe "when logged in" do
     before(:each) do
-      @user = Factory(:user, :validated => true)
+      @user = build_valid_user
       visit login_path(:locale => :en)
       fill_in :Email,     :with => @user.email
       fill_in :password,  :with => @user.password

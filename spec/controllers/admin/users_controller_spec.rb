@@ -5,7 +5,7 @@ describe Admin::UsersController do
 
   describe "as non admin users" do
     before(:each) do
-      @user = Factory(:user)
+      @user = build_valid_user
       test_login @user
     end
 
@@ -16,11 +16,6 @@ describe Admin::UsersController do
 
     it "should protect the validate action" do
       get :validate, :id => @user
-      response.should redirect_to(root_path)
-    end
-
-    it "should protect the invalidate action" do
-      get :invalidate, :id => @user
       response.should redirect_to(root_path)
     end
 
@@ -42,8 +37,8 @@ describe Admin::UsersController do
 
   describe "as admin users" do
     before(:each) do
-      @user = Factory(:user)
-      @admin = Factory(:user, :email => Factory.next(:email), :admin => true)
+      @user = build_not_valid_user
+      @admin = build_admin
       test_login @admin
     end
 
@@ -82,33 +77,9 @@ describe Admin::UsersController do
       end
     end
 
-    describe "GET 'invalidate'" do
-      before(:each) do
-        @user.validated = true
-        @user.save!
-      end
-
-      it "should invalidate the user" do
-        get :invalidate, :id => @user
-        @user.reload
-        @user.validated.should_not be_true
-      end
-
-      it "should have a flash message" do
-        get :invalidate, :id => @user
-        flash[:success].should =~ /successfully/i
-      end
-
-      it "should redirect to index" do
-        get :invalidate, :id => @user
-        response.should redirect_to admin_users_path
-      end
-    end
-
     describe "GET 'activate'" do
       before(:each) do
-        @user.passive = true
-        @user.save!
+        @user.update_attribute :passive, true
       end
       it "should activate the user" do
         get :activate, :id => @user
@@ -170,6 +141,48 @@ describe Admin::UsersController do
       it "should redirect to the index page" do
         delete :destroy, :id => @user
         response.should redirect_to admin_users_path
+      end
+
+      describe "percentage recalculation" do
+        before(:each) do
+          @user.update_attribute :validated, true
+          @user2 = build_valid_user
+          @user3 = build_valid_user
+          @not_valid = build_not_valid_user
+          payment_at @user
+          payment_at @user2
+          payment_at @user3
+        end
+
+        it "should recalculate percentages upon user deletion" do
+          [@user, @user2, @user3].each do |user|
+            user.reload
+            user.percentage.round(5).should == 33.33333
+          end
+          delete :destroy, :id => @user
+          [@user2, @user3].each do |user|
+            user.reload
+            user.percentage.should == 50.0
+          end
+        end
+
+        it "should create a new expense as the user money retired" do
+          lambda do
+            delete :destroy, :id => @user
+          end.should change(Expense, :count).by(1)
+        end
+
+        it "should not recalculate if deleted user is not validated" do
+          [@user, @user2, @user3].each do |user|
+            user.reload
+            user.percentage.round(5).should == 33.33333
+          end
+          delete :destroy, :id => @not_valid
+          [@user, @user2, @user3].each do |user|
+            user.reload
+            user.percentage.round(5).should == 33.33333
+          end
+        end
       end
     end
   end

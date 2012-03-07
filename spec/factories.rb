@@ -46,7 +46,6 @@ Factory.define :message do |message|
 end
 
 Factory.define :expense do |expense|
-  expense.date        Date.today
   expense.value       10.40
   expense.description "Expense description"
 end

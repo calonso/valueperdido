@@ -29,7 +29,7 @@ describe SessionsController do
 
     describe "valid login" do
       before(:each) do
-        @user = Factory(:user, :validated => true)
+        @user = build_valid_user
         @attr = { :email => @user.email, :password => @user.password }
       end
 
@@ -48,7 +48,7 @@ describe SessionsController do
 
   describe "DELETE 'destroy'" do
     before(:each) do
-      @user = Factory(:user)
+      @user = build_valid_user
       test_login(@user)
     end
 
@@ -58,5 +58,4 @@ describe SessionsController do
       response.should redirect_to(root_path)
     end
   end
-
 end

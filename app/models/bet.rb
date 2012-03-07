@@ -3,10 +3,18 @@ class Bet < ActiveRecord::Base
   STATUS_PERFORMED = '1'
   STATUS_LOSER     = '2'
   STATUS_WINNER    = '3'
-  STATUSES = [ ["#{ I18n.t :idle }", STATUS_IDLE],
-               ["#{ I18n.t :performed }", STATUS_PERFORMED],
-               ["#{ I18n.t :loser }", STATUS_LOSER],
-               ["#{ I18n.t :winner }", STATUS_WINNER]]
+  STATUSES = [
+      ["#{ I18n.t :idle }", STATUS_IDLE],
+      ["#{ I18n.t :performed }", STATUS_PERFORMED],
+      ["#{ I18n.t :loser }", STATUS_LOSER],
+      ["#{ I18n.t :winner }", STATUS_WINNER]
+  ]
+  TRANSITIONS = [
+      [STATUS_PERFORMED], #Means that an IDLE Bet can only move to performed
+      [STATUS_LOSER, STATUS_WINNER], #Means that a PERFORMED Bet can move to loser or winner
+      [],
+      []
+  ]
 
   attr_accessible :title, :description, :status, :money, :odds,
                   :event_id, :earned
@@ -14,6 +22,8 @@ class Bet < ActiveRecord::Base
   belongs_to :user
   belongs_to :event
   has_many :votes, :dependent => :destroy
+  has_many :bet_participants
+  has_many :participants, :class_name => "User", :source => :user, :through => :bet_participants
 
   validates :title, :presence => true,
                     :length => { :maximum => 45 }
@@ -28,15 +38,14 @@ class Bet < ActiveRecord::Base
   validates :earned, :numericality => { :greater_than => 0 }, :if => Proc.new { |b| b.status == STATUS_WINNER }
   validate :no_more_than_max_bets_per_user, :on => :create
   validate :event_is_active, :on => :create, :if => :event_id
-  validate :non_editable_when_performed, :on => :update, :if => :date_performed
-  validate :non_editable_when_finished, :on => :update, :if => :date_finished
+  validate :transitable, :on => :update
 
   scope :performed, lambda { where("status != ?", STATUS_IDLE) }
 
   default_scope :order => 'bets.id DESC'
 
   before_update :set_dates
-  
+
   def self.with_votes_for_event(evt, usr)
     self.connection.execute(sanitize_sql ["
       SELECT b.id as id, title, COALESCE(votes, 0) as votes, COALESCE(voted, 0) as voted, status, user_id, author FROM bets b
@@ -46,37 +55,25 @@ class Bet < ActiveRecord::Base
       where event_id = ? order by votes desc", usr, evt, evt]).to_a
   end
 
-  def no_more_than_max_bets_per_user
-    bets = Bet.where("user_id = ? AND event_id = ?", user, event)
-    if bets.count >= Valueperdido::Application.config.max_bets_per_user
-      errors.add(:event, "#{I18n.t :max_bets_err}")
-    end
-  end
-
-  def non_editable_when_performed
-    if self.status_changed? && self.status == STATUS_IDLE
-      errors.add(:status, "#{I18n.t :bet_performed_non_editable}")
-    end
-    if self.money_changed?
-      errors.add(:money, "#{I18n.t :bet_money_non_editable}")
-    end
-    if self.odds_changed?
-      errors.add(:odds, "#{I18n.t :bet_odds_non_editable}")
-    end
-  end
-
-  def non_editable_when_finished
-    if self.status_changed?
-      errors.add(:status, "#{I18n.t :bet_winner_non_editable}")
-    end
-    if self.earned_changed?
-      errors.add(:earned, "#{I18n.t :bet_earned_non_editable}")
-    end
-  end
-
-  def event_is_active
-    unless Event.find(event_id).active?
-      errors.add(:event, "#{I18n.t :event_closed_err}")
+  def process_update(new_attributes)
+    if new_attributes[:status] == Bet::STATUS_PERFORMED
+      self.participants = User.validated
+      self.update_attributes!(new_attributes)
+    else
+      self.update_attributes!(new_attributes)
+      if new_attributes[:status] == Bet::STATUS_WINNER && User.any_user_first_payed_between?(self.date_performed, Time.now) then
+        total = AccountSummary.total_money
+        bet_value = self.money + self.earned
+        total -= bet_value
+        participants = self.bet_participants
+        User.validated.each do |user|
+          user_amount = total * user.percentage / 100
+          register = participants.find { |p| p.user_id == user.id }
+          user_amount += bet_value * (register.percentage / 100) if register
+          user.percentage = (user_amount / (total + bet_value)) * 100
+          user.save!
+        end
+      end
     end
   end
 
@@ -101,6 +98,34 @@ class Bet < ActiveRecord::Base
           self.date_performed = Date.today unless self.date_performed
           self.date_finished = Date.today
       end
+    end
+  end
+
+  def transitable
+    if TRANSITIONS[self.status_was.to_i].include? self.status
+      if self.status_was == STATUS_PERFORMED
+        if self.money_changed?
+          errors.add(:money, "#{I18n.t :bet_money_non_editable}")
+        end
+        if self.odds_changed?
+          errors.add(:odds, "#{I18n.t :bet_odds_non_editable}")
+        end
+      end
+    else
+      errors.add(:event, "#{I18n.t :bet_status_invalid}")
+    end
+  end
+
+  def no_more_than_max_bets_per_user
+    bets = Bet.where("user_id = ? AND event_id = ?", user, event)
+    if bets.count >= Valueperdido::Application.config.max_bets_per_user
+      errors.add(:event, "#{I18n.t :max_bets_err}")
+    end
+  end
+
+  def event_is_active
+    unless Event.find(event_id).active?
+      errors.add(:event, "#{I18n.t :event_closed_err}")
     end
   end
 end

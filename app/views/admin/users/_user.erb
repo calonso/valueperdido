@@ -2,9 +2,7 @@
   <td><%= link_to "#{user.surname}, #{user.name}", user %></td>
   <td><%= user.percentage %> %</td>
   <td>
-  <% if user.validated %>
-    <%= link_to "#{t :invalidate}", admin_invalidate_path(:id => user.id) %>
-  <% else %>
+  <% unless user.validated? %>
     <%= link_to "#{t :validate}", admin_validate_path(:id => user.id) %>
   <% end %>
   </td>

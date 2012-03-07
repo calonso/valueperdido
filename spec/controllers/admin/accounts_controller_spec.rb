@@ -12,7 +12,7 @@ describe Admin::AccountsController do
 
   describe "for non admin users" do
     before(:each) do
-      test_login Factory(:user)
+      test_login build_valid_user
     end
     it "should protect the index page" do
       get :index
@@ -22,7 +22,7 @@ describe Admin::AccountsController do
 
   describe "for admin users" do
     before(:each) do
-      test_login Factory(:user, :admin => true)
+      test_login build_admin
     end
     it "should be success" do
       get :index

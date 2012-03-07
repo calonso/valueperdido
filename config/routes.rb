@@ -5,7 +5,6 @@ Valueperdido::Application.routes.draw do
   scope "(:locale)", :locale => /en|es/ do
     namespace :admin do
       match '/users/:id/validate',    :to => 'users#validate',    :as => :validate
-      match '/users/:id/invalidate',  :to => 'users#invalidate',  :as => :invalidate
       match '/users/:id/activate',    :to => 'users#activate',    :as => :activate
       match '/users/:id/passive',     :to => 'users#passive',     :as => :passive
       resources :users, :only => [:index, :destroy]
@@ -20,7 +19,7 @@ Valueperdido::Application.routes.draw do
     resources :events, :except => :show do
       resources :bets
     end
-    resources :users, :except => :index do
+    resources :users, :except => [:index, :destroy] do
       resources :payments, :only => [:index, :new, :create]
     end
     resources :sessions, :only => [:new, :create, :destroy]

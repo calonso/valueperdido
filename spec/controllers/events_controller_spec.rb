@@ -5,7 +5,7 @@ describe EventsController do
 
   describe "for not logged users" do
     before(:each) do
-      user = Factory(:user)
+      user = build_valid_user
       @evt = Factory(:event, :user => user)
     end
     it "should deny the access to 'index'" do
@@ -46,7 +46,7 @@ describe EventsController do
 
   describe "logged users" do
     before(:each) do
-      @user = Factory(:user)
+      @user = build_valid_user
       @evt = Factory(:event, :user => @user)
       test_login @user
     end
@@ -89,7 +89,7 @@ describe EventsController do
 
   describe "admin users" do
     before(:each) do
-      @user = Factory(:user, :admin => true)
+      @user = build_admin
       test_login @user
     end
 
@@ -256,6 +256,5 @@ describe EventsController do
         flash[:success].should =~ /destroyed/i
       end
     end
-
   end
 end

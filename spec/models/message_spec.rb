@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Message do
   before(:each) do
-    @user = Factory(:user)
+    @user = build_valid_user
     @attr = { :message => "This is the text" }
   end
 

@@ -66,11 +66,15 @@ class BetsController < ApplicationController
 
   def update
     @bet = Bet.find(params[:id])
-    if @bet.update_attributes(params[:bet])
-      flash[:success] = t :bet_updated_flash
-      redirect_to event_bet_path, :event_id => params[:event_id], :bet => @bet
-    else
-      render 'edit'
+    Bet.transaction do
+      begin
+        @bet.process_update params[:bet]
+        flash[:success] = t :bet_updated_flash
+        redirect_to event_bet_path, :event_id => params[:event_id], :bet => @bet
+      rescue Exception => e
+        render 'edit'
+        raise ActiveRecord::Rollback
+      end
     end
   end
 

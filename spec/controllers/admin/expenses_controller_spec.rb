@@ -4,7 +4,7 @@ describe Admin::ExpensesController do
   render_views
 
   before(:each) do
-    @attrs = { :date => Date.today, :value => 50.5, :description => "Desc" }
+    @attrs = { :value => 50.5, :description => "Desc" }
   end
 
   describe "for non logged users" do
@@ -21,7 +21,7 @@ describe Admin::ExpensesController do
 
   describe "for non admin users" do
     before(:each) do
-      user = Factory(:user)
+      user = build_valid_user
       test_login user
     end
 
@@ -38,8 +38,7 @@ describe Admin::ExpensesController do
 
   describe "for admin users" do
     before(:each) do
-      @admin = Factory(:user, :admin => true)
-      test_login @admin
+      test_login build_admin
     end
 
     describe "GET 'new'" do
@@ -57,7 +56,7 @@ describe Admin::ExpensesController do
     describe "POST 'create'" do
       describe "failure" do
         before(:each) do
-          @attrs = { :date => nil, :value => '', :description => ''}
+          @attrs = { :value => '', :description => ''}
         end
 
         it "should not create a new instance" do
