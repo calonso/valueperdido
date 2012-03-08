@@ -1,6 +1,23 @@
 <h1><%= t :payment_list %></h1>
 
-<% unless @payments.empty? %>
+<p>Instrucciones de pago:</p>
+<ol>
+  <li>Realizar el pago, indicando tu nombre y apellidos en el concepto.
+    <dl>
+      <dt>Ingreso a cuenta</dt>
+        <dd>Entidad: Caja Duero</dd>
+        <dd>Titular: Carlos Alonso</dd>
+        <dd>Número: 2104 0005 24 9163733499</dd>
+      <dt>Transferencia PayPal</dt>
+        <dd>Realizar un envío de dinero a: valueperdido@gmail.com</dd>
+        <dd>ValuePerdido en ningún caso se hará cargo del pago de comisiones por este método.</dd>
+    </dl>
+   </li>
+  <li>Notificar este pago por email a valueperdido@gmail.com.</li>
+  <li>Tan pronto como verifiquemos el pago lo daremos de alta en el sistema.</li>
+</ol>
+
+<% if @payments.any? %>
     <%= will_paginate %>
     <ul>
         <%= render @payments %>
