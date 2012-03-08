@@ -200,7 +200,7 @@ describe EventsController do
           Factory(:bet, :event => evt3, :user => @user, :status => Bet::STATUS_WINNER, :money => 10, :odds => 2, :earned => 20)
           evt3.update_attribute :date, Date.yesterday
 
-          @events = [evt3, evt2]
+          @events = [evt2, evt3]
         end
 
         it "should not get any active events" do
