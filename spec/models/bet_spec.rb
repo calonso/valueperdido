@@ -54,7 +54,7 @@ describe Bet do
     end
 
     it "should have the right associated user" do
-      @bet.user_id.should == @user.id
+      @bet.user.id.should == @user.id
       @bet.user.should == @user
     end
 
@@ -63,7 +63,7 @@ describe Bet do
     end
 
     it "should have the right associated event" do
-      @bet.event_id.should == @event.id
+      @bet.event.id.should == @event.id
       @bet.event.should == @event
     end
   end
@@ -267,6 +267,10 @@ describe Bet do
 
     it "should have a votes attribute" do
       @bet.should respond_to(:votes)
+    end
+
+    it "should assign the right votes" do
+      @bet.votes.should == [@vote]
     end
 
     it "should destroy associated votes" do
