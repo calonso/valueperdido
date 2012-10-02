@@ -3,8 +3,7 @@ require "digest"
 class User < ActiveRecord::Base
   attr_accessor :password, :terms
   attr_accessible :name, :surname, :email, :admin, :validated,
-                  :password, :password_confirmation, :terms, :passive, :encrypted_password,
-                  :salt
+                  :password, :password_confirmation, :terms, :passive
 
   has_many :events
   has_many :bets
@@ -13,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :messages, :dependent => :destroy
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-=begin
+
   validates :name, :presence => true,
                    :length => { :maximum => 45 }
   validates :surname, :presence => true,
@@ -31,7 +30,7 @@ class User < ActiveRecord::Base
 
 
   before_save :encrypt_password, :unless => Proc.new { |a| a.password.blank? }
-=end
+
   default_scope :order => "users.surname ASC, users.name ASC"
   scope :validated, where(:validated => true)
 
